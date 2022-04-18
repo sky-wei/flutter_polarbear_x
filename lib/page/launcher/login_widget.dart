@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/route.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
+import 'package:flutter_polarbear_x/widget/fade_animate_widget.dart';
 
 import '../../widget/big_button_widget.dart';
 import '../../widget/big_input_widget.dart';
@@ -29,45 +30,96 @@ class LoginWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _LoginWidgetState();
 }
 
-class _LoginWidgetState extends State<LoginWidget> {
+class _LoginWidgetState extends State<LoginWidget> with SingleTickerProviderStateMixin {
+
+  late AnimationController _animationController;
+  bool _enableView = false;
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+        duration: const Duration(milliseconds: 800),
+        vsync: this
+    );
+    _animationController.forward();
+    _nameController.addListener(_refreshViewState);
+    _passwordController.addListener(_refreshViewState);
+  }
+
+  @override
+  void dispose() {
+    _passwordController.removeListener(_refreshViewState);
+    _nameController.removeListener(_refreshViewState);
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      // crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        BigInputWidget(
-          iconName: 'ic_user.svg',
-          labelText: 'Name',
-          textInputAction: TextInputAction.next,
-        ),
-        const SizedBox(height: 15),
-        BigInputWidget(
-          iconName: 'ic_password.svg',
-          labelText: 'Password',
-          obscureText: true,
-          textInputAction: TextInputAction.next,
-          // onFieldSubmitted: (value) => _login(),
-        ),
-        const SizedBox(height: 40),
-        BigButtonWidget(
-          onPressed: () {
+    return FadeAnimateWidget(
+      animation: _animationController,
+      child: Column(
+        children: [
+          BigInputWidget(
+            controller: _nameController,
+            iconName: 'ic_user.svg',
+            labelText: 'Name',
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: 15),
+          BigInputWidget(
+            controller: _passwordController,
+            iconName: 'ic_password.svg',
+            labelText: 'Password',
+            obscureText: true,
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (value) {
+              if (_enableView) _login();
+            },
+          ),
+          XBox.vertical40,
+          BigButtonWidget(
+            onPressed: _enableView ? _login : null,
+            text: 'Login',
+          ),
+          XBox.vertical20,
+          _buildTextButton('Forget Password?'),
+        ],
+      ),
+    );
+  }
 
-          },
-          text: 'Login',
+  void _refreshViewState() {
+    final name = _nameController.text;
+    final password = _passwordController.text;
+    _setViewState(name.isNotEmpty && password.isNotEmpty);
+  }
+
+  void _setViewState(bool enable) {
+    if (_enableView != enable) {
+      setState(() { _enableView = enable; });
+    }
+  }
+
+  void _login() {
+    Navigator.pushReplacementNamed(context, XRoute.home);
+  }
+
+  Widget _buildTextButton(String text) {
+    return TextButton(
+      onPressed: () {  },
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.normal,
+          color: Theme.of(context).colorScheme.onSurface
         ),
-        XBox.vertical20,
-        TextButton(
-            onPressed: () {  },
-            child: Text(
-              'Forget Password?',
-              style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal,
-                  color: Theme.of(context).colorScheme.onSurface
-              ),
-            )
-        )
-      ],
+      )
     );
   }
 }

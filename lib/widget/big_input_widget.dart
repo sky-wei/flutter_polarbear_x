@@ -31,6 +31,8 @@ class BigInputWidget extends StatelessWidget {
   final TextInputType keyboardType;
   final ValueChanged<String>? onFieldSubmitted;
   final int maxLines;
+  final Size? size;
+  final Radius? radius;
 
   const BigInputWidget({
     Key? key,
@@ -44,13 +46,19 @@ class BigInputWidget extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.onFieldSubmitted,
     this.maxLines = 1,
+    this.size,
+    this.radius
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    final size = this.size ?? const Size(double.infinity, 46);
+    final radius = this.radius ?? const Radius.circular(6);
+
     return SizedBox(
-      width: 270,
-      height: 46,
+      width: size.width,
+      height: size.height,
       child: TextFormField(
         controller: controller,
         autofocus: autofocus,
@@ -60,19 +68,19 @@ class BigInputWidget extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: SvgPicture.asset(
               'assets/svg/$iconName',
-              color: XColor.grayColor,
+              color: Theme.of(context).hintColor,
               width: 22,
               height: 22,
             ),
           ),
-          labelText: labelText,
-          labelStyle: TextStyle(
+          // labelText: labelText,
+          hintStyle: const TextStyle(
               fontSize: 15
           ),
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(6))
+          hintText: labelText,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(radius)
           ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 23)
         ),
         textInputAction: textInputAction,
         keyboardType: keyboardType,

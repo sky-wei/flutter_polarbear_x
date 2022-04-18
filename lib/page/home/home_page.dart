@@ -21,17 +21,13 @@ class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
+  State<StatefulWidget> createState() => _HomePageState();
 }
 
-class HomePageState extends State {
+class _HomePageState extends State {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw Text('AA');
+    return Text('AA');
   }
 }

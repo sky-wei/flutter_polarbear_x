@@ -20,31 +20,38 @@ class BigButtonWidget extends StatelessWidget {
 
   final VoidCallback? onPressed;
   final String text;
+  final TextStyle? textStyle;
+  final Size? size;
+  final Radius? radius;
 
   const BigButtonWidget({
     Key? key,
     required this.onPressed,
-    required this.text
+    required this.text,
+    this.textStyle,
+    this.size,
+    this.radius
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    final size = this.size ?? const Size(double.infinity, 55);
+    final textStyle = this.textStyle ?? const TextStyle(
+      // fontFamily: 'hwxw',
+      fontSize: 16
+    );
+    final radius = this.radius ?? const Radius.circular(6);
+
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        minimumSize: MaterialStateProperty.all(
-            const Size(280, 55)
-        ),
-        textStyle: MaterialStateProperty.all(
-            const TextStyle(
-                // fontFamily: 'hwxw',
-                fontSize: 16
-            )
-        ),
+        minimumSize: MaterialStateProperty.all(size),
+        textStyle: MaterialStateProperty.all(textStyle),
         elevation: MaterialStateProperty.all(0),
         shape: MaterialStateProperty.all(
-          const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(6))
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(radius)
           )
         )
       ),

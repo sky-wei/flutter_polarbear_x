@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/page/launcher/register_widget.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
@@ -44,7 +42,7 @@ class _LauncherPageState extends State<LauncherPage> {
           ConstrainedBox(
             constraints: const BoxConstraints.expand(),
             child: Image.asset(
-              'assets/image/wallhavenx.png',
+              'assets/image/launcher_background.jpg',
               fit: BoxFit.cover,
             ),
           ),
@@ -68,7 +66,7 @@ class _LauncherPageState extends State<LauncherPage> {
             ),
             child: SizedBox(
               width: 380,
-              // height: 470,
+              height: 470,
               child: _buildLauncherWidget(),
             ),
           )
@@ -80,54 +78,54 @@ class _LauncherPageState extends State<LauncherPage> {
   Widget _buildLauncherWidget() {
     return Padding(
       padding: const EdgeInsets.only(
-          left: 20, top: 40, right: 20, bottom: 30
+          left: 55, top: 40, right: 55, bottom: 0
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const BigTitleWidget(
-            title: 'PasswordX'
-          ),
+          const BigTitleWidget('PasswordX'),
           XBox.vertical40,
-          _tabSwitchWidget(
+          _buildTabBarWidget(
             index: _currentIndex,
-            onValueChanged: (index) => setState(() {
-              _currentIndex = index;
-            })
+            onValueChanged: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            }
           ),
           XBox.vertical30,
           Expanded(
             flex: 0,
-            child: _buildTabContent()
+            child: _buildTabView()
           )
         ],
       ),
     );
   }
 
-  Widget _buildTabContent() {
+  Widget _buildTabView() {
     if (_currentIndex == 0) {
       return const LoginWidget();
     }
     return const RegisterWidget();
   }
 
-  Widget _tabSwitchWidget({
+  Widget _buildTabBarWidget({
     required int index,
     required ValueChanged onValueChanged
   }) {
     return SizedBox(
-      width: 270,
+      width: double.infinity,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _tabTextButton(
+          _buildTabTextButton(
             text: 'Login',
             select: index == 0,
             onPressed: () => onValueChanged(0)
           ),
           XBox.horizontal10,
-          _tabTextButton(
+          _buildTabTextButton(
             text: 'Sign Up',
             select: index == 1,
             onPressed: () => onValueChanged(1)
@@ -137,21 +135,21 @@ class _LauncherPageState extends State<LauncherPage> {
     );
   }
 
-  Widget _tabTextButton({
+  Widget _buildTabTextButton({
     required String text,
     required bool select,
     VoidCallback? onPressed
   }) {
     return TextButton(
-        onPressed: onPressed,
-        child: Text(
-          text,
-          style: TextStyle(
-              fontSize: 16,
-              fontWeight: select ? FontWeight.bold : FontWeight.normal,
-              color: Theme.of(context).colorScheme.onSurface
-          ),
-        )
+      onPressed: onPressed,
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: select ? FontWeight.bold : FontWeight.normal,
+          color: Theme.of(context).colorScheme.onSurface
+        ),
+      )
     );
   }
 }

@@ -19,20 +19,24 @@ import 'package:flutter/cupertino.dart';
 class BigTitleWidget extends StatelessWidget {
 
   final String title;
+  final TextStyle? style;
 
-  const BigTitleWidget({
+  const BigTitleWidget(this.title, {
     Key? key,
-    required this.title
+    this.style
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    
+    final style = this.style ?? const TextStyle(
+        fontSize: 30,
+        fontWeight: FontWeight.bold
+    );
+    
     return Text(
       title,
-      style: const TextStyle(
-          fontSize: 30,
-          fontWeight: FontWeight.bold
-      ),
+      style: style,
     );
   }
 }

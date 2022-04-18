@@ -16,21 +16,25 @@
 
 import 'package:flutter/material.dart';
 
-import 'color.dart';
+class SlideAnimateWidget extends AnimatedBuilder {
 
-class XTheme {
+  SlideAnimateWidget({Key? key,
+    required Animation<double> animation,
+    Widget? child
+  }) : super(key: key, animation: animation, builder: (context, child) {
 
-  XTheme._();
+    final curvedAnimation = CurvedAnimation(
+        parent: animation, curve: Curves.easeOut
+    );
+    final tween = Tween<Offset>(
+      begin: const Offset(1.0, 0.0),
+      end: const Offset(0.0, 0.0)
+    ).animate(curvedAnimation);
 
-  static ThemeData lightTheme() => ThemeData(
-    primarySwatch: XColor.red,
-    backgroundColor: XColor.backgroundColor,
-  );
-
-  static ThemeData darkTheme() => ThemeData(
-    brightness: Brightness.dark,
-    primarySwatch: XColor.red,
-    backgroundColor: const Color(0xFF101010),
-  );
+    return SlideTransition(
+      position: tween,
+      child: child,
+    );
+  }, child: child);
 }
 
