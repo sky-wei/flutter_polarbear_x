@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  bitsdojo_window_linux
   file_selector_linux
   objectbox_flutter_libs
   url_launcher_linux

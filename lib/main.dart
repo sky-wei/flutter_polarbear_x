@@ -1,3 +1,4 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_polarbear_x/page/home/home_page.dart';
@@ -12,9 +13,19 @@ import 'model/app_model.dart';
 
 void main() {
   runApp(const PolarBearX());
+  doWhenWindowReady(() {
+    final win = appWindow;
+    const initialSize = Size(1560, 1000);
+    win.minSize = initialSize;
+    win.size = initialSize;
+    win.alignment = Alignment.center;
+    win.title = 'PasswordX';
+    win.show();
+  });
 }
 
 class PolarBearX extends StatelessWidget {
+
   const PolarBearX({Key? key}) : super(key: key);
 
   // This widget is the root of your application.

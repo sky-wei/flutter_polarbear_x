@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/page/launcher/register_widget.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
@@ -36,41 +37,55 @@ class _LauncherPageState extends State<LauncherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        alignment: AlignmentDirectional.center,
-        children: [
-          ConstrainedBox(
-            constraints: const BoxConstraints.expand(),
-            child: Image.asset(
-              'assets/image/launcher_background.jpg',
-              fit: BoxFit.cover,
+      body: WindowBorder(
+        color: Theme.of(context).backgroundColor,
+        child: Stack(
+          alignment: AlignmentDirectional.center,
+          children: [
+            ConstrainedBox(
+              constraints: const BoxConstraints.expand(),
+              child: Image.asset(
+                'assets/image/launcher_background.jpg',
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          // const DecoratedBox(
-          //   decoration: BoxDecoration(
-          //     gradient: LinearGradient(
-          //       begin: Alignment.topRight,
-          //       end: Alignment.bottomLeft,
-          //       colors: [Color(0xFFfed6e3), Color(0xFFa8edea)],
-          //     )
-          //   ),
-          //   child: SizedBox(
-          //     width: double.infinity,
-          //     height: double.infinity,
-          //   ),
-          // ),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: Theme.of(context).backgroundColor,
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            // const DecoratedBox(
+            //   decoration: BoxDecoration(
+            //     gradient: LinearGradient(
+            //       begin: Alignment.topRight,
+            //       end: Alignment.bottomLeft,
+            //       colors: [Color(0xFFfed6e3), Color(0xFFa8edea)],
+            //     )
+            //   ),
+            //   child: SizedBox(
+            //     width: double.infinity,
+            //     height: double.infinity,
+            //   ),
+            // ),
+            Align(
+              alignment: Alignment.topRight,
+              child: WindowTitleBarBox(
+                child: Row(
+                  children: [
+                    Expanded(child: MoveWindow()),
+                    WindowButtons()
+                  ],
+                ),
+              ),
             ),
-            child: SizedBox(
-              width: 380,
-              height: 470,
-              child: _buildLauncherWidget(),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: Theme.of(context).backgroundColor,
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+              ),
+              child: SizedBox(
+                width: 370,
+                height: 470,
+                child: _buildLauncherWidget(),
+              ),
             ),
-          )
-        ],
+          ],
+        )
       )
     );
   }
@@ -150,6 +165,23 @@ class _LauncherPageState extends State<LauncherPage> {
           color: Theme.of(context).colorScheme.onSurface
         ),
       )
+    );
+  }
+}
+
+
+class WindowButtons extends StatelessWidget {
+
+  const WindowButtons({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        MinimizeWindowButton(),
+        MaximizeWindowButton(),
+        CloseWindowButton(),
+      ],
     );
   }
 }

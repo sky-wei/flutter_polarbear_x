@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import 'package:flutter/cupertino.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter/material.dart';
+
+import '../launcher/launcher_page.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -28,6 +31,27 @@ class _HomePageState extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Text('AA');
+    return Scaffold(
+      body: WindowBorder(
+        color: Theme.of(context).backgroundColor,
+        child: Column(
+          children: [
+            WindowTitleBarBox(
+              child: Row(
+                children: [
+                  Expanded(child: MoveWindow()),
+                  const WindowButtons()
+                ],
+              ),
+            ),
+            Expanded(child: _buildFrame())
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFrame() {
+    return Text('AAA');
   }
 }
