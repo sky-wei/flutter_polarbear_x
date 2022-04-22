@@ -20,6 +20,7 @@ import 'package:flutter_polarbear_x/page/launcher/register_widget.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 
 import '../../widget/big_title_widget.dart';
+import '../../widget/head_logo_widget.dart';
 import 'login_widget.dart';
 
 class LauncherPage extends StatefulWidget {
@@ -70,6 +71,10 @@ class _LauncherPageState extends State<LauncherPage> {
                 ],
               ),
             ),
+          ),
+          const Align(
+            alignment: Alignment.topLeft,
+            child: HeadLogoWidget(),
           ),
           DecoratedBox(
             decoration: BoxDecoration(

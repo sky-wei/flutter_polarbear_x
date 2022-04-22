@@ -37,6 +37,7 @@ class _HomePageState extends State {
     return Scaffold(
       body: Stack(
         children: [
+          _buildHomeFrame(),
           WindowTitleBarBox(
             child: Row(
               children: [
@@ -44,8 +45,7 @@ class _HomePageState extends State {
                 const WindowButtons()
               ],
             ),
-          ),
-          _buildHomeFrame()
+          )
         ],
       ),
     );

@@ -15,9 +15,11 @@
  */
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
+
+import '../../widget/head_logo_widget.dart';
+import 'home_user_info.dart';
 
 class HomeSide extends StatefulWidget {
 
@@ -31,13 +33,25 @@ class _HomeSideState extends State<HomeSide> {
   
   @override
   Widget build(BuildContext context) {
+
+    // Theme.of(context).copyWith()
+
     return Container(
       color: const Color(0xFF222530),
-      constraints: const BoxConstraints.expand(width: 300),
-      padding: EdgeInsets.only(top: appWindow.titleBarHeight),
+      // color: Theme.of(context).backgroundColor,
+      constraints: const BoxConstraints.expand(width: 260),
+      child: DefaultTextStyle(
+        style: const TextStyle(
+          color: XColor.white
+        ),
+        child: Column(
+          children: const [
+            HeadLogoWidget(),
+            HomeUserInfoWidget(),
+          ],
+        ),
+      ),
     );
   }
-
-  // 0xFFF3F6F9
 }
 
