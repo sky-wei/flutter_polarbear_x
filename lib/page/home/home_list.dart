@@ -14,18 +14,28 @@
  * limitations under the License.
  */
 
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/theme/color.dart';
 
-class LeftSide extends StatefulWidget {
+class HomeList extends StatefulWidget {
 
-  const LeftSide({Key? key}) : super(key: key);
+  const HomeList({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
+  State<StatefulWidget> createState() => _HomeListState();
+}
+
+class _HomeListState extends State<HomeList> {
+  
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xFFF3F6F9),
+      constraints: const BoxConstraints.expand(width: 400),
+      padding: EdgeInsets.only(top: appWindow.titleBarHeight),
+    );
   }
-
-
 }
 

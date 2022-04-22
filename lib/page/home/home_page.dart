@@ -16,8 +16,11 @@
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/page/home/home_content.dart';
+import 'package:flutter_polarbear_x/page/home/home_side.dart';
 
 import '../launcher/launcher_page.dart';
+import 'home_list.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -32,26 +35,29 @@ class _HomePageState extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: WindowBorder(
-        color: Theme.of(context).backgroundColor,
-        child: Column(
-          children: [
-            WindowTitleBarBox(
-              child: Row(
-                children: [
-                  Expanded(child: MoveWindow()),
-                  const WindowButtons()
-                ],
-              ),
+      body: Stack(
+        children: [
+          WindowTitleBarBox(
+            child: Row(
+              children: [
+                Expanded(child: MoveWindow()),
+                const WindowButtons()
+              ],
             ),
-            Expanded(child: _buildFrame())
-          ],
-        ),
+          ),
+          _buildHomeFrame()
+        ],
       ),
     );
   }
 
-  Widget _buildFrame() {
-    return Text('AAA');
+  Widget _buildHomeFrame() {
+    return Row(
+      children: const [
+        HomeSide(),
+        HomeList(),
+        Expanded(child: HomeContent())
+      ],
+    );
   }
 }

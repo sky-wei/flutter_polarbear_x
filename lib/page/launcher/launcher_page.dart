@@ -37,55 +37,52 @@ class _LauncherPageState extends State<LauncherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: WindowBorder(
-        color: Theme.of(context).backgroundColor,
-        child: Stack(
-          alignment: AlignmentDirectional.center,
-          children: [
-            ConstrainedBox(
-              constraints: const BoxConstraints.expand(),
-              child: Image.asset(
-                'assets/image/launcher_background.jpg',
-                fit: BoxFit.cover,
+      body: Stack(
+        alignment: AlignmentDirectional.center,
+        children: [
+          ConstrainedBox(
+            constraints: const BoxConstraints.expand(),
+            child: Image.asset(
+              'assets/image/launcher_background.jpg',
+              fit: BoxFit.cover,
+            ),
+          ),
+          // const DecoratedBox(
+          //   decoration: BoxDecoration(
+          //     gradient: LinearGradient(
+          //       begin: Alignment.topRight,
+          //       end: Alignment.bottomLeft,
+          //       colors: [Color(0xFFfed6e3), Color(0xFFa8edea)],
+          //     )
+          //   ),
+          //   child: SizedBox(
+          //     width: double.infinity,
+          //     height: double.infinity,
+          //   ),
+          // ),
+          Align(
+            alignment: Alignment.topRight,
+            child: WindowTitleBarBox(
+              child: Row(
+                children: [
+                  Expanded(child: MoveWindow()),
+                  const WindowButtons()
+                ],
               ),
             ),
-            // const DecoratedBox(
-            //   decoration: BoxDecoration(
-            //     gradient: LinearGradient(
-            //       begin: Alignment.topRight,
-            //       end: Alignment.bottomLeft,
-            //       colors: [Color(0xFFfed6e3), Color(0xFFa8edea)],
-            //     )
-            //   ),
-            //   child: SizedBox(
-            //     width: double.infinity,
-            //     height: double.infinity,
-            //   ),
-            // ),
-            Align(
-              alignment: Alignment.topRight,
-              child: WindowTitleBarBox(
-                child: Row(
-                  children: [
-                    Expanded(child: MoveWindow()),
-                    WindowButtons()
-                  ],
-                ),
-              ),
+          ),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: Theme.of(context).backgroundColor,
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
             ),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: Theme.of(context).backgroundColor,
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-              ),
-              child: SizedBox(
-                width: 370,
-                height: 470,
-                child: _buildLauncherWidget(),
-              ),
+            child: SizedBox(
+              width: 370,
+              height: 470,
+              child: _buildLauncherWidget(),
             ),
-          ],
-        )
+          ),
+        ],
       )
     );
   }
@@ -96,7 +93,6 @@ class _LauncherPageState extends State<LauncherPage> {
           left: 55, top: 40, right: 55, bottom: 0
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
           const BigTitleWidget('PasswordX'),
           XBox.vertical40,
@@ -109,10 +105,7 @@ class _LauncherPageState extends State<LauncherPage> {
             }
           ),
           XBox.vertical30,
-          Expanded(
-            flex: 0,
-            child: _buildTabView()
-          )
+          _buildTabView()
         ],
       ),
     );
@@ -129,24 +122,21 @@ class _LauncherPageState extends State<LauncherPage> {
     required int index,
     required ValueChanged onValueChanged
   }) {
-    return SizedBox(
-      width: double.infinity,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildTabTextButton(
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        _buildTabTextButton(
             text: 'Login',
             select: index == 0,
             onPressed: () => onValueChanged(0)
-          ),
-          XBox.horizontal10,
-          _buildTabTextButton(
+        ),
+        XBox.horizontal10,
+        _buildTabTextButton(
             text: 'Sign Up',
             select: index == 1,
             onPressed: () => onValueChanged(1)
-          )
-        ],
-      ),
+        )
+      ],
     );
   }
 
