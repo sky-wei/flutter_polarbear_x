@@ -60,14 +60,14 @@ class _HomeUserInfoState extends State<HomeUserInfoWidget> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          color: XColor.white
+                          color: XColor.sideTextColor
                       ),
                     ),
                   ),
                   XBox.horizontal15,
                   SvgPicture.asset(
                     'assets/svg/ic_settings.svg',
-                    color: XColor.grayColor,
+                    color: XColor.gray2Color,
                     width: 20,
                   )
                 ],

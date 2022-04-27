@@ -15,6 +15,7 @@
  */
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_polarbear_x/theme/color.dart';
 
 import '../generated/l10n.dart';
 import '../util/size_box_util.dart';
@@ -36,7 +37,12 @@ class HeadLogoWidget extends StatelessWidget {
             height: 22,
           ),
           XBox.horizontal5,
-          Text(S.of(context).appName)
+          Text(
+            S.of(context).appName,
+            style: const TextStyle(
+              color: XColor.sideTextColor
+            ),
+          )
         ],
       ),
     );
