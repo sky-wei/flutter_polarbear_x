@@ -36,6 +36,8 @@ class XColor {
 
   static const Color sideTextColor = Color(0xFFC7C7C7);
 
+  static const Color sideChooseColor = Color(0x66757575);
+
   static const Color themeColor = Color(_redPrimaryValue);
 
 

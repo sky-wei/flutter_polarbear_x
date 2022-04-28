@@ -42,6 +42,8 @@ class _HomeUserInfoState extends State<HomeUserInfoWidget> {
           ),
           child: InkWell(
             borderRadius: BorderRadius.circular(6),
+            splashColor: XColor.sideChooseColor,
+            highlightColor: XColor.sideChooseColor,
             onTap: () { },
             child: Padding(
               padding: const EdgeInsets.all(10),
