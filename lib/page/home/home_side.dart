@@ -16,7 +16,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../model/side_item.dart';
@@ -38,11 +37,19 @@ class HomeSide extends StatefulWidget {
 
 class _HomeSideState extends State<HomeSide> {
 
-  final Map<String, SideItem> _sideMap = {
-    'Favorites': SideItem(name: 'Favorites', icon: 'assets/svg/ic_favorites.svg'),
-    'AllItems': SideItem(name: 'All Items', icon: 'assets/svg/ic_all_items.svg'),
-    'Trash': SideItem(name: 'Trash', icon: 'assets/svg/ic_trash.svg'),
-  };
+  final List<SideItem> _fixed = [
+    SideItem(name: 'Favorites', icon: 'assets/svg/ic_favorites.svg'),
+    SideItem(name: 'All Items', icon: 'assets/svg/ic_all_items.svg'),
+    SideItem(name: 'Trash', icon: 'assets/svg/ic_trash.svg'),
+  ];
+
+  final List<SideItem> _folders = [
+    SideItem(icon: 'assets/svg/ic_folder.svg', name: 'Demo1'),
+    SideItem(icon: 'assets/svg/ic_folder.svg', name: 'Demo2'),
+    SideItem(icon: 'assets/svg/ic_folder.svg', name: 'Demo3'),
+    SideItem(icon: 'assets/svg/ic_folder.svg', name: 'Demo4'),
+    SideItem(icon: 'assets/svg/ic_folder.svg', name: 'Demo5'),
+  ];
   
   SideItem? _curSideItem;
 
@@ -50,7 +57,7 @@ class _HomeSideState extends State<HomeSide> {
   @override
   void initState() {
     super.initState();
-    _curSideItem = _sideMap['AllItems'];
+    _curSideItem = _fixed[1];
   }
 
   @override
@@ -68,60 +75,41 @@ class _HomeSideState extends State<HomeSide> {
         ),
         child: Column(
           children: [
-            HeadLogoWidget(),
-            HomeUserInfoWidget(),
-            XBox.vertical10,
-            SideItemWidget(
-              item: _sideMap['Favorites']!,
-              onChoose: _isChooseItem,
-              onPressed: _chooseHandler,
-            ),
+            const HeadLogoWidget(),
+            const HomeUserInfoWidget(),
             XBox.vertical5,
-            SideItemWidget(
-              item: _sideMap['AllItems']!,
-              onChoose: _isChooseItem,
-              onPressed: _chooseHandler,
-            ),
-            XBox.vertical5,
-            SideItemWidget(
-              item: _sideMap['Trash']!,
-              onChoose: _isChooseItem,
-              onPressed: _chooseHandler,
-            ),
+            for (var item in _fixed)
+              SideItemWidget(
+                item: item,
+                onChoose: _isChooseItem,
+                onPressed: _chooseHandler,
+              ),
             XBox.vertical10,
             SideFolderWidget(
               name: "Folders",
+              onPressed: () {
+                
+              },
             ),
-            XBox.vertical5,
-            SideItemWidget(
-              item: SideItem(
-                icon: 'assets/svg/ic_folder.svg',
-                name: 'Demo1'
-              ),
-              onChoose: _isChooseItem,
-              onPressed: _chooseHandler,
-            ),
-            XBox.vertical5,
-            SideItemWidget(
-              item: SideItem(
-                  icon: 'assets/svg/ic_folder.svg',
-                  name: 'Demo2'
-              ),
-              onChoose: _isChooseItem,
-              onPressed: _chooseHandler,
-            ),
-            XBox.vertical5,
-            SideItemWidget(
-              item: SideItem(
-                  icon: 'assets/svg/ic_folder.svg',
-                  name: 'Demo3'
-              ),
-              onChoose: _isChooseItem,
-              onPressed: _chooseHandler,
-            ),
+            Expanded(
+              child: _buildFolderList()
+            )
           ],
         ),
       ),
+    );
+  }
+  
+  Widget _buildFolderList() {
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        return SideItemWidget(
+          item: _folders[index],
+          onChoose: _isChooseItem,
+          onPressed: _chooseHandler,
+        );
+      },
+      itemCount: _folders.length,
     );
   }
   
@@ -139,12 +127,14 @@ class SideItemWidget extends StatelessWidget {
   final SideItem item;
   final ChooseItem<SideItem> onChoose;
   final ValueChanged<SideItem>? onPressed;
+  final EdgeInsetsGeometry? padding;
 
   const SideItemWidget({
     Key? key,
     required this.item,
     required this.onChoose,
-    this.onPressed
+    this.onPressed,
+    this.padding
   }) : super(key: key);
 
   @override
@@ -153,7 +143,7 @@ class SideItemWidget extends StatelessWidget {
     final choose = onChoose(item);
 
     return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
+      padding: padding?? const EdgeInsets.only(left: 10, top: 5, right: 10),
       child: Material(
         color: XColor.transparent,
         child: Ink(
@@ -164,6 +154,7 @@ class SideItemWidget extends StatelessWidget {
           child: InkWell(
             splashColor: XColor.sideChooseColor,
             highlightColor: XColor.sideChooseColor,
+            enableFeedback: false,
             borderRadius: BorderRadius.circular(6),
             onTap: () { if (onPressed != null) onPressed!(item); },
             child: Padding(
@@ -200,10 +191,12 @@ class SideItemWidget extends StatelessWidget {
 class SideFolderWidget extends StatelessWidget {
 
   final String name;
+  final VoidCallback? onPressed;
 
   const SideFolderWidget({
     Key? key,
-    required this.name
+    required this.name,
+    this.onPressed
   }) : super(key: key);
 
   @override
@@ -222,7 +215,7 @@ class SideFolderWidget extends StatelessWidget {
             )
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: onPressed,
             icon: SvgPicture.asset(
               'assets/svg/ic_add.svg',
               color: XColor.sideTextColor,
