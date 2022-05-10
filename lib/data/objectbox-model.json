@@ -1,0 +1,154 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:7243920561383345351",
+      "lastPropertyId": "12:2316121011874826872",
+      "name": "AccountEntity",
+      "properties": [
+        {
+          "id": "1:6618971053497472697",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:7499360944018734015",
+          "name": "adminId",
+          "type": 6
+        },
+        {
+          "id": "3:7498129903544109014",
+          "name": "alias",
+          "type": 9
+        },
+        {
+          "id": "4:8451152365234876964",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "5:3443911853882744166",
+          "name": "password",
+          "type": 9
+        },
+        {
+          "id": "6:7204257963088120383",
+          "name": "url",
+          "type": 9
+        },
+        {
+          "id": "7:735216984544301895",
+          "name": "node",
+          "type": 9
+        },
+        {
+          "id": "8:5607975824042696162",
+          "name": "folderId",
+          "type": 6
+        },
+        {
+          "id": "9:3522479104907954916",
+          "name": "favorite",
+          "type": 1
+        },
+        {
+          "id": "10:9215705905769326182",
+          "name": "trash",
+          "type": 1
+        },
+        {
+          "id": "11:6257958827909214274",
+          "name": "createTime",
+          "type": 6
+        },
+        {
+          "id": "12:2316121011874826872",
+          "name": "updateTime",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:7229556591746610788",
+      "lastPropertyId": "6:2741697708274369194",
+      "name": "AdminEntity",
+      "properties": [
+        {
+          "id": "1:303164366444706577",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:5495362310273198486",
+          "name": "name",
+          "type": 9,
+          "flags": 2080,
+          "indexId": "1:6214150832406744158"
+        },
+        {
+          "id": "3:1566734422845387504",
+          "name": "password",
+          "type": 9
+        },
+        {
+          "id": "4:3410483970049015189",
+          "name": "desc",
+          "type": 9
+        },
+        {
+          "id": "5:9172638734654771728",
+          "name": "createTime",
+          "type": 6
+        },
+        {
+          "id": "6:2741697708274369194",
+          "name": "updateTime",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:8350531745845790151",
+      "lastPropertyId": "3:7661035055685820640",
+      "name": "FolderEntity",
+      "properties": [
+        {
+          "id": "1:3060842957316074954",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:8675753262262574228",
+          "name": "name",
+          "type": 9,
+          "flags": 2080,
+          "indexId": "2:8578202736251352447"
+        },
+        {
+          "id": "3:7661035055685820640",
+          "name": "createTime",
+          "type": 6
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "3:8350531745845790151",
+  "lastIndexId": "2:8578202736251352447",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
