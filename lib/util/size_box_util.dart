@@ -22,6 +22,7 @@ class XBox {
 
   static final SizedBox vertical5 = vertical(5);
   static final SizedBox vertical10 = vertical(10);
+  static final SizedBox vertical15 = vertical(15);
   static final SizedBox vertical20 = vertical(20);
   static final SizedBox vertical30 = vertical(30);
   static final SizedBox vertical40 = vertical(40);

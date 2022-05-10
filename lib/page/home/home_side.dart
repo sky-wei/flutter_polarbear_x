@@ -66,7 +66,7 @@ class _HomeSideState extends State<HomeSide> {
     // Theme.of(context).copyWith()
 
     return Container(
-      color: const Color(0xFF1C1F28),
+      color: const Color(0xFF222530),
       // color: Theme.of(context).backgroundColor,
       constraints: const BoxConstraints.expand(width: 260),
       child: DefaultTextStyle(
@@ -88,7 +88,7 @@ class _HomeSideState extends State<HomeSide> {
             SideFolderWidget(
               name: "Folders",
               onPressed: () {
-                
+
               },
             ),
             Expanded(
@@ -209,7 +209,7 @@ class SideFolderWidget extends StatelessWidget {
             child: Text(
               name,
               style: const TextStyle(
-                color: XColor.gray2Color,
+                color: Color(0xFF97B9E8),
                 fontWeight: FontWeight.normal
               ),
             )

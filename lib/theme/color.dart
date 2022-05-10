@@ -34,9 +34,13 @@ class XColor {
 
   static const Color gray2Color = Color(0xFFBFBFBF);
 
-  static const Color sideTextColor = Color(0xFFC7C7C7);
+  static const Color sideTextColor = Color(0xFFB0C1D9);
 
-  static const Color sideChooseColor = Color(0x66757575);
+  static const Color sideChooseColor = Color(0xFF414B5E);
+
+  static const Color listChooseColor = Color(0xFFE7ECF3);
+
+  static const Color deleteColor = Color(0xFFF63061);
 
   static const Color themeColor = Color(_redPrimaryValue);
 

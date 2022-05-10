@@ -15,7 +15,7 @@ void main() {
   runApp(const PolarBearX());
   doWhenWindowReady(() {
     final win = appWindow;
-    const initialSize = Size(1560, 1000);
+    const initialSize = Size(1500, 1000);
     win.minSize = initialSize;
     win.size = initialSize;
     win.alignment = Alignment.center;
