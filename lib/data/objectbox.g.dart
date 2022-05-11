@@ -132,7 +132,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(3, 8350531745845790151),
       name: 'FolderEntity',
-      lastPropertyId: const IdUid(3, 7661035055685820640),
+      lastPropertyId: const IdUid(4, 7970571712746313481),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -149,6 +149,11 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(3, 7661035055685820640),
             name: 'createTime',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 7970571712746313481),
+            name: 'adminId',
             type: 6,
             flags: 0)
       ],
@@ -299,10 +304,11 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (FolderEntity object, fb.Builder fbb) {
           final nameOffset = fbb.writeString(object.name);
-          fbb.startTable(4);
+          fbb.startTable(5);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
           fbb.addInt64(2, object.createTime);
+          fbb.addInt64(3, object.adminId);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -312,6 +318,8 @@ ModelDefinition getObjectBoxModel() {
 
           final object = FolderEntity(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              adminId:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0),
               name: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 6, ''),
               createTime:
@@ -415,4 +423,8 @@ class FolderEntity_ {
   /// see [FolderEntity.createTime]
   static final createTime =
       QueryIntegerProperty<FolderEntity>(_entities[2].properties[2]);
+
+  /// see [FolderEntity.adminId]
+  static final adminId =
+      QueryIntegerProperty<FolderEntity>(_entities[2].properties[3]);
 }

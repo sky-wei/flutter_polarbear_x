@@ -24,23 +24,22 @@ class ErrorUtil {
   ErrorUtil._();
 
   static String getMessage(BuildContext context, Object? error) {
-    // if (error is DataException) {
-    //   switch(error.type) {
-    //     case ErrorType.adminExist:
-    //       return S.of(context).accountExists;
-    //     case ErrorType.nameOrPasswordError:
-    //       return S.of(context).accountPasswordError;
-    //     case ErrorType.updateError:
-    //       return S.of(context).updateInfoError;
-    //     case ErrorType.other:
-    //       return S.of(context).handlerError;
-    //     case ErrorType.deleteError:
-    //       return S.of(context).deleteInfoError;
-    //     case ErrorType.passwordError:
-    //       return S.of(context).passwordError;
-    //   }
-    // }
-    // return S.of(context).handlerError;
-    return "";
+    if (error is DataException) {
+      switch(error.type) {
+        case ErrorType.adminExist:
+          return S.of(context).accountExists;
+        case ErrorType.nameOrPasswordError:
+          return S.of(context).accountPasswordError;
+        case ErrorType.updateError:
+          return S.of(context).updateInfoError;
+        case ErrorType.other:
+          return S.of(context).handlerError;
+        case ErrorType.deleteError:
+          return S.of(context).deleteInfoError;
+        case ErrorType.passwordError:
+          return S.of(context).passwordError;
+      }
+    }
+    return S.of(context).handlerError;
   }
 }

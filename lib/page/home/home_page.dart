@@ -16,11 +16,14 @@
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_polarbear_x/page/home/home_content.dart';
-import 'package:flutter_polarbear_x/page/home/home_side.dart';
+import 'package:provider/provider.dart';
 
-import '../launcher/launcher_page.dart';
+import '../../model/app_model.dart';
+import '../../util/log_util.dart';
+import '../../widget/window_buttons.dart';
+import 'home_content.dart';
 import 'home_list.dart';
+import 'home_side.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -31,6 +34,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State {
+
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<AppModel>().initialize().then((value) {
+      XLog.d('初始化成功！');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

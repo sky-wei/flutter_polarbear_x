@@ -70,7 +70,7 @@ class AdminItem {
 
   @override
   String toString() {
-    return 'AdminItem{id: $id, name: $name, password: $password, desc: $desc, createTime: $createTime}, updateTime: $updateTime}';
+    return 'AdminItem{id: $id, name: $name, password: $password, desc: $desc, createTime: $createTime, updateTime: $updateTime}';
   }
 }
 

@@ -17,11 +17,13 @@
 class FolderItem {
 
   final int id;
+  int adminId;
   final String name;
   final int createTime;
 
   FolderItem({
     this.id = 0,
+    required this.adminId,
     required this.name,
     this.createTime = 0
   });

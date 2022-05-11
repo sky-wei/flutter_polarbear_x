@@ -1,4 +1,19 @@
 {
   "appName": "PasswordX",
-  "search": "Search"
+  "search": "Search",
+  "login": "Login",
+  "signUp": "Sign Up",
+  "name": "Name",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "forgetPassword": "Forget Password?",
+  "accountExists": "Account already exists!",
+  "accountPasswordError": "Incorrect username or password!",
+  "updateInfoError": "Update error!",
+  "handlerError": "Handling exceptions!",
+  "deleteInfoError": "Delete error!",
+  "passwordError": "Wrong password!",
+  "notSupport": "Not currently supported!",
+  "passwordNotMatch": "Password does not match!",
+  "end": "End"
 }

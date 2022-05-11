@@ -16,8 +16,13 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_polarbear_x/widget/fade_animate_widget.dart';
+import 'package:provider/provider.dart';
 
+import '../../generated/l10n.dart';
+import '../../model/app_model.dart';
 import '../../route.dart';
+import '../../util/error_util.dart';
+import '../../util/message_util.dart';
 import '../../widget/big_button_widget.dart';
 import '../../widget/big_input_widget.dart';
 
@@ -70,23 +75,22 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
           BigInputWidget(
             controller: _nameController,
             iconName: 'ic_user.svg',
-            labelText: 'Name',
+            labelText: S.of(context).name,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 15),
           BigInputWidget(
             controller: _passwordController,
             iconName: 'ic_password.svg',
-            labelText: 'Password',
+            labelText: S.of(context).password,
             obscureText: true,
             textInputAction: TextInputAction.next,
-            // onFieldSubmitted: (value) => _login(),
           ),
           const SizedBox(height: 15),
           BigInputWidget(
             controller: _confirmPasswordController,
             iconName: 'ic_password.svg',
-            labelText: 'Confirm Password',
+            labelText: S.of(context).confirmPassword,
             obscureText: true,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (value) {
@@ -96,7 +100,7 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
           const SizedBox(height: 40),
           BigButtonWidget(
             onPressed: _enableView ? _register : null,
-            text: 'Sign Up',
+            text: S.of(context).signUp,
           ),
           // const SizedBox(height: 20),
         ],
@@ -104,6 +108,7 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
     );
   }
 
+  /// 刷新控件状态
   void _refreshViewState() {
     final name = _nameController.text;
     final password = _passwordController.text;
@@ -111,13 +116,33 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
     _setViewState(name.isNotEmpty && password.isNotEmpty && confirmPassword.isNotEmpty);
   }
 
+  /// 设置状态
   void _setViewState(bool enable) {
     if (_enableView != enable) {
       setState(() { _enableView = enable; });
     }
   }
 
+  /// 注册
   void _register() {
-    Navigator.pushReplacementNamed(context, XRoute.home);
+
+    var name = _nameController.text;
+    var password = _passwordController.text;
+    var confirmPassword = _confirmPasswordController.text;
+
+    if (password != confirmPassword) {
+      MessageUtil.showMessage(context, S.of(context).passwordNotMatch);
+      return;
+    }
+
+    var appModel = context.read<AppModel>();
+
+    appModel.createAdmin(
+        name: name, password: password
+    ).then((value) {
+      Navigator.pushReplacementNamed(context, XRoute.home);
+    }).onError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+    });
   }
 }

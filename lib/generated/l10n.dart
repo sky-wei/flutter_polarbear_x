@@ -69,6 +69,156 @@ class S {
       args: [],
     );
   }
+
+  /// `Login`
+  String get login {
+    return Intl.message(
+      'Login',
+      name: 'login',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign Up`
+  String get signUp {
+    return Intl.message(
+      'Sign Up',
+      name: 'signUp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name`
+  String get name {
+    return Intl.message(
+      'Name',
+      name: 'name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password`
+  String get password {
+    return Intl.message(
+      'Password',
+      name: 'password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm Password`
+  String get confirmPassword {
+    return Intl.message(
+      'Confirm Password',
+      name: 'confirmPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Forget Password?`
+  String get forgetPassword {
+    return Intl.message(
+      'Forget Password?',
+      name: 'forgetPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account already exists!`
+  String get accountExists {
+    return Intl.message(
+      'Account already exists!',
+      name: 'accountExists',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Incorrect username or password!`
+  String get accountPasswordError {
+    return Intl.message(
+      'Incorrect username or password!',
+      name: 'accountPasswordError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update error!`
+  String get updateInfoError {
+    return Intl.message(
+      'Update error!',
+      name: 'updateInfoError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Handling exceptions!`
+  String get handlerError {
+    return Intl.message(
+      'Handling exceptions!',
+      name: 'handlerError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete error!`
+  String get deleteInfoError {
+    return Intl.message(
+      'Delete error!',
+      name: 'deleteInfoError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wrong password!`
+  String get passwordError {
+    return Intl.message(
+      'Wrong password!',
+      name: 'passwordError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not currently supported!`
+  String get notSupport {
+    return Intl.message(
+      'Not currently supported!',
+      name: 'notSupport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password does not match!`
+  String get passwordNotMatch {
+    return Intl.message(
+      'Password does not match!',
+      name: 'passwordNotMatch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End`
+  String get end {
+    return Intl.message(
+      'End',
+      name: 'end',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -28,6 +28,7 @@ class FolderMapper {
   static FolderItem transformEntity(FolderEntity entity) {
     return FolderItem(
         id: entity.id,
+        adminId: entity.adminId,
         name: entity.name,
         createTime: entity.createTime,
     );
@@ -40,6 +41,7 @@ class FolderMapper {
   static FolderEntity transformItem(FolderItem item) {
     return FolderEntity(
         id: item.id,
+        adminId: item.adminId,
         name: item.name,
         createTime: item.createTime,
     );

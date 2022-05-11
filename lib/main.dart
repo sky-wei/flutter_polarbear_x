@@ -44,7 +44,7 @@ class PolarBearX extends StatelessWidget {
           XRoute.splash: (BuildContext context) => const LauncherPage(),
           XRoute.home: (BuildContext context) => const HomePage(),
         },
-        initialRoute: XRoute.home,
+        initialRoute: XRoute.splash,
         localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,

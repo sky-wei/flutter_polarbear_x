@@ -18,7 +18,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/route.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/fade_animate_widget.dart';
+import 'package:provider/provider.dart';
 
+import '../../generated/l10n.dart';
+import '../../model/app_model.dart';
+import '../../util/error_util.dart';
+import '../../util/message_util.dart';
 import '../../widget/big_button_widget.dart';
 import '../../widget/big_input_widget.dart';
 
@@ -67,14 +72,14 @@ class _LoginWidgetState extends State<LoginWidget> with SingleTickerProviderStat
           BigInputWidget(
             controller: _nameController,
             iconName: 'ic_user.svg',
-            labelText: 'Name',
+            labelText: S.of(context).name,
             textInputAction: TextInputAction.next,
           ),
-          const SizedBox(height: 15),
+          XBox.vertical15,
           BigInputWidget(
             controller: _passwordController,
             iconName: 'ic_password.svg',
-            labelText: 'Password',
+            labelText: S.of(context).password,
             obscureText: true,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (value) {
@@ -84,34 +89,41 @@ class _LoginWidgetState extends State<LoginWidget> with SingleTickerProviderStat
           XBox.vertical40,
           BigButtonWidget(
             onPressed: _enableView ? _login : null,
-            text: 'Login',
+            text: S.of(context).login,
           ),
           XBox.vertical20,
-          _buildTextButton('Forget Password?'),
+          _buildTextButton(
+            text: S.of(context).forgetPassword,
+            onPressed: () {
+              MessageUtil.showMessage(context, S.of(context).notSupport);
+            }
+          ),
         ],
       ),
     );
   }
 
+  /// 刷新控件状态
   void _refreshViewState() {
     final name = _nameController.text;
     final password = _passwordController.text;
     _setViewState(name.isNotEmpty && password.isNotEmpty);
   }
 
+  /// 设置状态
   void _setViewState(bool enable) {
     if (_enableView != enable) {
       setState(() { _enableView = enable; });
     }
   }
 
-  void _login() {
-    Navigator.pushReplacementNamed(context, XRoute.home);
-  }
-
-  Widget _buildTextButton(String text) {
+  /// 创建按钮
+  Widget _buildTextButton({
+    required String text,
+    required VoidCallback? onPressed,
+  }) {
     return TextButton(
-      onPressed: () {  },
+      onPressed: onPressed,
       child: Text(
         text,
         style: TextStyle(
@@ -121,5 +133,22 @@ class _LoginWidgetState extends State<LoginWidget> with SingleTickerProviderStat
         ),
       )
     );
+  }
+
+  /// 登录
+  void _login() {
+
+    var name = _nameController.text;
+    var password = _passwordController.text;
+
+    var appModel = context.read<AppModel>();
+
+    appModel.loginByAdmin(
+        name: name, password: password
+    ).then((value) {
+      Navigator.pushReplacementNamed(context, XRoute.home);
+    }).onError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+    });
   }
 }

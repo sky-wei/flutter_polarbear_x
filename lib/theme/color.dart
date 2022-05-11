@@ -42,6 +42,8 @@ class XColor {
 
   static const Color deleteColor = Color(0xFFF63061);
 
+  static const Color logoTextColor = Color(0xFFC1CAD7);
+
   static const Color themeColor = Color(_redPrimaryValue);
 
 

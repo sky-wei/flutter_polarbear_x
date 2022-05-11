@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../generated/l10n.dart';
 import '../../model/side_item.dart';
 import '../../util/size_box_util.dart';
 import '../../widget/head_logo_widget.dart';
@@ -75,7 +76,10 @@ class _HomeSideState extends State<HomeSide> {
         ),
         child: Column(
           children: [
-            const HeadLogoWidget(),
+            HeadLogoWidget(
+              logo: 'assets/image/ic_head_logo.png',
+              title: S.of(context).appName,
+            ),
             const HomeUserInfoWidget(),
             XBox.vertical5,
             for (var item in _fixed)

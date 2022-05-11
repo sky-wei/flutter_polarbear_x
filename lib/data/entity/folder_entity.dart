@@ -22,6 +22,8 @@ class FolderEntity {
   @Id(assignable: true)
   int id;
 
+  int adminId;
+
   @Unique()
   String name;
 
@@ -29,6 +31,7 @@ class FolderEntity {
 
   FolderEntity({
     this.id = 0,
+    required this.adminId,
     required this.name,
     this.createTime = 0,
   });

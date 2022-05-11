@@ -22,7 +22,31 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "accountExists":
+            MessageLookupByLibrary.simpleMessage("Account already exists!"),
+        "accountPasswordError": MessageLookupByLibrary.simpleMessage(
+            "Incorrect username or password!"),
         "appName": MessageLookupByLibrary.simpleMessage("PasswordX"),
-        "search": MessageLookupByLibrary.simpleMessage("Search")
+        "confirmPassword":
+            MessageLookupByLibrary.simpleMessage("Confirm Password"),
+        "deleteInfoError":
+            MessageLookupByLibrary.simpleMessage("Delete error!"),
+        "end": MessageLookupByLibrary.simpleMessage("End"),
+        "forgetPassword":
+            MessageLookupByLibrary.simpleMessage("Forget Password?"),
+        "handlerError":
+            MessageLookupByLibrary.simpleMessage("Handling exceptions!"),
+        "login": MessageLookupByLibrary.simpleMessage("Login"),
+        "name": MessageLookupByLibrary.simpleMessage("Name"),
+        "notSupport":
+            MessageLookupByLibrary.simpleMessage("Not currently supported!"),
+        "password": MessageLookupByLibrary.simpleMessage("Password"),
+        "passwordError":
+            MessageLookupByLibrary.simpleMessage("Wrong password!"),
+        "passwordNotMatch":
+            MessageLookupByLibrary.simpleMessage("Password does not match!"),
+        "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
+        "updateInfoError": MessageLookupByLibrary.simpleMessage("Update error!")
       };
 }

@@ -17,12 +17,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 
-import '../generated/l10n.dart';
 import '../util/size_box_util.dart';
 
 class HeadLogoWidget extends StatelessWidget {
 
-  const HeadLogoWidget({Key? key}) : super(key: key);
+  final String logo;
+  final Color? logoColor;
+  final String title;
+  final Color? titleColor;
+
+  const HeadLogoWidget({
+    Key? key,
+    required this.logo,
+    required this.title,
+    this.logoColor = XColor.themeColor,
+    this.titleColor = XColor.logoTextColor
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +42,15 @@ class HeadLogoWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           Image.asset(
-            'assets/image/ic_head_logo.png',
+            logo,
             width: 22,
-            height: 22,
+            color: logoColor,
           ),
           XBox.horizontal5,
           Text(
-            S.of(context).appName,
-            style: const TextStyle(
-              color: XColor.sideTextColor
+            title,
+            style: TextStyle(
+              color: titleColor
             ),
           )
         ],

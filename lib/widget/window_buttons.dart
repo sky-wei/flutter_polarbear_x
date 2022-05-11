@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_toastr/flutter_toastr.dart';
 
-class MessageUtil {
+class WindowButtons extends StatelessWidget {
 
-  MessageUtil._();
+  const WindowButtons({Key? key}) : super(key: key);
 
-  static showMessage(BuildContext context, String msg) {
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   SnackBar(content: Text(msg))
-    // );
-    FlutterToastr.show(msg, context);
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        MinimizeWindowButton(),
+        MaximizeWindowButton(),
+        CloseWindowButton(),
+      ],
+    );
   }
 }
-

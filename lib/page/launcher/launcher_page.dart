@@ -17,10 +17,17 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/page/launcher/register_widget.dart';
+import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
+import 'package:flutter_toastr/flutter_toastr.dart';
+import 'package:provider/provider.dart';
 
+import '../../generated/l10n.dart';
+import '../../model/app_model.dart';
+import '../../theme/color.dart';
 import '../../widget/big_title_widget.dart';
 import '../../widget/head_logo_widget.dart';
+import '../../widget/window_buttons.dart';
 import 'login_widget.dart';
 
 class LauncherPage extends StatefulWidget {
@@ -34,6 +41,15 @@ class LauncherPage extends StatefulWidget {
 class _LauncherPageState extends State<LauncherPage> {
 
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<AppModel>().initialize().then((value) {
+      XLog.d('初始化成功！');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,59 +79,58 @@ class _LauncherPageState extends State<LauncherPage> {
           // ),
           Align(
             alignment: Alignment.topRight,
-            child: WindowTitleBarBox(
-              child: Row(
-                children: [
-                  Expanded(child: MoveWindow()),
-                  const WindowButtons()
-                ],
-              ),
-            ),
+            child: _buildWindowTitleBar(),
           ),
-          const Align(
+          Align(
             alignment: Alignment.topLeft,
-            child: HeadLogoWidget(),
-          ),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: Theme.of(context).backgroundColor,
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-            ),
-            child: SizedBox(
-              width: 370,
-              height: 470,
-              child: _buildLauncherWidget(),
+            child: HeadLogoWidget(
+              logo: 'assets/image/ic_head_logo.png',
+              title: S.of(context).appName,
+              logoColor: XColor.logoTextColor,
             ),
           ),
+          _buildLauncherWidget(),
         ],
       )
     );
   }
 
+  /// 创建登录与注册控件
   Widget _buildLauncherWidget() {
-    return Padding(
-      padding: const EdgeInsets.only(
-          left: 55, top: 40, right: 55, bottom: 0
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Theme.of(context).backgroundColor,
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
-      child: Column(
-        children: [
-          const BigTitleWidget('PasswordX'),
-          XBox.vertical40,
-          _buildTabBarWidget(
-            index: _currentIndex,
-            onValueChanged: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            }
+      child: SizedBox(
+        width: 370,
+        height: 470,
+        child: Padding(
+          padding: const EdgeInsets.only(
+              left: 55, top: 40, right: 55, bottom: 0
           ),
-          XBox.vertical30,
-          _buildTabView()
-        ],
+          child: Column(
+            children: [
+              BigTitleWidget(S.of(context).appName),
+              XBox.vertical40,
+              _buildTabBarWidget(
+                index: _currentIndex,
+                onValueChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                }
+              ),
+              XBox.vertical30,
+              _buildTabView()
+            ],
+          ),
+        ),
       ),
     );
   }
 
+  /// 创建Tab
   Widget _buildTabView() {
     if (_currentIndex == 0) {
       return const LoginWidget();
@@ -123,6 +138,7 @@ class _LauncherPageState extends State<LauncherPage> {
     return const RegisterWidget();
   }
 
+  /// 创建TabBar
   Widget _buildTabBarWidget({
     required int index,
     required ValueChanged onValueChanged
@@ -131,13 +147,13 @@ class _LauncherPageState extends State<LauncherPage> {
       mainAxisSize: MainAxisSize.max,
       children: [
         _buildTabTextButton(
-            text: 'Login',
+            text: S.of(context).login,
             select: index == 0,
             onPressed: () => onValueChanged(0)
         ),
         XBox.horizontal10,
         _buildTabTextButton(
-            text: 'Sign Up',
+            text: S.of(context).signUp,
             select: index == 1,
             onPressed: () => onValueChanged(1)
         )
@@ -145,6 +161,7 @@ class _LauncherPageState extends State<LauncherPage> {
     );
   }
 
+  /// 创建按钮
   Widget _buildTabTextButton({
     required String text,
     required bool select,
@@ -162,21 +179,16 @@ class _LauncherPageState extends State<LauncherPage> {
       )
     );
   }
-}
 
-
-class WindowButtons extends StatelessWidget {
-
-  const WindowButtons({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        MinimizeWindowButton(),
-        MaximizeWindowButton(),
-        CloseWindowButton(),
-      ],
+  /// 创建Bar
+  Widget _buildWindowTitleBar() {
+    return WindowTitleBarBox(
+      child: Row(
+        children: [
+          Expanded(child: MoveWindow()),
+          const WindowButtons()
+        ],
+      ),
     );
   }
 }
