@@ -29,7 +29,7 @@ class AppModel extends AbstractModel {
   bool _init = false;
   late AppRepository _appRepository;
 
-  AdminItem _admin = AdminItem.empty;
+  AdminItem _admin = AdminItem(id: 1, name: 'Sky', password: '123456');
 
   // 获取管理员信息
   AdminItem get admin => _admin;
@@ -54,11 +54,12 @@ class AppModel extends AbstractModel {
   }) async {
 
     var item = _appRepository.encryptAdmin(
-        AdminItem(
-            name: name,
-            password: password,
-            createTime: DateTime.now().millisecondsSinceEpoch
-        )
+      AdminItem(
+        name: name,
+        password: password,
+        createTime: DateTime.now().millisecondsSinceEpoch,
+        updateTime: DateTime.now().millisecondsSinceEpoch,
+      )
     );
 
     var admin = await _appRepository.createAdmin(item);
@@ -73,7 +74,7 @@ class AppModel extends AbstractModel {
   }) async {
 
     var item = _appRepository.encryptAdmin(
-        AdminItem(name: name, password: password)
+      AdminItem(name: name, password: password)
     );
 
     var admin = await _appRepository.loginByAdmin(item);

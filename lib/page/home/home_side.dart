@@ -15,8 +15,10 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/model/app_model.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 import '../../generated/l10n.dart';
 import '../../model/side_item.dart';
@@ -53,22 +55,19 @@ class _HomeSideState extends State<HomeSide> {
   ];
   
   SideItem? _curSideItem;
-
+  late AppModel _appModel;
 
   @override
   void initState() {
     super.initState();
     _curSideItem = _fixed[1];
+    _appModel = context.read<AppModel>();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    // Theme.of(context).copyWith()
-
     return Container(
-      color: const Color(0xFF222530),
-      // color: Theme.of(context).backgroundColor,
+      color: XColor.sideColor,
       constraints: const BoxConstraints.expand(width: 260),
       child: DefaultTextStyle(
         style: const TextStyle(
@@ -80,7 +79,9 @@ class _HomeSideState extends State<HomeSide> {
               logo: 'assets/image/ic_head_logo.png',
               title: S.of(context).appName,
             ),
-            const HomeUserInfoWidget(),
+            HomeUserInfoWidget(
+              admin: _appModel.admin,
+            ),
             XBox.vertical5,
             for (var item in _fixed)
               SideItemWidget(

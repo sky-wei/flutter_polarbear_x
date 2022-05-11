@@ -15,6 +15,7 @@
  */
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/fade_animate_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -78,7 +79,7 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
             labelText: S.of(context).name,
             textInputAction: TextInputAction.next,
           ),
-          const SizedBox(height: 15),
+          XBox.vertical15,
           BigInputWidget(
             controller: _passwordController,
             iconName: 'ic_password.svg',
@@ -86,7 +87,7 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
             obscureText: true,
             textInputAction: TextInputAction.next,
           ),
-          const SizedBox(height: 15),
+          XBox.vertical15,
           BigInputWidget(
             controller: _confirmPasswordController,
             iconName: 'ic_password.svg',
@@ -97,7 +98,7 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
               if (_enableView) _register();
             },
           ),
-          const SizedBox(height: 40),
+          XBox.vertical40,
           BigButtonWidget(
             onPressed: _enableView ? _register : null,
             text: S.of(context).signUp,

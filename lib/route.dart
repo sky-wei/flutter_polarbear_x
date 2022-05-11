@@ -25,5 +25,7 @@ class XRoute {
   static const String register = "/register";
 
   static const String home = "/home";
+
+  static const String setting = "/home/setting";
 }
 

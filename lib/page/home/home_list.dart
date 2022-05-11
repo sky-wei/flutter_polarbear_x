@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
 import '../../generated/l10n.dart';
 import '../../widget/big_search_widget.dart';
@@ -150,7 +151,9 @@ class ListItemWidget extends StatelessWidget {
   final ValueChanged<DemoItem>? onPressed;
   final EdgeInsetsGeometry? padding;
 
-  const ListItemWidget({
+  final DateFormat _dateFormat = DateFormat.yMMMMd();
+
+  ListItemWidget({
     Key? key,
     required this.item,
     required this.onChoose,
@@ -209,7 +212,7 @@ class ListItemWidget extends StatelessWidget {
                       ),
                       XBox.vertical5,
                       Text(
-                        item.lastTime.toString(),
+                        _dateFormat.format(item.lastTime),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(

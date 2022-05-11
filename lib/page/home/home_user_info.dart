@@ -15,14 +15,22 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/data/item/admin_item.dart';
+import 'package:flutter_polarbear_x/page/setting/setting_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../route.dart';
 import '../../theme/color.dart';
 import '../../util/size_box_util.dart';
 
 class HomeUserInfoWidget extends StatefulWidget {
 
-  const HomeUserInfoWidget({Key? key}) : super(key: key);
+  final AdminItem admin;
+
+  const HomeUserInfoWidget({
+    Key? key,
+    required this.admin
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _HomeUserInfoState();
@@ -44,7 +52,7 @@ class _HomeUserInfoState extends State<HomeUserInfoWidget> {
             borderRadius: BorderRadius.circular(6),
             splashColor: XColor.sideChooseColor,
             highlightColor: XColor.sideChooseColor,
-            onTap: () { },
+            onTap: _settings,
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: Row(
@@ -56,12 +64,12 @@ class _HomeUserInfoState extends State<HomeUserInfoWidget> {
                     ),
                   ),
                   XBox.horizontal15,
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'jingcai.wei',
+                      widget.admin.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: XColor.sideTextColor
                       ),
                     ),
@@ -79,5 +87,16 @@ class _HomeUserInfoState extends State<HomeUserInfoWidget> {
         ),
       ),
     );
+  }
+
+  /// 打开设置
+  void _settings() {
+    // Navigator.pushNamed(context, XRoute.setting);
+    showDialog(
+      context: context,
+      builder: (context) => SettingDialog()
+    );
+    
+    // showMenu(context: context, position: position, items: items)
   }
 }

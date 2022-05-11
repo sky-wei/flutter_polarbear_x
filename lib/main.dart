@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_polarbear_x/page/home/home_page.dart';
 import 'package:flutter_polarbear_x/page/launcher/launcher_page.dart';
+import 'package:flutter_polarbear_x/page/setting/setting_dialog.dart';
 import 'package:flutter_polarbear_x/route.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/log_util.dart';
@@ -43,8 +44,9 @@ class PolarBearX extends StatelessWidget {
         routes: {
           XRoute.splash: (BuildContext context) => const LauncherPage(),
           XRoute.home: (BuildContext context) => const HomePage(),
+          XRoute.setting: (BuildContext context) => const SettingDialog(),
         },
-        initialRoute: XRoute.splash,
+        initialRoute: XRoute.home,
         localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,

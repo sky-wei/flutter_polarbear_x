@@ -34,6 +34,8 @@ class XColor {
 
   static const Color gray2Color = Color(0xFFBFBFBF);
 
+  static const Color sideColor = Color(0xFF222530);
+
   static const Color sideTextColor = Color(0xFFB0C1D9);
 
   static const Color sideChooseColor = Color(0xFF414B5E);
