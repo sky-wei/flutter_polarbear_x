@@ -14,25 +14,37 @@
  * limitations under the License.
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_polarbear_x/data/repository/encrypt_store.dart';
 import 'package:flutter_polarbear_x/util/easy_notifier.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../data/item/admin_item.dart';
+import '../data/item/folder_item.dart';
 import '../data/objectbox.dart';
 import '../data/repository/app_repository.dart';
 
-abstract class AbstractModel extends EasyNotifier {}
+class AbstractModel extends EasyNotifier {
+
+}
 
 class AppModel extends AbstractModel {
 
   bool _init = false;
   late AppRepository _appRepository;
 
+  final ValueNotifier<List<FolderItem>> folderNotifier = ValueNotifier([]);
+
   AdminItem _admin = AdminItem(id: 1, name: 'Sky', password: '123456');
 
   // 获取管理员信息
   AdminItem get admin => _admin;
+
+  @override
+  void dispose() {
+    folderNotifier.dispose();
+    super.dispose();
+  }
 
   /// 初始化
   Future<AppModel> initialize() async {
@@ -80,6 +92,29 @@ class AppModel extends AbstractModel {
     var admin = await _appRepository.loginByAdmin(item);
 
     return _updateAdmin(admin.copy(password: password));
+  }
+
+
+  /// 创建文件夹
+  Future<FolderItem> createFolder(String name) async {
+
+    var item = await _appRepository.createFolder(
+      FolderItem(adminId: admin.id, name: name)
+    );
+
+    var folders = List<FolderItem>.of(folderNotifier.value)
+      ..add(item);
+    folderNotifier.value = folders;
+
+    return item;
+  }
+
+  /// 加载文件夹
+  Future<List<FolderItem>> loadFolders() async {
+
+    folderNotifier.value = await _appRepository.loadFoldersBy(admin);
+
+    return folderNotifier.value;
   }
 
   /// 更新管理员信息

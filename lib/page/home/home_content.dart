@@ -49,6 +49,7 @@ class _HomeContentState extends State<HomeContent> {
     super.dispose();
     _nameController.dispose();
     _userNameController.dispose();
+    _passwordController.dispose();
   }
 
   @override

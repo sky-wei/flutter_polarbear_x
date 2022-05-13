@@ -26,20 +26,30 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Account already exists!"),
         "accountPasswordError": MessageLookupByLibrary.simpleMessage(
             "Incorrect username or password!"),
+        "allItems": MessageLookupByLibrary.simpleMessage("All Items"),
         "appName": MessageLookupByLibrary.simpleMessage("PasswordX"),
+        "canNotEmpty": MessageLookupByLibrary.simpleMessage("Can not be empty"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "confirmPassword":
             MessageLookupByLibrary.simpleMessage("Confirm Password"),
         "deleteInfoError":
             MessageLookupByLibrary.simpleMessage("Delete error!"),
         "end": MessageLookupByLibrary.simpleMessage("End"),
+        "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
+        "folderExists":
+            MessageLookupByLibrary.simpleMessage("Folder already exists!"),
+        "folders": MessageLookupByLibrary.simpleMessage("Folders"),
         "forgetPassword":
             MessageLookupByLibrary.simpleMessage("Forget Password?"),
         "handlerError":
             MessageLookupByLibrary.simpleMessage("Handling exceptions!"),
+        "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
+        "noFolder": MessageLookupByLibrary.simpleMessage("No Folder"),
         "notSupport":
             MessageLookupByLibrary.simpleMessage("Not currently supported!"),
+        "ok": MessageLookupByLibrary.simpleMessage("OK"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "passwordError":
             MessageLookupByLibrary.simpleMessage("Wrong password!"),
@@ -47,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Password does not match!"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
+        "trash": MessageLookupByLibrary.simpleMessage("Trash"),
         "updateInfoError": MessageLookupByLibrary.simpleMessage("Update error!")
       };
 }

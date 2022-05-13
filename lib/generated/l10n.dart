@@ -140,6 +140,16 @@ class S {
     );
   }
 
+  /// `Folder already exists!`
+  String get folderExists {
+    return Intl.message(
+      'Folder already exists!',
+      name: 'folderExists',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Incorrect username or password!`
   String get accountPasswordError {
     return Intl.message(
@@ -205,6 +215,96 @@ class S {
     return Intl.message(
       'Password does not match!',
       name: 'passwordNotMatch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Folders`
+  String get folders {
+    return Intl.message(
+      'Folders',
+      name: 'folders',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Favorites`
+  String get favorites {
+    return Intl.message(
+      'Favorites',
+      name: 'favorites',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All Items`
+  String get allItems {
+    return Intl.message(
+      'All Items',
+      name: 'allItems',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Folder`
+  String get noFolder {
+    return Intl.message(
+      'No Folder',
+      name: 'noFolder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trash`
+  String get trash {
+    return Intl.message(
+      'Trash',
+      name: 'trash',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading...`
+  String get loading {
+    return Intl.message(
+      'Loading...',
+      name: 'loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Can not be empty`
+  String get canNotEmpty {
+    return Intl.message(
+      'Can not be empty',
+      name: 'canNotEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OK`
+  String get ok {
+    return Intl.message(
+      'OK',
+      name: 'ok',
       desc: '',
       args: [],
     );

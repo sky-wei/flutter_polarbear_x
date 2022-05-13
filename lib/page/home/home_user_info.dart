@@ -54,7 +54,7 @@ class _HomeUserInfoState extends State<HomeUserInfoWidget> {
             highlightColor: XColor.sideChooseColor,
             onTap: _settings,
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
               child: Row(
                 children: [
                   ClipOval(
@@ -91,12 +91,9 @@ class _HomeUserInfoState extends State<HomeUserInfoWidget> {
 
   /// 打开设置
   void _settings() {
-    // Navigator.pushNamed(context, XRoute.setting);
     showDialog(
       context: context,
-      builder: (context) => SettingDialog()
+      builder: (context) => const SettingDialog()
     );
-    
-    // showMenu(context: context, position: position, items: items)
   }
 }

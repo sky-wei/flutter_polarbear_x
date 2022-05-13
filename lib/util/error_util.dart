@@ -28,6 +28,8 @@ class ErrorUtil {
       switch(error.type) {
         case ErrorType.adminExist:
           return S.of(context).accountExists;
+        case ErrorType.folderExist:
+          return S.of(context).folderExists;
         case ErrorType.nameOrPasswordError:
           return S.of(context).accountPasswordError;
         case ErrorType.updateError:

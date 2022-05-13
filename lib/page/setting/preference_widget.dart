@@ -14,38 +14,28 @@
  * limitations under the License.
  */
 
-class DataException implements Exception {
+import 'package:flutter/cupertino.dart';
 
-  final ErrorType type;
-  final dynamic message;
+import '../../util/size_box_util.dart';
 
-  DataException({
-    this.type = ErrorType.other,
-    this.message = 'Exception'
-  });
+class PreferenceWidget extends StatefulWidget {
 
-  DataException.type({
-    this.type = ErrorType.other
-  }) : message = 'Exception';
-
-  DataException.message([this.message]) : type = ErrorType.other;
+  const PreferenceWidget({Key? key}) : super(key: key);
 
   @override
-  String toString() {
-    Object? message = this.message;
-    if (message == null) return "Exception";
-    return "Exception: $message";
-  }
+  State<StatefulWidget> createState() => PreferenceWidgetState();
 }
 
-enum ErrorType {
+class PreferenceWidgetState extends State<PreferenceWidget> {
 
-  adminExist,
-  nameOrPasswordError,
-  updateError,
-  deleteError,
-  passwordError,
-  folderExist,
-  other
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        XBox.vertical40,
+        const Text('AAAAAA')
+      ],
+    );
+  }
 }
 

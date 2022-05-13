@@ -14,42 +14,187 @@
  * limitations under the License.
  */
 
-import 'package:flutter/cupertino.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/page/setting/about_widget.dart';
+import 'package:flutter_polarbear_x/page/setting/account_widget.dart';
+import 'package:flutter_polarbear_x/page/setting/preference_widget.dart';
+import 'package:flutter_polarbear_x/theme/color.dart';
+import 'package:flutter_svg/svg.dart';
+
+import '../../model/side_item.dart';
+import '../../util/size_box_util.dart';
+
+
+typedef ChooseItem<T> = bool Function(T value);
 
 class SettingDialog extends StatelessWidget {
-
-  static const double _defaultElevation = 24.0;
-  static const RoundedRectangleBorder _defaultDialogShape =
-  RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4.0)));
 
   const SettingDialog({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final DialogTheme dialogTheme = DialogTheme.of(context);
-    final EdgeInsets effectivePadding = MediaQuery.of(context).viewInsets + EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0);//(insetPadding ?? EdgeInsets.zero);
-    return AnimatedPadding(
-      padding: effectivePadding,
-      duration: Duration(milliseconds: 600),
-      curve: Curves.decelerate,
-      child: MediaQuery.removeViewInsets(
-        removeLeft: true,
-        removeTop: true,
-        removeRight: true,
-        removeBottom: true,
-        context: context,
-        child: Align(
-          alignment: Alignment.center,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints.expand(width: 900, height: 700),
-            child: Material(
-              color: dialogTheme.backgroundColor ?? Theme.of(context).dialogBackgroundColor,
-              elevation: dialogTheme.elevation ?? _defaultElevation,
-              shape: dialogTheme.shape ?? _defaultDialogShape,
-              type: MaterialType.card,
-              clipBehavior: Clip.none,
-              child: Text('AA'),
+    return Dialog(
+      child: SizedBox(
+        width: 900,
+        height: 700,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                padding: const EdgeInsets.all(12),
+                onPressed: () { Navigator.pop(context); },
+                icon: CloseIcon(color: XColor.black)
+              ),
+            ),
+            const SettingWidget()
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SettingWidget extends StatefulWidget {
+  
+  const SettingWidget({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => SettingWidgetState();
+}
+
+class SettingWidgetState extends State<SettingWidget> {
+
+  final List<SideItem> _items = [
+    SideItem(id: 0, name: 'Account', icon: 'assets/svg/ic_user.svg'),
+    SideItem(id: 1, name: 'Preference', icon: 'assets/svg/ic_all_items.svg'),
+    SideItem(id: 2, name: 'About', icon: 'assets/svg/ic_trash.svg'),
+  ];
+
+  SideItem? _curSideItem;
+
+  @override
+  void initState() {
+    super.initState();
+    _curSideItem = _items[0];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        _buildSide(),
+        Expanded(
+          child: _buildContent(_curSideItem!),
+        )
+      ],
+    );
+  }
+
+  Widget _buildSide() {
+    return Container(
+      constraints: const BoxConstraints.expand(width: 230),
+      decoration: const BoxDecoration(
+        color: XColor.listColor,
+        borderRadius: BorderRadius.all(Radius.circular(4))
+      ),
+      child: Column(
+        children: [
+          XBox.vertical30,
+          for (var item in _items)
+            SideItemWidget(
+              item: item,
+              onChoose: _isChooseItem,
+              onPressed: _chooseHandler,
+            )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent(SideItem item) {
+    switch(item.id) {
+      case 0:
+        return const AccountWidget();
+      case 1:
+        return const PreferenceWidget();
+      case 2:
+        return const AboutWidget();
+      default:
+        return const Center(
+          child: Text('AAAAA'),
+        );
+    }
+  }
+
+  bool _isChooseItem(SideItem item) => _curSideItem == item;
+
+  void _chooseHandler(SideItem item) {
+    setState(() {
+      _curSideItem = item;
+    });
+  }
+}
+
+class SideItemWidget extends StatelessWidget {
+
+  final SideItem item;
+  final ChooseItem<SideItem> onChoose;
+  final ValueChanged<SideItem>? onPressed;
+  final EdgeInsetsGeometry? padding;
+
+  const SideItemWidget({
+    Key? key,
+    required this.item,
+    required this.onChoose,
+    this.onPressed,
+    this.padding
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+
+    final choose = onChoose(item);
+
+    return Padding(
+      padding: padding?? const EdgeInsets.only(left: 10, top: 5, right: 10),
+      child: Material(
+        color: XColor.transparent,
+        child: Ink(
+          decoration: BoxDecoration(
+            color: choose ? XColor.setSideChooseColor : XColor.transparent,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: InkWell(
+            splashColor: XColor.setSideChooseColor,
+            highlightColor: XColor.setSideChooseColor,
+            enableFeedback: false,
+            borderRadius: BorderRadius.circular(6),
+            onTap: () { if (onPressed != null) onPressed!(item); },
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+              child: Row(
+                children: [
+                  if (item.icon != null)
+                    SvgPicture.asset(
+                      item.icon!,
+                      color: XColor.setSideTextColor,
+                      width: 18,
+                    ),
+                  if (item.icon != null)
+                    XBox.horizontal15,
+                  Text(
+                    item.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: XColor.setSideTextColor,
+                        fontWeight: FontWeight.normal
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -57,18 +202,4 @@ class SettingDialog extends StatelessWidget {
     );
   }
 }
-
-// class _SettingPageState extends State<SettingPage> {
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: SizedBox(
-//         width: 1000,
-//         height: 800,
-//         child: Text('AA'),
-//       ),
-//     );
-//   }
-// }
 

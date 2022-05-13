@@ -27,5 +27,32 @@ class FolderItem {
     required this.name,
     this.createTime = 0
   });
+
+  FolderItem copy({
+    int? id,
+    int? adminId,
+    String? name,
+    int? createTime,
+  }) {
+    return FolderItem(
+        id: id ?? this.id,
+        adminId: id ?? this.adminId,
+        name: name ?? this.name,
+        createTime: createTime ?? this.createTime,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FolderItem && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  String toString() {
+    return 'FolderItem{id: $id, adminId: $adminId, name: $name, createTime: $createTime}';
+  }
 }
 

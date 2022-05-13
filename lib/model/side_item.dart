@@ -14,19 +14,32 @@
  * limitations under the License.
  */
 
+enum SideType {
+  favorite,
+  allItems,
+  trash,
+  folder,
+  noFolder,
+  none
+}
+
 class SideItem {
 
   final int id;
   final String? icon;
   final String name;
+  final SideType type;
+  final dynamic data;
 
   SideItem({
     this.id = 0,
     required this.name,
     this.icon,
-  });
+    this.type = SideType.none,
+    dynamic value
+  }): data = value;
 
-  SideItem.text(this.id, this.name): icon = null;
+  SideItem.text(this.id, this.name): icon = null, type = SideType.none, data = null;
 
   @override
   bool operator ==(Object other) =>
@@ -35,9 +48,11 @@ class SideItem {
           runtimeType == other.runtimeType &&
           id == other.id &&
           icon == other.icon &&
-          name == other.name;
+          name == other.name &&
+          type == other.type;
 
   @override
-  int get hashCode => id.hashCode ^ icon.hashCode ^ name.hashCode;
+  int get hashCode =>
+      id.hashCode ^ icon.hashCode ^ name.hashCode ^ type.hashCode;
 }
 

@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+import 'package:flutter_polarbear_x/data/entity/folder_entity.dart';
+import 'package:flutter_polarbear_x/data/item/folder_item.dart';
+import 'package:flutter_polarbear_x/data/mapper/folder_mapper.dart';
+
 import '../data_exception.dart';
 import '../entity/account_entity.dart';
 import '../entity/admin_entity.dart';
@@ -30,6 +34,7 @@ class AppRepository {
   final EncryptStore encryptStore;
 
   Box<AdminEntity> get adminBox => objectBox.adminBox;
+  Box<FolderEntity> get folderBox => objectBox.folderBox;
   Box<AccountEntity> get accountBox => objectBox.accountBox;
 
   AppRepository({
@@ -71,6 +76,65 @@ class AppRepository {
     }
 
     return AdminMapper.transformEntity(entity);
+  }
+
+
+  /// 创建文件夹
+  Future<FolderItem> createFolder(FolderItem item) async {
+
+    var entity = folderBox
+        .query(FolderEntity_.name.equals(item.name))
+        .build()
+        .findFirst();
+
+    if (entity != null) {
+      throw DataException.type(type: ErrorType.folderExist);
+    }
+
+    var id = folderBox.put(FolderMapper.transformItem(item));
+
+    return item.copy(id: id);
+  }
+
+  /// 删除文件夹
+  Future<FolderItem> deleteFolder(FolderItem item) async {
+    if (!folderBox.remove(item.id)) {
+      throw DataException.type(type: ErrorType.deleteError);
+    }
+    return item;
+  }
+
+  /// 更新文件夹
+  Future<FolderItem> updateFolder(FolderItem item) async {
+
+    var entity = folderBox
+        .query(FolderEntity_.name.equals(item.name))
+        .build()
+        .findFirst();
+
+    if (entity != null) {
+      throw DataException.type(type: ErrorType.updateError);
+    }
+
+    var updateEntity = FolderMapper.transformItem(item);
+    var result = folderBox.put(updateEntity, mode: PutMode.update);
+
+    if (result <= 0) {
+      throw DataException.type(type: ErrorType.updateError);
+    }
+
+    return item;
+  }
+
+  /// 加载文件夹
+  Future<List<FolderItem>> loadFoldersBy(AdminItem item) async {
+
+    var entities = folderBox
+        .query(FolderEntity_.adminId.equals(item.id))
+        .build()
+        .find();
+
+    return FolderMapper.transformEntities(entities);
   }
 
   /// 加密管理员的密码

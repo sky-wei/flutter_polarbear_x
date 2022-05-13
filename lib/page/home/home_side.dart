@@ -15,13 +15,18 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/model/app_model.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
+import 'package:flutter_polarbear_x/util/log_util.dart';
+import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
+import '../../dialog/input_dialog.dart';
 import '../../generated/l10n.dart';
 import '../../model/side_item.dart';
+import '../../util/error_util.dart';
 import '../../util/size_box_util.dart';
 import '../../widget/head_logo_widget.dart';
 import 'home_user_info.dart';
@@ -41,19 +46,16 @@ class HomeSide extends StatefulWidget {
 class _HomeSideState extends State<HomeSide> {
 
   final List<SideItem> _fixed = [
-    SideItem(name: 'Favorites', icon: 'assets/svg/ic_favorites.svg'),
-    SideItem(name: 'All Items', icon: 'assets/svg/ic_all_items.svg'),
-    SideItem(name: 'Trash', icon: 'assets/svg/ic_trash.svg'),
+    SideItem(name: S.current.favorites, icon: 'assets/svg/ic_favorites.svg', type: SideType.favorite),
+    SideItem(name: S.current.allItems, icon: 'assets/svg/ic_all_items.svg', type: SideType.allItems),
+    SideItem(name: S.current.trash, icon: 'assets/svg/ic_trash.svg', type: SideType.trash),
   ];
 
-  final List<SideItem> _folders = [
-    SideItem(icon: 'assets/svg/ic_folder.svg', name: 'Demo1'),
-    SideItem(icon: 'assets/svg/ic_folder.svg', name: 'Demo2'),
-    SideItem(icon: 'assets/svg/ic_folder.svg', name: 'Demo3'),
-    SideItem(icon: 'assets/svg/ic_folder.svg', name: 'Demo4'),
-    SideItem(icon: 'assets/svg/ic_folder.svg', name: 'Demo5'),
-  ];
-  
+  final SideItem _noFolder =
+    SideItem(name: S.current.noFolder, icon: 'assets/svg/ic_folder.svg', type: SideType.noFolder);
+
+  final List<SideItem> _folders = [];
+
   SideItem? _curSideItem;
   late AppModel _appModel;
 
@@ -62,6 +64,16 @@ class _HomeSideState extends State<HomeSide> {
     super.initState();
     _curSideItem = _fixed[1];
     _appModel = context.read<AppModel>();
+    _appModel.folderNotifier.addListener(_infoChange);
+
+    /// 加载文件夹
+    _appModel.loadFolders();
+  }
+
+  @override
+  void dispose() {
+    _appModel.folderNotifier.removeListener(_infoChange);
+    super.dispose();
   }
 
   @override
@@ -91,10 +103,8 @@ class _HomeSideState extends State<HomeSide> {
               ),
             XBox.vertical10,
             SideFolderWidget(
-              name: "Folders",
-              onPressed: () {
-
-              },
+              name: S.of(context).folders,
+              onPressed: _newFolder,
             ),
             Expanded(
               child: _buildFolderList()
@@ -115,6 +125,52 @@ class _HomeSideState extends State<HomeSide> {
         );
       },
       itemCount: _folders.length,
+    );
+  }
+
+  /// 创建文件夹
+  void _newFolder() {
+    showDialog<String>(
+        context: context, builder: (context) => const InputDialog()
+    ).then((value) {
+      if (value == null) {
+        return;
+      }
+
+      if (value.isEmpty) {
+        MessageUtil.showMessage(context, S.of(context).canNotEmpty);
+        return;
+      }
+
+      // 创建文件夹
+      _appModel.createFolder(value).then((value) {
+      }).onError((error, stackTrace) {
+        MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+      });
+    });
+  }
+
+  /// 信息修改
+  void _infoChange() {
+
+    final items = _appModel.folderNotifier.value;
+    final folders = items.map((value) => _buildSideItem(value)).toList();
+
+    folders.add(_noFolder);
+
+    setState(() {
+      _folders.clear();
+      _folders.addAll(folders);
+    });
+  }
+
+  /// 创建SideItem
+  SideItem _buildSideItem(FolderItem item) {
+    return SideItem(
+        id: item.id,
+        icon: 'assets/svg/ic_folder.svg',
+        name: item.name,
+        value: item
     );
   }
   
@@ -146,44 +202,49 @@ class SideItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final choose = onChoose(item);
-
+    
     return Padding(
       padding: padding?? const EdgeInsets.only(left: 10, top: 5, right: 10),
       child: Material(
         color: XColor.transparent,
-        child: Ink(
-          decoration: BoxDecoration(
-            color: choose ? XColor.sideChooseColor : XColor.transparent,
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: InkWell(
-            splashColor: XColor.sideChooseColor,
-            highlightColor: XColor.sideChooseColor,
-            enableFeedback: false,
-            borderRadius: BorderRadius.circular(6),
-            onTap: () { if (onPressed != null) onPressed!(item); },
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  if (item.icon != null)
-                    SvgPicture.asset(
-                      item.icon!,
-                      color: choose ? XColor.themeColor : XColor.sideTextColor,
-                      width: 18,
+        child: Listener(
+          onPointerUp: (event) {
+            XLog.d(">>>>>>>>>>>>>>>>>>>>>>> $event");
+          },
+          child: Ink(
+            decoration: BoxDecoration(
+              color: choose ? XColor.sideChooseColor : XColor.transparent,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: InkWell(
+              splashColor: XColor.sideChooseColor,
+              highlightColor: XColor.sideChooseColor,
+              enableFeedback: false,
+              borderRadius: BorderRadius.circular(6),
+              onTap: () { if (onPressed != null) onPressed!(item); },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                child: Row(
+                  children: [
+                    if (item.icon != null)
+                      SvgPicture.asset(
+                        item.icon!,
+                        color: choose ? XColor.themeColor : XColor.sideTextColor,
+                        width: 18,
+                      ),
+                    if (item.icon != null)
+                      XBox.horizontal15,
+                    Text(
+                      item.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          color: XColor.sideTextColor,
+                          fontWeight: FontWeight.normal
+                      ),
                     ),
-                  if (item.icon != null)
-                    XBox.horizontal15,
-                  Text(
-                    item.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: XColor.sideTextColor,
-                      fontWeight: FontWeight.normal
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -207,7 +268,7 @@ class SideFolderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 10),
+      padding: const EdgeInsets.only(left: 25, right: 12),
       child: Row(
         children: [
           Expanded(

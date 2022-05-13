@@ -72,7 +72,7 @@ class _HomeListState extends State<HomeList> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFFF5F8FB),
+      color: XColor.listColor,
       constraints: const BoxConstraints.expand(width: 340),
       padding: EdgeInsets.only(top: appWindow.titleBarHeight),
       child: Column(

@@ -8,6 +8,7 @@
   "confirmPassword": "Confirm Password",
   "forgetPassword": "Forget Password?",
   "accountExists": "Account already exists!",
+  "folderExists": "Folder already exists!",
   "accountPasswordError": "Incorrect username or password!",
   "updateInfoError": "Update error!",
   "handlerError": "Handling exceptions!",
@@ -15,5 +16,14 @@
   "passwordError": "Wrong password!",
   "notSupport": "Not currently supported!",
   "passwordNotMatch": "Password does not match!",
+  "folders": "Folders",
+  "favorites": "Favorites",
+  "allItems": "All Items",
+  "noFolder": "No Folder",
+  "trash": "Trash",
+  "loading": "Loading...",
+  "canNotEmpty": "Can not be empty",
+  "cancel": "Cancel",
+  "ok": "OK",
   "end": "End"
 }

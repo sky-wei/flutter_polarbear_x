@@ -17,13 +17,9 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/page/launcher/register_widget.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
-import 'package:flutter_toastr/flutter_toastr.dart';
-import 'package:provider/provider.dart';
 
 import '../../generated/l10n.dart';
-import '../../model/app_model.dart';
 import '../../theme/color.dart';
 import '../../widget/big_title_widget.dart';
 import '../../widget/head_logo_widget.dart';
@@ -41,15 +37,6 @@ class LauncherPage extends StatefulWidget {
 class _LauncherPageState extends State<LauncherPage> {
 
   int _currentIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    context.read<AppModel>().initialize().then((value) {
-      XLog.d('初始化成功！');
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

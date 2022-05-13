@@ -16,10 +16,7 @@
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../model/app_model.dart';
-import '../../util/log_util.dart';
 import '../../widget/window_buttons.dart';
 import 'home_content.dart';
 import 'home_list.dart';
@@ -34,15 +31,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State {
-
-  @override
-  void initState() {
-    super.initState();
-
-    context.read<AppModel>().initialize().then((value) {
-      XLog.d('初始化成功！');
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

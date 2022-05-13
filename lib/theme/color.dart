@@ -42,9 +42,15 @@ class XColor {
 
   static const Color listChooseColor = Color(0xFFE7ECF3);
 
+  static const Color listColor = Color(0xFFF5F8FB);
+
   static const Color deleteColor = Color(0xFFF63061);
 
   static const Color logoTextColor = Color(0xFFC1CAD7);
+
+  static const Color setSideTextColor = Color(0xFF262626);
+
+  static const Color setSideChooseColor = Color(0xFFDBE3F3);
 
   static const Color themeColor = Color(_redPrimaryValue);
 
