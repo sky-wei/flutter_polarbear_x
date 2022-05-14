@@ -25,5 +25,13 @@
   "canNotEmpty": "Can not be empty",
   "cancel": "Cancel",
   "ok": "OK",
+  "close": "Close",
+  "edit": "Edit",
+  "delete": "Delete",
+  "editFolder": "Edit Folder",
+  "deleteFolder": "Delete Folder",
+  "addFolderTip": "Add folder",
+  "addAccountTip": "Add account",
+  "deleteFolderMessage": "Are you sure you want to delete this folder!",
   "end": "End"
 }

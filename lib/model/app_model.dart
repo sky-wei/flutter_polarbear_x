@@ -40,6 +40,9 @@ class AppModel extends AbstractModel {
   // 获取管理员信息
   AdminItem get admin => _admin;
 
+  /// 文件夹
+  List<FolderItem> get folders => folderNotifier.value;
+
   @override
   void dispose() {
     folderNotifier.dispose();
@@ -94,7 +97,6 @@ class AppModel extends AbstractModel {
     return _updateAdmin(admin.copy(password: password));
   }
 
-
   /// 创建文件夹
   Future<FolderItem> createFolder(String name) async {
 
@@ -102,11 +104,38 @@ class AppModel extends AbstractModel {
       FolderItem(adminId: admin.id, name: name)
     );
 
-    var folders = List<FolderItem>.of(folderNotifier.value)
+    final folders = List<FolderItem>.of(this.folders)
       ..add(item);
     folderNotifier.value = folders;
 
     return item;
+  }
+
+  /// 修改文件夹
+  Future<FolderItem> updateFolder(FolderItem item) async {
+
+    final result = await _appRepository.updateFolder(item);
+
+    final folders = List<FolderItem>.of(this.folders);
+    final index = folders.indexOf(result);
+    folders.removeAt(index);
+    folders.insert(index, result);
+
+    folderNotifier.value = folders;
+
+    return result;
+  }
+
+  /// 删除文件夹
+  Future<FolderItem> deleteFolder(FolderItem item) async {
+
+    final result = await _appRepository.deleteFolder(item);
+
+    final folders = List<FolderItem>.of(this.folders)
+      ..remove(result);
+    folderNotifier.value = folders;
+
+    return result;
   }
 
   /// 加载文件夹
@@ -114,7 +143,7 @@ class AppModel extends AbstractModel {
 
     folderNotifier.value = await _appRepository.loadFoldersBy(admin);
 
-    return folderNotifier.value;
+    return folders;
   }
 
   /// 更新管理员信息

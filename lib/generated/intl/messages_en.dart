@@ -26,14 +26,23 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Account already exists!"),
         "accountPasswordError": MessageLookupByLibrary.simpleMessage(
             "Incorrect username or password!"),
+        "addAccountTip": MessageLookupByLibrary.simpleMessage("Add account"),
+        "addFolderTip": MessageLookupByLibrary.simpleMessage("Add folder"),
         "allItems": MessageLookupByLibrary.simpleMessage("All Items"),
         "appName": MessageLookupByLibrary.simpleMessage("PasswordX"),
         "canNotEmpty": MessageLookupByLibrary.simpleMessage("Can not be empty"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "close": MessageLookupByLibrary.simpleMessage("Close"),
         "confirmPassword":
             MessageLookupByLibrary.simpleMessage("Confirm Password"),
+        "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "deleteFolder": MessageLookupByLibrary.simpleMessage("Delete Folder"),
+        "deleteFolderMessage": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to delete this folder!"),
         "deleteInfoError":
             MessageLookupByLibrary.simpleMessage("Delete error!"),
+        "edit": MessageLookupByLibrary.simpleMessage("Edit"),
+        "editFolder": MessageLookupByLibrary.simpleMessage("Edit Folder"),
         "end": MessageLookupByLibrary.simpleMessage("End"),
         "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
         "folderExists":

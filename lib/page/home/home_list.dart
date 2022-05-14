@@ -109,6 +109,7 @@ class _HomeListState extends State<HomeList> {
               width: 20,
               height: 20,
             ),
+            tooltip: S.of(context).addAccountTip,
           )
         ],
       ),

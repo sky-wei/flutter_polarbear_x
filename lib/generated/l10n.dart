@@ -310,6 +310,86 @@ class S {
     );
   }
 
+  /// `Close`
+  String get close {
+    return Intl.message(
+      'Close',
+      name: 'close',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit`
+  String get edit {
+    return Intl.message(
+      'Edit',
+      name: 'edit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get delete {
+    return Intl.message(
+      'Delete',
+      name: 'delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Folder`
+  String get editFolder {
+    return Intl.message(
+      'Edit Folder',
+      name: 'editFolder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Folder`
+  String get deleteFolder {
+    return Intl.message(
+      'Delete Folder',
+      name: 'deleteFolder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add folder`
+  String get addFolderTip {
+    return Intl.message(
+      'Add folder',
+      name: 'addFolderTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add account`
+  String get addAccountTip {
+    return Intl.message(
+      'Add account',
+      name: 'addAccountTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete this folder!`
+  String get deleteFolderMessage {
+    return Intl.message(
+      'Are you sure you want to delete this folder!',
+      name: 'deleteFolderMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `End`
   String get end {
     return Intl.message(

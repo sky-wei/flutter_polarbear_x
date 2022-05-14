@@ -15,23 +15,21 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_polarbear_x/theme/color.dart';
 
 import '../generated/l10n.dart';
 import '../util/size_box_util.dart';
 
-class InputDialog extends StatelessWidget {
+
+
+class HintDialog extends StatelessWidget {
 
   final String title;
-  final String? labelText;
-  final String value;
+  final String message;
 
-  const InputDialog({
+  const HintDialog({
     Key? key,
     required this.title,
-    this.labelText,
-    this.value = ''
+    required this.message,
   }) : super(key: key);
 
   @override
@@ -39,57 +37,19 @@ class InputDialog extends StatelessWidget {
     return Dialog(
       child: SizedBox(
         width: 400,
-        child: InputWidget(
-          title: title,
-          labelText: labelText,
-          value: value,
-        ),
+        child: _buildContent(context),
       ),
     );
   }
-}
 
-class InputWidget extends StatefulWidget {
-
-  final String title;
-  final String? labelText;
-  final String value;
-
-  const InputWidget({
-    Key? key,
-    required this.title,
-    this.labelText,
-    this.value = ''
-  }) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => InputWidgetState();
-}
-
-class InputWidgetState extends State<InputWidget> {
-
-  late TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.value);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  /// 创建内容
+  Widget _buildContent(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         XBox.vertical30,
         Text(
-          widget.title,
+          title,
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600
@@ -98,29 +58,21 @@ class InputWidgetState extends State<InputWidget> {
         XBox.vertical10,
         Padding(
           padding: const EdgeInsets.fromLTRB(40, 20, 40, 30),
-          child: TextField(
-            controller: _controller,
-            autofocus: true,
-            decoration: InputDecoration(
-              labelText: widget.labelText,
-              border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(6))
-              )
+          child: Text(
+            message,
+            style: const TextStyle(
+              fontSize: 16,
             ),
-            textInputAction: TextInputAction.done,
-            textAlignVertical: TextAlignVertical.bottom,
-            keyboardType: TextInputType.text,
-            onSubmitted: (value) => _ok(),
           ),
         ),
         const Divider(thickness: 1),
         Row(
           children: [
             Expanded(
-              child: _buildTextButton(
-                  text: S.of(context).cancel,
-                  onPressed: _cancel
-              )
+                child: _buildTextButton(
+                    text: S.of(context).cancel,
+                    onPressed: () => Navigator.pop(context)
+                )
             ),
             XBox.horizontal5,
             const SizedBox(
@@ -132,7 +84,7 @@ class InputWidgetState extends State<InputWidget> {
             Expanded(
               child: _buildTextButton(
                   text: S.of(context).ok,
-                  onPressed: _ok
+                  onPressed: () => Navigator.pop(context, 1)
               ),
             )
           ],
@@ -149,16 +101,9 @@ class InputWidgetState extends State<InputWidget> {
       onPressed: onPressed,
       child: Text(text),
       style: ButtonStyle(
-        padding: MaterialStateProperty.all(const EdgeInsets.fromLTRB(20, 26, 20, 26))
+          padding: MaterialStateProperty.all(const EdgeInsets.fromLTRB(20, 26, 20, 26))
       ),
     );
   }
-
-  void _cancel() {
-    Navigator.pop(context);
-  }
-
-  void _ok() {
-    Navigator.pop(context, _controller.text);
-  }
 }
+

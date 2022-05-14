@@ -17,15 +17,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_toastr/flutter_toastr.dart';
 
+import '../generated/l10n.dart';
+
 class MessageUtil {
 
   MessageUtil._();
 
   static showMessage(BuildContext context, String msg) {
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   SnackBar(content: Text(msg))
-    // );
-    FlutterToastr.show(msg, context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.fromLTRB(300, 10, 300, 10),
+        padding: const EdgeInsets.all(20),
+        action: SnackBarAction(
+          label: S.of(context).close,
+          onPressed: () { },
+        ),
+      )
+    );
+    // FlutterToastr.show(msg, context);
   }
 }
 

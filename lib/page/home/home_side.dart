@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
+import 'dart:ui';
+
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
+import 'package:flutter_polarbear_x/dialog/hint_dialog.dart';
 import 'package:flutter_polarbear_x/model/app_model.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -104,56 +107,128 @@ class _HomeSideState extends State<HomeSide> {
             XBox.vertical10,
             SideFolderWidget(
               name: S.of(context).folders,
-              onPressed: _newFolder,
+              onPressed: _editFolder,
             ),
             Expanded(
-              child: _buildFolderList()
+              child: _buildFolderSideList()
             )
           ],
         ),
       ),
     );
   }
-  
-  Widget _buildFolderList() {
+
+  /// 创建文件夹列表
+  Widget _buildFolderSideList() {
     return ListView.builder(
       itemBuilder: (context, index) {
+        final item = _folders[index];
         return SideItemWidget(
-          item: _folders[index],
+          item: item,
           onChoose: _isChooseItem,
           onPressed: _chooseHandler,
+          onPointerDown: (event) =>
+            _noFolder != item ? _onPointerDown(item, event) : null,
         );
       },
       itemCount: _folders.length,
     );
   }
 
-  /// 创建文件夹
-  void _newFolder() {
-    showDialog<String>(
-        context: context, builder: (context) => const InputDialog()
-    ).then((value) {
-      if (value == null) {
-        return;
-      }
+  /// 鼠标事件
+  Future<void> _onPointerDown(SideItem item, PointerDownEvent event) async {
 
-      if (value.isEmpty) {
-        MessageUtil.showMessage(context, S.of(context).canNotEmpty);
-        return;
-      }
+    if (event.kind != PointerDeviceKind.mouse
+        || event.buttons != kSecondaryMouseButton) {
+      return;
+    }
 
+    final overlay = Overlay.of(context)!.context
+        .findRenderObject() as RenderBox;
+
+    final menuItem = await showMenu<int>(
+        context: context,
+        items: [
+          PopupMenuItem(value: 1, child: Text(S.of(context).edit)),
+          PopupMenuItem(value: 2, child: Text(S.of(context).delete)),
+        ],
+        position: RelativeRect.fromSize(
+            event.position & const Size(48.0, 48.0), overlay.size
+        )
+    );
+    
+    switch (menuItem) {
+      case 1:
+        _editFolder(item: item.data);
+        break;
+      case 2:
+        _deleteFolder(item: item.data);
+        break;
+      default:
+    }
+  }
+
+  /// 编辑文件夹
+  Future<void> _editFolder({FolderItem? item}) async {
+
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return InputDialog(
+          title: S.of(context).editFolder,
+          labelText: S.of(context).name,
+          value: item?.name ?? '',
+        );
+      }
+    );
+
+    if (result == null) {
+      return;
+    }
+
+    if (result.isEmpty) {
+      MessageUtil.showMessage(context, S.of(context).canNotEmpty);
+      return;
+    }
+
+    if (item == null) {
       // 创建文件夹
-      _appModel.createFolder(value).then((value) {
-      }).onError((error, stackTrace) {
+      _appModel.createFolder(result).catchError((error, stackTrace) {
         MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
       });
+      return;
+    }
+
+    // 更新文件夹
+    _appModel.updateFolder(item.copy(name: result)).catchError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
     });
+  }
+
+  /// 删除文件夹
+  Future<void> _deleteFolder({required FolderItem item}) async {
+
+    final result = await showDialog<int>(
+      context: context,
+      builder: (context) {
+        return HintDialog(
+          title: S.of(context).deleteFolder,
+          message: S.of(context).deleteFolderMessage,
+        );
+      }
+    );
+
+    if (result == 1) {
+      _appModel.deleteFolder(item).catchError((error, stackTrace) {
+        MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+      });
+    }
   }
 
   /// 信息修改
   void _infoChange() {
 
-    final items = _appModel.folderNotifier.value;
+    final items = _appModel.folders;
     final folders = items.map((value) => _buildSideItem(value)).toList();
 
     folders.add(_noFolder);
@@ -189,13 +264,15 @@ class SideItemWidget extends StatelessWidget {
   final ChooseItem<SideItem> onChoose;
   final ValueChanged<SideItem>? onPressed;
   final EdgeInsetsGeometry? padding;
+  final PointerDownEventListener? onPointerDown;
 
   const SideItemWidget({
     Key? key,
     required this.item,
     required this.onChoose,
     this.onPressed,
-    this.padding
+    this.padding,
+    this.onPointerDown
   }) : super(key: key);
 
   @override
@@ -208,9 +285,7 @@ class SideItemWidget extends StatelessWidget {
       child: Material(
         color: XColor.transparent,
         child: Listener(
-          onPointerUp: (event) {
-            XLog.d(">>>>>>>>>>>>>>>>>>>>>>> $event");
-          },
+          onPointerDown: onPointerDown,
           child: Ink(
             decoration: BoxDecoration(
               color: choose ? XColor.sideChooseColor : XColor.transparent,
@@ -234,15 +309,17 @@ class SideItemWidget extends StatelessWidget {
                       ),
                     if (item.icon != null)
                       XBox.horizontal15,
-                    Text(
-                      item.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                    Expanded(
+                      child: Text(
+                        item.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
                           color: XColor.sideTextColor,
-                          fontWeight: FontWeight.normal
+                          fontWeight: FontWeight.normal,
+                        ),
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
@@ -286,7 +363,8 @@ class SideFolderWidget extends StatelessWidget {
               'assets/svg/ic_add.svg',
               color: XColor.sideTextColor,
               width: 16,
-            )
+            ),
+            tooltip: S.of(context).addFolderTip,
           ),
         ],
       ),
