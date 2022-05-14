@@ -254,6 +254,7 @@ class _HomeSideState extends State<HomeSide> {
   void _chooseHandler(SideItem item) {
     setState(() {
       _curSideItem = item;
+      _appModel.loadAccounts(id: item.id, type: item.type);
     });
   }
 }

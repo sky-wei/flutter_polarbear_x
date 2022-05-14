@@ -32,6 +32,8 @@
   "deleteFolder": "Delete Folder",
   "addFolderTip": "Add folder",
   "addAccountTip": "Add account",
+  "newAccount": "New Account",
+  "emptyAccountListTip": "There are no items to list.",
   "deleteFolderMessage": "Are you sure you want to delete this folder!",
   "end": "End"
 }

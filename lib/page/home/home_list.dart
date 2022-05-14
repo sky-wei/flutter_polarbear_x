@@ -17,13 +17,17 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/data/item/account_item.dart';
+import 'package:flutter_polarbear_x/model/side_item.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
+import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../../generated/l10n.dart';
-import '../../widget/big_search_widget.dart';
+import '../../model/app_model.dart';
 import 'home_side.dart';
 
 class HomeList extends StatefulWidget {
@@ -36,24 +40,10 @@ class HomeList extends StatefulWidget {
 
 class _HomeListState extends State<HomeList> {
 
-  List<DemoItem> _demoItems = [
-    DemoItem("Test1", "Sky", DateTime.now()),
-    DemoItem("Test2", "Sky", DateTime.now()),
-    DemoItem("Test3", "Sky", DateTime.now()),
-    DemoItem("Test4", "Sky", DateTime.now()),
-    DemoItem("Test5", "Sky", DateTime.now()),
-    DemoItem("Test6", "Sky", DateTime.now()),
-    DemoItem("Test7", "Sky", DateTime.now()),
-    DemoItem("Test8", "Sky", DateTime.now()),
-    DemoItem("Test8", "Sky", DateTime.now()),
-    DemoItem("Test9", "Sky", DateTime.now()),
-    DemoItem("Test10", "Sky", DateTime.now()),
-    DemoItem("Test11", "Sky", DateTime.now()),
-    DemoItem("Test12", "Sky", DateTime.now()),
-    DemoItem("Test13", "Sky", DateTime.now()),
-  ];
+  final List<AccountItem> _accountItems = [];
 
-  DemoItem? _curDemoItem;
+  AccountItem? _curAccountItem;
+  late AppModel _appModel;
 
   late ScrollController _scrollController;
 
@@ -61,11 +51,15 @@ class _HomeListState extends State<HomeList> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+    _appModel = context.read<AppModel>();
+    _appModel.accountNotifier.addListener(_infoChange);
+    _appModel.loadAccounts(type: SideType.allItems);
   }
 
   @override
   void dispose() {
     super.dispose();
+    _appModel.accountNotifier.removeListener(_infoChange);
     _scrollController.dispose();
   }
   
@@ -77,17 +71,18 @@ class _HomeListState extends State<HomeList> {
       padding: EdgeInsets.only(top: appWindow.titleBarHeight),
       child: Column(
         children: [
-          _buildSearHead(),
+          _buildListHead(),
           XBox.horizontal20,
           Expanded(
-            child: _buildList(),
+            child: _buildAccountList(),
           )
         ],
       ),
     );
   }
 
-  Widget _buildSearHead() {
+  /// 创建列表头
+  Widget _buildListHead() {
     return Padding(
       padding: const EdgeInsets.only(left: 20, top: 26, right: 20, bottom: 30),
       child: Row(
@@ -96,13 +91,12 @@ class _HomeListState extends State<HomeList> {
             child: ListSearchWidget(
               iconName: 'ic_search.svg',
               labelText: S.of(context).search,
+              onChanged: _infoSearch,
             ),
           ),
           XBox.horizontal5,
           IconButton(
-            onPressed: () {
-
-            },
+            onPressed: _createAccount,
             icon: SvgPicture.asset(
               'assets/svg/ic_add.svg',
               color: XColor.black,
@@ -116,40 +110,101 @@ class _HomeListState extends State<HomeList> {
     );
   }
 
-  Widget _buildList() {
+  /// 创建账号列表
+  Widget _buildAccountList() {
+
+    if (_accountItems.isEmpty) {
+      return _buildAccountEmpty(_createAccount);
+    }
+
     return ListView.separated(
       controller: _scrollController,
       itemBuilder: (context, index) {
         return ListItemWidget(
-          item: _demoItems[index],
+          item: _accountItems[index],
           onChoose: _isChooseItem,
           onPressed: _chooseHandler,
         );
       },
-      itemCount: _demoItems.length,
+      itemCount: _accountItems.length,
       separatorBuilder: (context, index) {
         return const Padding(
           padding: EdgeInsets.only(left: 20, right: 20),
-          child: Divider(color: Color(0xFFE7ECF3)),
+          child: Divider(color: XColor.listChooseColor),
         );
       },
     );
   }
 
-  bool _isChooseItem(DemoItem item) => _curDemoItem == item;
+  Widget _buildAccountEmpty(VoidCallback? onPressed) {
+    return Center(
+      child: Material(
+        child: Ink(
+          decoration: BoxDecoration(
+            color: XColor.listColor,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(6),
+            onTap: onPressed,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 28, top: 24, right: 28, bottom: 24
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset(
+                      'assets/svg/ic_empty.svg',
+                      color: XColor.themeColor,
+                      width: 46,
+                      height: 46
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    S.of(context).emptyAccountListTip,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-  void _chooseHandler(DemoItem item) {
+  /// 信息修改
+  void _infoChange() {
     setState(() {
-      _curDemoItem = item;
+      _accountItems.clear();
+      _accountItems.addAll(_appModel.accounts);
+    });
+  }
+
+  /// 搜索
+  void _infoSearch(String keyword) {
+    XLog.d('>>>>>>>>>>>>>>>>>>>>>> $keyword');
+  }
+
+  /// 创建账号
+  void _createAccount() {
+
+  }
+
+  bool _isChooseItem(AccountItem item) => _curAccountItem == item;
+
+  void _chooseHandler(AccountItem item) {
+    setState(() {
+      _curAccountItem = item;
     });
   }
 }
 
 class ListItemWidget extends StatelessWidget {
 
-  final DemoItem item;
-  final ChooseItem<DemoItem> onChoose;
-  final ValueChanged<DemoItem>? onPressed;
+  final AccountItem item;
+  final ChooseItem<AccountItem> onChoose;
+  final ValueChanged<AccountItem>? onPressed;
   final EdgeInsetsGeometry? padding;
 
   final DateFormat _dateFormat = DateFormat.yMMMMd();
@@ -191,7 +246,7 @@ class ListItemWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        item.name,
+                        item.alias,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -202,7 +257,7 @@ class ListItemWidget extends StatelessWidget {
                       ),
                       XBox.vertical10,
                       Text(
-                        item.username,
+                        item.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -213,7 +268,7 @@ class ListItemWidget extends StatelessWidget {
                       ),
                       XBox.vertical5,
                       Text(
-                        _dateFormat.format(item.lastTime),
+                        _dateFormat.format(item.updateDateTime),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -291,14 +346,5 @@ class ListSearchWidget extends StatelessWidget {
       ),
     );
   }
-}
-
-class DemoItem {
-
-  final String name;
-  final String username;
-  final DateTime lastTime;
-
-  DemoItem(this.name, this.username, this.lastTime);
 }
 

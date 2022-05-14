@@ -380,6 +380,26 @@ class S {
     );
   }
 
+  /// `New Account`
+  String get newAccount {
+    return Intl.message(
+      'New Account',
+      name: 'newAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There are no items to list.`
+  String get emptyAccountListTip {
+    return Intl.message(
+      'There are no items to list.',
+      name: 'emptyAccountListTip',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Are you sure you want to delete this folder!`
   String get deleteFolderMessage {
     return Intl.message(

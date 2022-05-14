@@ -30,9 +30,10 @@ class AdminItem {
    required this.name,
    required this.password,
    this.desc = 'Admin',
-   this.createTime = 0,
-   this.updateTime = 0,
-  });
+    int? createTime,
+    int? updateTime,
+  }): createTime = createTime ?? DateTime.now().millisecondsSinceEpoch,
+    updateTime = updateTime ?? DateTime.now().millisecondsSinceEpoch;
 
   AdminItem.valueOf(AdminItem item) :
     id = item.id,

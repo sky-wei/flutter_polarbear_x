@@ -15,8 +15,11 @@
  */
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/repository/encrypt_store.dart';
+import 'package:flutter_polarbear_x/model/side_item.dart';
 import 'package:flutter_polarbear_x/util/easy_notifier.dart';
+import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../data/item/admin_item.dart';
@@ -34,6 +37,7 @@ class AppModel extends AbstractModel {
   late AppRepository _appRepository;
 
   final ValueNotifier<List<FolderItem>> folderNotifier = ValueNotifier([]);
+  final ValueNotifier<List<AccountItem>> accountNotifier = ValueNotifier([]);
 
   AdminItem _admin = AdminItem(id: 1, name: 'Sky', password: '123456');
 
@@ -43,9 +47,13 @@ class AppModel extends AbstractModel {
   /// 文件夹
   List<FolderItem> get folders => folderNotifier.value;
 
+  /// 账号
+  List<AccountItem> get accounts => accountNotifier.value;
+
   @override
   void dispose() {
     folderNotifier.dispose();
+    accountNotifier.dispose();
     super.dispose();
   }
 
@@ -71,9 +79,7 @@ class AppModel extends AbstractModel {
     var item = _appRepository.encryptAdmin(
       AdminItem(
         name: name,
-        password: password,
-        createTime: DateTime.now().millisecondsSinceEpoch,
-        updateTime: DateTime.now().millisecondsSinceEpoch,
+        password: password
       )
     );
 
@@ -144,6 +150,30 @@ class AppModel extends AbstractModel {
     folderNotifier.value = await _appRepository.loadFoldersBy(admin);
 
     return folders;
+  }
+
+  /// 加载账号列表
+  Future<List<AccountItem>> loadAccounts({
+    int id = 0,
+    required SideType type
+  }) async {
+
+    XLog.d('>>>>>>>>>>>>>>>>>>>> $id  $type');
+
+    final items = [
+      AccountItem(id: 0, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
+      AccountItem(id: 1, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
+      AccountItem(id: 2, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
+      AccountItem(id: 3, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
+      AccountItem(id: 4, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
+      AccountItem(id: 5, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
+      AccountItem(id: 6, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
+      AccountItem(id: 7, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
+    ];
+
+    accountNotifier.value = items;
+
+    return accounts;
   }
 
   /// 更新管理员信息

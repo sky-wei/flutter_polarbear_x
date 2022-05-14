@@ -31,6 +31,10 @@ class AccountItem {
   final int createTime;
   final int updateTime;
 
+  DateTime get createDateTime => DateTime.fromMillisecondsSinceEpoch(createTime);
+
+  DateTime get updateDateTime => DateTime.fromMillisecondsSinceEpoch(updateTime);
+
   AccountItem({
     this.id = 0,
     required this.adminId,
@@ -42,9 +46,10 @@ class AccountItem {
     this.folderId = -1,
     this.favorite = false,
     this.trash = false,
-    this.createTime = 0,
-    this.updateTime = 0
-  });
+    int? createTime,
+    int? updateTime,
+  }): createTime = createTime ?? DateTime.now().millisecondsSinceEpoch,
+    updateTime = updateTime ?? DateTime.now().millisecondsSinceEpoch;
 
   AccountItem copy({
     int? id,

@@ -43,6 +43,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Delete error!"),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editFolder": MessageLookupByLibrary.simpleMessage("Edit Folder"),
+        "emptyAccountListTip":
+            MessageLookupByLibrary.simpleMessage("There are no items to list."),
         "end": MessageLookupByLibrary.simpleMessage("End"),
         "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
         "folderExists":
@@ -55,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
+        "newAccount": MessageLookupByLibrary.simpleMessage("New Account"),
         "noFolder": MessageLookupByLibrary.simpleMessage("No Folder"),
         "notSupport":
             MessageLookupByLibrary.simpleMessage("Not currently supported!"),
