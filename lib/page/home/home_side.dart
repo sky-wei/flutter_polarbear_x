@@ -243,8 +243,9 @@ class _HomeSideState extends State<HomeSide> {
   SideItem _buildSideItem(FolderItem item) {
     return SideItem(
         id: item.id,
-        icon: 'assets/svg/ic_folder.svg',
         name: item.name,
+        icon: 'assets/svg/ic_folder.svg',
+        type: SideType.folder,
         value: item
     );
   }
@@ -252,9 +253,12 @@ class _HomeSideState extends State<HomeSide> {
   bool _isChooseItem(SideItem item) => _curSideItem == item;
   
   void _chooseHandler(SideItem item) {
+
+    if (_isChooseItem(item)) return;
+
     setState(() {
       _curSideItem = item;
-      _appModel.loadAccounts(id: item.id, type: item.type);
+      _appModel.loadAccounts(folderId: item.id, type: item.type);
     });
   }
 }

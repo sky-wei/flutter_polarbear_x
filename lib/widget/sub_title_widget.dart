@@ -26,7 +26,7 @@ class SubTitleWidget extends StatelessWidget {
   const SubTitleWidget({
     Key? key,
     required this.title,
-    this.padding = const EdgeInsets.only(left: 15)
+    this.padding = const EdgeInsets.only(left: 20)
   }) : super(key: key);
 
   @override

@@ -16,6 +16,7 @@
 
 import 'package:flutter_polarbear_x/data/entity/folder_entity.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
+import 'package:flutter_polarbear_x/data/mapper/account_mapper.dart';
 import 'package:flutter_polarbear_x/data/mapper/folder_mapper.dart';
 
 import '../data_exception.dart';
@@ -136,6 +137,76 @@ class AppRepository {
 
     return FolderMapper.transformEntities(entities);
   }
+
+  // /// 加载收藏账号
+  // Future<List<AccountItem>> loadFavoriteAccountBy(AdminItem item) async {
+  //
+  //   var entities = accountBox
+  //       .query(
+  //         AccountEntity_.adminId.equals(item.id)
+  //             .and(AccountEntity_.trash.equals(false))
+  //             .and(AccountEntity_.favorite.equals(true))
+  //       )
+  //       .build()
+  //       .find();
+  //
+  //   return AccountMapper.transformEntities(entities);
+  // }
+
+  /// 加载所有账号(包括删除的账号)
+  Future<List<AccountItem>> loadAllAccountBy(AdminItem item) async {
+
+    var entities = accountBox
+        .query(AccountEntity_.adminId.equals(item.id))
+        .build()
+        .find();
+
+    return AccountMapper.transformEntities(entities);
+  }
+
+  // /// 加载被删除账号
+  // Future<List<AccountItem>> loadTrashAccountBy(AdminItem item) async {
+  //
+  //   var entities = accountBox
+  //       .query(
+  //         AccountEntity_.adminId.equals(item.id)
+  //             .and(AccountEntity_.trash.equals(true))
+  //       )
+  //       .build()
+  //       .find();
+  //
+  //   return AccountMapper.transformEntities(entities);
+  // }
+  //
+  // /// 加载文件夹的账号
+  // Future<List<AccountItem>> loadFolderAccountBy(AdminItem item, int id) async {
+  //
+  //   var entities = accountBox
+  //       .query(
+  //         AccountEntity_.adminId.equals(item.id)
+  //             .and(AccountEntity_.trash.equals(false))
+  //             .and(AccountEntity_.folderId.equals(id))
+  //       )
+  //       .build()
+  //       .find();
+  //
+  //   return AccountMapper.transformEntities(entities);
+  // }
+  //
+  // /// 加载文件夹的账号
+  // Future<List<AccountItem>> loadNoFolderAccountBy(AdminItem item) async {
+  //
+  //   var entities = accountBox
+  //       .query(
+  //         AccountEntity_.adminId.equals(item.id)
+  //           .and(AccountEntity_.trash.equals(false))
+  //           .and(AccountEntity_.folderId.equals(0))
+  //       )
+  //       .build()
+  //       .find();
+  //
+  //   return AccountMapper.transformEntities(entities);
+  // }
 
   /// 加密管理员的密码
   AdminItem encryptAdmin(AdminItem item) {

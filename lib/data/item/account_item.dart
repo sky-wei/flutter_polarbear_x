@@ -43,7 +43,7 @@ class AccountItem {
     required this.password,
     this.urls = const [],
     this.node = '',
-    this.folderId = -1,
+    this.folderId = 0,
     this.favorite = false,
     this.trash = false,
     int? createTime,
@@ -110,6 +110,19 @@ class AccountItem {
     'createTime': createTime,
     'updateTime': updateTime,
   };
+
+  bool contains(String keyword) {
+    return alias.contains(keyword) || name.contains(keyword) || _contains(urls, keyword);
+  }
+
+  bool _contains(List<String> values, String keyword) {
+    for(var value in values) {
+      if (value.contains(keyword)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   @override
   bool operator ==(Object other) =>

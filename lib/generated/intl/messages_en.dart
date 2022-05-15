@@ -32,10 +32,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "appName": MessageLookupByLibrary.simpleMessage("PasswordX"),
         "canNotEmpty": MessageLookupByLibrary.simpleMessage("Can not be empty"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "clone": MessageLookupByLibrary.simpleMessage("Clone"),
         "close": MessageLookupByLibrary.simpleMessage("Close"),
         "confirmPassword":
             MessageLookupByLibrary.simpleMessage("Confirm Password"),
+        "copy": MessageLookupByLibrary.simpleMessage("Copy"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "deleteAccount": MessageLookupByLibrary.simpleMessage("Delete Account"),
+        "deleteAccountMessage": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to delete this account!"),
         "deleteFolder": MessageLookupByLibrary.simpleMessage("Delete Folder"),
         "deleteFolderMessage": MessageLookupByLibrary.simpleMessage(
             "Are you sure you want to delete this folder!"),
@@ -67,9 +72,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Wrong password!"),
         "passwordNotMatch":
             MessageLookupByLibrary.simpleMessage("Password does not match!"),
+        "recall": MessageLookupByLibrary.simpleMessage("Recall"),
+        "save": MessageLookupByLibrary.simpleMessage("Save"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "trash": MessageLookupByLibrary.simpleMessage("Trash"),
-        "updateInfoError": MessageLookupByLibrary.simpleMessage("Update error!")
+        "updateInfoError":
+            MessageLookupByLibrary.simpleMessage("Update error!"),
+        "view": MessageLookupByLibrary.simpleMessage("View")
       };
 }

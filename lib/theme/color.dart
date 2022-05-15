@@ -52,6 +52,8 @@ class XColor {
 
   static const Color setSideChooseColor = Color(0xFFDBE3F3);
 
+  static const Color favoriteColor = Color(0xFFFFB806);
+
   static const Color themeColor = Color(_redPrimaryValue);
 
 

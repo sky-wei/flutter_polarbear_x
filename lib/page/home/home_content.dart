@@ -17,31 +17,68 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/sub_title_widget.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+
+import '../../dialog/hint_dialog.dart';
+import '../../generated/l10n.dart';
+import '../../model/app_model.dart';
+import '../../util/error_util.dart';
+import '../../util/message_util.dart';
+
+enum AccountState {
+  view,
+  edit,
+  none
+}
 
 class HomeContent extends StatefulWidget {
 
-  const HomeContent({Key? key}) : super(key: key);
+  static final GlobalKey _globalKey = GlobalKey();
+
+  static HomeContentState of(BuildContext context) {
+    return _globalKey.currentState! as HomeContentState;
+  }
+
+  HomeContent({Key? key}) : super(key: _globalKey);
 
   @override
-  State<StatefulWidget> createState() => _HomeContentState();
+  State<StatefulWidget> createState() => HomeContentState();
 }
 
-class _HomeContentState extends State<HomeContent> {
+class HomeContentState extends State<HomeContent> {
+  
+  final Map<MenuType, MenuItem> _menus = {
+    MenuType.edit: MenuItem(icon: 'assets/svg/ic_edit.svg', name: S.current.edit, type: MenuType.edit),
+    MenuType.copy: MenuItem(icon: 'assets/svg/ic_copy.svg', name: S.current.copy, type: MenuType.copy),
+    MenuType.delete: MenuItem(icon: 'assets/svg/ic_delete.svg', name: S.current.delete, type: MenuType.delete, color: XColor.deleteColor),
+    MenuType.recall: MenuItem(icon: 'assets/svg/ic_recall.svg', name: S.current.recall, type: MenuType.recall),
+    MenuType.save: MenuItem(icon: 'assets/svg/ic_save.svg', name: S.current.save, type: MenuType.save, color: XColor.themeColor),
+  };
 
   late TextEditingController _nameController;
   late TextEditingController _userNameController;
   late TextEditingController _passwordController;
 
+  late AppModel _appModel;
+
+  AccountState _accountState = AccountState.none;
+  AccountItem _rawAccountItem = AccountItem.empty;
+  AccountItem _editAccountItem = AccountItem.empty;
+
+  AccountState get accountState => _accountState;
+
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: "Sky");
-    _userNameController = TextEditingController(text: "Sky");
-    _passwordController = TextEditingController(text: "******");
+    _appModel = context.read<AppModel>();
+    _nameController = TextEditingController();
+    _userNameController = TextEditingController();
+    _passwordController = TextEditingController();
   }
 
   @override
@@ -52,10 +89,49 @@ class _HomeContentState extends State<HomeContent> {
     _passwordController.dispose();
   }
 
+  /// 显示账号
+  void viewAccount(AccountItem item) {
+    _setContent(AccountState.view, item);
+  }
+
+  /// 显示账号
+  void editAccount(AccountItem item) {
+    _setContent(AccountState.edit, item);
+  }
+
+  /// 清除账号
+  void clearAccount(AccountItem item) {
+    _setContent(AccountState.none, AccountItem.empty);
+  }
+
+  /// 设置信息
+  void _setContent(AccountState state, AccountItem item) {
+    setState(() {
+      _accountState = state;
+      _rawAccountItem = item;
+      _editAccountItem = item.copy();
+
+      _nameController.text = item.alias;
+      _userNameController.text = item.name;
+      _passwordController.text = item.password;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    switch(accountState) {
+      case AccountState.view:
+        return _buildViewContent();
+      case AccountState.edit:
+        return _buildEditContent();
+      case AccountState.none:
+        return const Center();
+    }
+  }
+
+  Widget _buildViewContent() {
     return Padding(
-      padding: EdgeInsets.only(left: 20, top: appWindow.titleBarHeight + 40, right: 20, bottom: 20),
+      padding: EdgeInsets.only(left: 40, top: appWindow.titleBarHeight + 40, right: 40, bottom: 20),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -79,6 +155,7 @@ class _HomeContentState extends State<HomeContent> {
                     SubItemWidget(
                       controller: _passwordController,
                       title: 'Password',
+                      obscureText: true,
                     ),
                   ],
                 ),
@@ -96,59 +173,167 @@ class _HomeContentState extends State<HomeContent> {
             ),
           ),
           XBox.horizontal20,
-          _buildMenuList()
+          _buildMenuList(_buildMenuItems())
         ],
       ),
     );
   }
 
-  Widget _buildMenuList() {
+  Widget _buildEditContent() {
     return Padding(
-      padding: EdgeInsets.only(top: 26),
+      padding: EdgeInsets.only(left: 40, top: appWindow.titleBarHeight + 40, right: 40, bottom: 20),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SubListWidget(
+                  title: 'ITEM INFORMATION',
+                  children: [
+                    SubItemWidget(
+                      controller: _nameController,
+                      title: 'Name',
+                      readOnly: false,
+                      autofocus: true,
+                    ),
+                    const SubItemLine(),
+                    SubItemWidget(
+                      controller: _userNameController,
+                      title: 'UserName',
+                      readOnly: false,
+                    ),
+                    const SubItemLine(),
+                    SubItemWidget(
+                      controller: _passwordController,
+                      title: 'Password',
+                      readOnly: false,
+                      obscureText: true,
+                    ),
+                  ],
+                ),
+                XBox.vertical30,
+                SubListWidget(
+                  title: 'ITEM INFORMATION',
+                  children: [
+                    SubItemWidget(
+                      controller: _nameController,
+                      title: 'Name',
+                      readOnly: false,
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          XBox.horizontal20,
+          _buildMenuList(_buildMenuItems())
+        ],
+      ),
+    );
+  }
+
+  /// 生成菜单列表
+  Widget _buildMenuList(List<MenuItem> items) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 26),
       child: Material(
         color: XColor.white,
         borderRadius: BorderRadius.circular(6),
         child: Padding(
-          padding: EdgeInsets.only(left: 5, right: 5),
+          padding: const EdgeInsets.only(left: 5, right: 5),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              XBox.vertical10,
-              IconButton(
-                  onPressed: () { },
-                  tooltip: 'Edit',
-                  icon: SvgPicture.asset(
-                    'assets/svg/ic_edit.svg',
-                    color: XColor.black,
-                    width: 20,
-                  )
-              ),
-              XBox.vertical10,
-              IconButton(
-                  onPressed: () { },
-                  tooltip: 'Copy',
-                  icon: SvgPicture.asset(
-                    'assets/svg/ic_copy.svg',
-                    color: XColor.black,
-                    width: 20,
-                  )
-              ),
-              XBox.vertical10,
-              IconButton(
-                  onPressed: () { },
-                  tooltip: 'Delete',
-                  icon: SvgPicture.asset(
-                    'assets/svg/ic_delete.svg',
-                    color: XColor.deleteColor,
-                    width: 20,
-                  )
-              ),
-              XBox.vertical10,
+              for (var item in items)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: IconButton(
+                    onPressed: () { _handlerMenuEvent(item); },
+                    tooltip: item.name,
+                    icon: SvgPicture.asset(
+                      item.icon,
+                      color: item.color,
+                      width: 20
+                    )
+                  ),
+                ),
+              XBox.vertical10
             ],
           ),
         ),
       ),
     );
+  }
+
+  /// 处理菜单事件
+  void _handlerMenuEvent(MenuItem item) {
+    switch(item.type) {
+      case MenuType.edit:
+        setState(() {
+          _accountState = AccountState.edit;
+        });
+        break;
+      case MenuType.copy:
+        break;
+      case MenuType.delete:
+        _deleteAccount(_rawAccountItem);
+        break;
+      case MenuType.recall:
+        setState(() {
+          _accountState = AccountState.view;
+        });
+        break;
+      case MenuType.save:
+        break;
+    }
+  }
+
+  /// 删除账号
+  Future<void> _deleteAccount(AccountItem item) async {
+
+    final result = await showDialog<int>(
+        context: context,
+        builder: (context) {
+          return HintDialog(
+            title: S.of(context).deleteAccount,
+            message: S.of(context).deleteAccountMessage,
+          );
+        }
+    );
+
+    if (result == 1) {
+      _appModel.deleteAccount(item).catchError((error, stackTrace) {
+        MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+      });
+    }
+  }
+
+  /// 创建MenuItem
+  List<MenuItem> _buildMenuItems() {
+
+    if (AccountState.view == accountState) {
+      return _buildMenuItem([MenuType.edit, MenuType.copy, MenuType.delete]);
+    }
+
+    if (AccountState.edit == accountState) {
+      return _buildMenuItem([MenuType.save, MenuType.recall, MenuType.delete]);
+    }
+
+    return _buildMenuItem([MenuType.save, MenuType.recall, MenuType.delete]);
+  }
+
+  /// 创建MenuItem
+  List<MenuItem> _buildMenuItem(List<MenuType> types) {
+
+    List<MenuItem> items = [];
+
+    for (var type in types) {
+      items.add(_menus[type]!);
+    }
+
+    return items;
   }
 }
 
@@ -174,7 +359,7 @@ class SubListWidget extends StatelessWidget {
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(6),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(15, 10, 0, 15),
+            padding: const EdgeInsets.fromLTRB(20, 10, 0, 20),
             child: Column(
               children: children,
             ),
@@ -194,6 +379,7 @@ class SubItemWidget extends StatelessWidget {
   final TextInputType keyboardType;
   final ValueChanged<String>? onChanged;
   final bool readOnly;
+  final bool obscureText;
 
   const SubItemWidget({
     Key? key,
@@ -203,7 +389,8 @@ class SubItemWidget extends StatelessWidget {
     this.textInputAction,
     this.keyboardType = TextInputType.text,
     this.onChanged,
-    this.readOnly = true
+    this.readOnly = true,
+    this.obscureText = false,
   }) : super(key: key);
 
   @override
@@ -235,6 +422,7 @@ class SubItemWidget extends StatelessWidget {
             keyboardType: keyboardType,
             onChanged: onChanged,
             readOnly: readOnly,
+            obscureText: obscureText,
           ),
         )
       ],
@@ -253,4 +441,27 @@ class SubItemLine extends StatelessWidget {
       thickness: 1,
     );
   }
+}
+
+enum MenuType {
+  edit,
+  copy,
+  delete,
+  recall,
+  save
+}
+
+class MenuItem {
+
+  final String icon;
+  final String name;
+  final MenuType type;
+  final Color color;
+
+  MenuItem({
+    required this.icon,
+    required this.name, 
+    required this.type,
+    this.color = XColor.black
+  });
 }

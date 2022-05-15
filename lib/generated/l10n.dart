@@ -360,6 +360,16 @@ class S {
     );
   }
 
+  /// `Delete Account`
+  String get deleteAccount {
+    return Intl.message(
+      'Delete Account',
+      name: 'deleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Add folder`
   String get addFolderTip {
     return Intl.message(
@@ -405,6 +415,66 @@ class S {
     return Intl.message(
       'Are you sure you want to delete this folder!',
       name: 'deleteFolderMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete this account!`
+  String get deleteAccountMessage {
+    return Intl.message(
+      'Are you sure you want to delete this account!',
+      name: 'deleteAccountMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View`
+  String get view {
+    return Intl.message(
+      'View',
+      name: 'view',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clone`
+  String get clone {
+    return Intl.message(
+      'Clone',
+      name: 'clone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Copy`
+  String get copy {
+    return Intl.message(
+      'Copy',
+      name: 'copy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recall`
+  String get recall {
+    return Intl.message(
+      'Recall',
+      name: 'recall',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get save {
+    return Intl.message(
+      'Save',
+      name: 'save',
       desc: '',
       args: [],
     );

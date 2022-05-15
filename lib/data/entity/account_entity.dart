@@ -52,7 +52,7 @@ class AccountEntity {
     required this.password,
     this.url = '',
     this.node = '',
-    this.folderId = -1,
+    this.folderId = 0,
     this.favorite = false,
     this.trash = false,
     this.createTime = 0,

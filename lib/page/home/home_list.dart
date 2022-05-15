@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
+import 'dart:ui';
+
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
-import 'package:flutter_polarbear_x/model/side_item.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../dialog/hint_dialog.dart';
 import '../../generated/l10n.dart';
 import '../../model/app_model.dart';
+import '../../util/error_util.dart';
+import '../../util/message_util.dart';
+import 'home_content.dart';
 import 'home_side.dart';
 
 class HomeList extends StatefulWidget {
@@ -53,7 +58,7 @@ class _HomeListState extends State<HomeList> {
     _scrollController = ScrollController();
     _appModel = context.read<AppModel>();
     _appModel.accountNotifier.addListener(_infoChange);
-    _appModel.loadAccounts(type: SideType.allItems);
+    _appModel.loadAllAccount();
   }
 
   @override
@@ -120,10 +125,12 @@ class _HomeListState extends State<HomeList> {
     return ListView.separated(
       controller: _scrollController,
       itemBuilder: (context, index) {
+        final item = _accountItems[index];
         return ListItemWidget(
-          item: _accountItems[index],
+          item: item,
           onChoose: _isChooseItem,
           onPressed: _chooseHandler,
+          onPointerDown: (event) => _onPointerDown(item, event),
         );
       },
       itemCount: _accountItems.length,
@@ -173,6 +180,73 @@ class _HomeListState extends State<HomeList> {
     );
   }
 
+  /// 鼠标事件
+  Future<void> _onPointerDown(AccountItem item, PointerDownEvent event) async {
+
+    if (event.kind != PointerDeviceKind.mouse
+        || event.buttons != kSecondaryMouseButton) {
+      return;
+    }
+
+    final overlay = Overlay.of(context)!.context
+        .findRenderObject() as RenderBox;
+
+    final menuItem = await showMenu<int>(
+        context: context,
+        items: [
+          PopupMenuItem(value: 1, child: Text(S.of(context).view)),
+          PopupMenuItem(value: 2, child: Text(S.of(context).edit)),
+          PopupMenuItem(value: 3, child: Text(S.of(context).delete)),
+        ],
+        position: RelativeRect.fromSize(
+            event.position & const Size(48.0, 48.0), overlay.size
+        )
+    );
+
+    switch (menuItem) {
+      case 1:
+        _viewAccount(item: item);
+        break;
+      case 2:
+        _editAccount(item: item);
+        break;
+      case 3:
+        _deleteAccount(item: item);
+        break;
+      default:
+    }
+  }
+
+  /// 删除账号
+  Future<void> _deleteAccount({required AccountItem item}) async {
+
+    final result = await showDialog<int>(
+        context: context,
+        builder: (context) {
+          return HintDialog(
+            title: S.of(context).deleteAccount,
+            message: S.of(context).deleteAccountMessage,
+          );
+        }
+    );
+
+    if (result == 1) {
+      _appModel.deleteAccount(item).catchError((error, stackTrace) {
+        MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+      });
+    }
+  }
+
+  /// 显示账号
+  Future<void> _viewAccount({required AccountItem item}) async {
+    HomeContent.of(context).viewAccount(item);
+  }
+
+  /// 编辑账号
+  Future<void> _editAccount({required AccountItem item}) async {
+    HomeContent.of(context).editAccount(item);
+  }
+
   /// 信息修改
   void _infoChange() {
     setState(() {
@@ -183,7 +257,7 @@ class _HomeListState extends State<HomeList> {
 
   /// 搜索
   void _infoSearch(String keyword) {
-    XLog.d('>>>>>>>>>>>>>>>>>>>>>> $keyword');
+    _appModel.searchAccount(keyword: keyword);
   }
 
   /// 创建账号
@@ -194,95 +268,156 @@ class _HomeListState extends State<HomeList> {
   bool _isChooseItem(AccountItem item) => _curAccountItem == item;
 
   void _chooseHandler(AccountItem item) {
+
+    if (_isChooseItem(item)) return;
+
     setState(() {
       _curAccountItem = item;
+      _viewAccount(item: item);
     });
   }
 }
 
-class ListItemWidget extends StatelessWidget {
+class ListItemWidget extends StatefulWidget {
 
   final AccountItem item;
   final ChooseItem<AccountItem> onChoose;
   final ValueChanged<AccountItem>? onPressed;
   final EdgeInsetsGeometry? padding;
+  final PointerDownEventListener? onPointerDown;
 
-  final DateFormat _dateFormat = DateFormat.yMMMMd();
-
-  ListItemWidget({
+  const ListItemWidget({
     Key? key,
     required this.item,
     required this.onChoose,
     this.onPressed,
-    this.padding
+    this.padding,
+    this.onPointerDown
   }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => ListItemWidgetState();
+}
+
+class ListItemWidgetState extends State<ListItemWidget> {
+
+  bool _show = false;
+
+  final DateFormat _dateFormat = DateFormat.yMMMMd();
 
   @override
   Widget build(BuildContext context) {
 
-    final choose = onChoose(item);
+    final choose = widget.onChoose(widget.item);
 
     return Padding(
-      padding: padding?? const EdgeInsets.only(left: 10, right: 10),
+
+      padding: widget.padding ?? const EdgeInsets.only(left: 10, right: 10),
       child: Material(
         color: XColor.transparent,
-        child: Ink(
-          decoration: BoxDecoration(
-            color: choose ? XColor.listChooseColor : XColor.transparent,
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: InkWell(
-            splashColor: XColor.listChooseColor,
-            highlightColor: XColor.listChooseColor,
-            enableFeedback: false,
-            borderRadius: BorderRadius.circular(6),
-            onTap: () { if (onPressed != null) onPressed!(item); },
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Stack(
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        child: MouseRegion(
+          onEnter: (event) {
+            setState(() {
+              _show = true;
+            });
+          },
+          onExit: (event) {
+            setState(() {
+              _show = false;
+            });
+          },
+          child: Listener(
+            onPointerDown: widget.onPointerDown,
+            child: Ink(
+              decoration: BoxDecoration(
+                color: choose ? XColor.listChooseColor : XColor.transparent,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: InkWell(
+                splashColor: XColor.listChooseColor,
+                highlightColor: XColor.listChooseColor,
+                enableFeedback: false,
+                borderRadius: BorderRadius.circular(6),
+                onTap: () { if (widget.onPressed != null) widget.onPressed!(widget.item); },
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Stack(
                     children: [
-                      Text(
-                        item.alias,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          // color: XColor.sideTextColor,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16
-                        ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.item.alias,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              // color: XColor.sideTextColor,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 16
+                            ),
+                          ),
+                          XBox.vertical10,
+                          Text(
+                            widget.item.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                color: XColor.grayColor,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 14
+                            ),
+                          ),
+                          XBox.vertical5,
+                          Text(
+                            _dateFormat.format(widget.item.updateDateTime),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                color: XColor.grayColor,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 14
+                            ),
+                          ),
+                        ],
                       ),
-                      XBox.vertical10,
-                      Text(
-                        item.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: XColor.grayColor,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 14
+                      if (widget.item.favorite)
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                              iconSize: 18,
+                              padding: const EdgeInsets.all(0),
+                              constraints: const BoxConstraints(
+                                  maxWidth: 18
+                              ),
+                              onPressed: () { },
+                              icon: SvgPicture.asset(
+                                'assets/svg/ic_favorite.svg',
+                                color: XColor.favoriteColor,
+                                width: 18,
+                              )
+                          ),
                         ),
-                      ),
-                      XBox.vertical5,
-                      Text(
-                        _dateFormat.format(item.updateDateTime),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: XColor.grayColor,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 14
+                      if (!widget.item.favorite && _show)
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                              iconSize: 18,
+                              padding: const EdgeInsets.all(0),
+                              constraints: const BoxConstraints(
+                                  maxWidth: 18
+                              ),
+                              onPressed: () { },
+                              icon: SvgPicture.asset(
+                                'assets/svg/ic_un_favorite.svg',
+                                color: XColor.gray2Color,
+                                width: 18,
+                              )
+                          ),
                         ),
-                      ),
                     ],
                   ),
-                  // GestureDetector(
-                  //
-                  // )
-                ],
+                ),
               ),
             ),
           ),

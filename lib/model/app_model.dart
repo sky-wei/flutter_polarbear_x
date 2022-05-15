@@ -15,6 +15,7 @@
  */
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/repository/encrypt_store.dart';
 import 'package:flutter_polarbear_x/model/side_item.dart';
@@ -26,6 +27,9 @@ import '../data/item/admin_item.dart';
 import '../data/item/folder_item.dart';
 import '../data/objectbox.dart';
 import '../data/repository/app_repository.dart';
+
+
+typedef AccountFilter = bool Function(AccountItem account);
 
 class AbstractModel extends EasyNotifier {
 
@@ -40,6 +44,12 @@ class AppModel extends AbstractModel {
   final ValueNotifier<List<AccountItem>> accountNotifier = ValueNotifier([]);
 
   AdminItem _admin = AdminItem(id: 1, name: 'Sky', password: '123456');
+
+  SideType _lastType = SideType.allItems;
+  String _lastKeyword = '';
+  List<AccountItem> _allAccountItems = [];
+  List<AccountItem> _trashAccountItems = [];
+  List<AccountItem> _filterAccountItems = [];
 
   // 获取管理员信息
   AdminItem get admin => _admin;
@@ -152,28 +162,124 @@ class AppModel extends AbstractModel {
     return folders;
   }
 
+  /// 加载所有账号
+  Future<List<AccountItem>> loadAllAccount() async {
+
+    final items = await _appRepository.loadAllAccountBy(admin);
+
+    _allAccountItems = _filterAccount(
+        accounts: items,
+        filter: (item) => !item.trash
+    );
+
+    _allAccountItems.addAll(
+      [
+        AccountItem(id: 1, adminId: 1, alias: 'Sky1', name: 'jingcai.wei@163.com', password: 'AAAAA', favorite: true),
+        AccountItem(id: 2, adminId: 1, alias: 'Sky2', name: 'jingcai.wei@163.com', password: 'AAAAA', folderId: 18),
+        AccountItem(id: 3, adminId: 1, alias: 'Sky3', name: 'jingcai.wei@163.com', password: 'AAAAA'),
+        AccountItem(id: 4, adminId: 1, alias: 'Sky4', name: 'jingcai.wei@163.com', password: 'AAAAA', folderId: 17),
+        AccountItem(id: 5, adminId: 1, alias: 'Sky5', name: 'jingcai.wei@163.com', password: 'AAAAA', favorite: true),
+      ]
+    );
+
+    _trashAccountItems = _filterAccount(
+        accounts: items,
+        filter: (item) => item.trash
+    );
+
+    _trashAccountItems.addAll(
+        [
+          AccountItem(id: 6, adminId: 1, alias: 'Sky6', name: 'jingcai.wei@163.com', password: 'AAAAA'),
+          AccountItem(id: 7, adminId: 1, alias: 'Sky7', name: 'jingcai.wei@163.com', password: 'AAAAA'),
+        ]
+    );
+
+    return await loadAccounts(type: SideType.allItems);
+  }
+
   /// 加载账号列表
   Future<List<AccountItem>> loadAccounts({
-    int id = 0,
+    int folderId = 0,
     required SideType type
   }) async {
 
-    XLog.d('>>>>>>>>>>>>>>>>>>>> $id  $type');
+    final List<AccountItem> items;
 
-    final items = [
-      AccountItem(id: 0, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
-      AccountItem(id: 1, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
-      AccountItem(id: 2, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
-      AccountItem(id: 3, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
-      AccountItem(id: 4, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
-      AccountItem(id: 5, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
-      AccountItem(id: 6, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
-      AccountItem(id: 7, adminId: 1, alias: 'Sky', name: 'jingcai.wei@163.com', password: 'AAA'),
-    ];
+    switch(type) {
+      case SideType.favorite:
+        items = _filterAccount(
+            accounts: _allAccountItems,
+            filter: (item) => item.favorite
+        );
+        break;
+      case SideType.allItems:
+        items = List.of(_allAccountItems);
+        break;
+      case SideType.trash:
+        items = List.of(_trashAccountItems);
+        break;
+      case SideType.folder:
+        items = _filterAccount(
+            accounts: _allAccountItems,
+            filter: (item) => item.folderId == folderId
+        );
+        break;
+      case SideType.noFolder:
+        items = _filterAccount(
+            accounts: _allAccountItems,
+            filter: (item) => item.folderId == 0
+        );
+        break;
+      default:
+        items = [];
+    }
+
+    _lastType = type;
+    _filterAccountItems = items;
+
+    return await searchAccount(keyword: _lastKeyword);
+  }
+
+  /// 搜索账号
+  Future<List<AccountItem>> searchAccount({
+    required String keyword
+  }) async {
+
+    _lastKeyword = keyword;
+
+    if (keyword.isEmpty) {
+      accountNotifier.value = _filterAccountItems;
+      return accounts;
+    }
+
+    final items = _filterAccount(
+      accounts: _filterAccountItems,
+      filter: (item) => item.contains(keyword)
+    );
 
     accountNotifier.value = items;
-
+    
     return accounts;
+  }
+
+  /// 删除账号
+  Future<AccountItem> deleteAccount(AccountItem item) async {
+    return item;
+  }
+
+  /// 过滤账号
+  List<AccountItem> _filterAccount({
+    required List<AccountItem> accounts,
+    required AccountFilter filter
+  }) {
+
+    final List<AccountItem> items = [];
+
+    for (var item in accounts) {
+      if (filter(item)) items.add(item);
+    }
+
+    return items;
   }
 
   /// 更新管理员信息
