@@ -62,6 +62,11 @@ class HomeContentState extends State<HomeContent> {
     MenuType.restore: MenuItem(icon: 'assets/svg/ic_restore.svg', name: S.current.restore, type: MenuType.restore),
   };
 
+  final ActionItem _copyAction = ActionItem(icon: 'assets/svg/ic_copy.svg', name: S.current.copy);
+  final ActionItem _visibilityAction = ActionItem(icon: 'assets/svg/ic_visibility.svg', name: S.current.toggleVisibility);
+  final ActionItem _invisibleAction = ActionItem(icon: 'assets/svg/ic_invisible.svg', name: S.current.toggleInvisible);
+  final ActionItem _launcherAction = ActionItem(icon: 'assets/svg/ic_launcher.svg', name: S.current.launcher);
+
   late TextEditingController _nameController;
   late TextEditingController _userNameController;
   late TextEditingController _passwordController;
@@ -141,24 +146,26 @@ class HomeContentState extends State<HomeContent> {
           children: [
             SubItemWidget(
               controller: _nameController,
-              title: 'Name',
+              title: S.of(context).name,
             ),
             const SubItemLine(),
             SubItemWidget(
               controller: _userNameController,
-              title: 'UserName',
+              title: S.of(context).userName,
+              actions: [_copyAction],
             ),
             const SubItemLine(),
             SubItemWidget(
               controller: _passwordController,
-              title: 'Password',
+              title: S.of(context).password,
               obscureText: true,
+              actions: [_visibilityAction, _copyAction],
             ),
           ],
         ),
         XBox.vertical30,
         SubListWidget(
-          title: 'ITEM INFORMATION',
+          title: '',
           children: [
             SubItemWidget(
               controller: _nameController,
@@ -175,7 +182,7 @@ class HomeContentState extends State<HomeContent> {
     return SubFrameWidget(
       children: [
         SubListWidget(
-          title: 'ITEM INFORMATION',
+          title: 'EDIT ITEM',
           children: [
             SubItemWidget(
               controller: _nameController,
@@ -251,9 +258,7 @@ class HomeContentState extends State<HomeContent> {
   void _handlerMenuEvent(MenuItem item) {
     switch(item.type) {
       case MenuType.edit:
-        setState(() {
-          _accountState = AccountState.edit;
-        });
+        _setContent(AccountState.edit, _rawAccountItem);
         break;
       case MenuType.copy:
         break;
@@ -261,11 +266,11 @@ class HomeContentState extends State<HomeContent> {
         _deleteAccount(_rawAccountItem);
         break;
       case MenuType.recall:
-        setState(() {
-          _accountState = AccountState.view;
-        });
+        _setContent(AccountState.view, _rawAccountItem);
         break;
       case MenuType.save:
+        break;
+      case MenuType.restore:
         break;
     }
   }
@@ -395,8 +400,10 @@ class SubItemWidget extends StatelessWidget {
   final TextInputAction? textInputAction;
   final TextInputType keyboardType;
   final ValueChanged<String>? onChanged;
+  final ValueChanged<ActionItem>? onAction;
   final bool readOnly;
   final bool obscureText;
+  final List<ActionItem> actions;
 
   const SubItemWidget({
     Key? key,
@@ -408,6 +415,8 @@ class SubItemWidget extends StatelessWidget {
     this.onChanged,
     this.readOnly = true,
     this.obscureText = false,
+    this.actions = const <ActionItem>[],
+    this.onAction
   }) : super(key: key);
 
   @override
@@ -424,24 +433,46 @@ class SubItemWidget extends StatelessWidget {
           ),
         ),
         XBox.vertical5,
-        SizedBox(
-          width: double.infinity,
-          height: 32,
-          child: TextField(
-            controller: controller,
-            autofocus: autofocus,
-            decoration: const InputDecoration(
-              border: InputBorder.none
+        Row(
+          children: [
+            Expanded(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxHeight: 32,
+                ),
+                child: TextField(
+                  controller: controller,
+                  autofocus: autofocus,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none
+                  ),
+                  maxLines: 1,
+                  textInputAction: textInputAction,
+                  textAlignVertical: TextAlignVertical.bottom,
+                  keyboardType: keyboardType,
+                  onChanged: onChanged,
+                  readOnly: readOnly,
+                  obscureText: obscureText,
+                ),
+              ),
             ),
-            maxLines: 1,
-            textInputAction: textInputAction,
-            textAlignVertical: TextAlignVertical.bottom,
-            keyboardType: keyboardType,
-            onChanged: onChanged,
-            readOnly: readOnly,
-            obscureText: obscureText,
-          ),
-        )
+            actions.isEmpty ? XBox.horizontal20 : XBox.horizontal60,
+            for (var action in actions)
+              Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: IconButton(
+                  onPressed: () { if (onAction != null) onAction!(action); },
+                  tooltip: action.name,
+                  icon: SvgPicture.asset(
+                    action.icon,
+                    color: XColor.black,
+                    width: 20
+                  )
+                ),
+              ),
+            XBox.horizontal10,
+          ],
+        ),
       ],
     );
   }
@@ -481,5 +512,16 @@ class MenuItem {
     required this.name, 
     required this.type,
     this.color = XColor.black
+  });
+}
+
+class ActionItem {
+
+  final String icon;
+  final String name;
+
+  ActionItem({
+    required this.icon,
+    required this.name,
   });
 }

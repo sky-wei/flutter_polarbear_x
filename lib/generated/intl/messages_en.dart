@@ -59,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Forget Password?"),
         "handlerError":
             MessageLookupByLibrary.simpleMessage("Handling exceptions!"),
+        "launcher": MessageLookupByLibrary.simpleMessage("Launcher"),
         "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
@@ -77,9 +78,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
+        "toggleInvisible":
+            MessageLookupByLibrary.simpleMessage("Toggle Invisible"),
+        "toggleVisibility":
+            MessageLookupByLibrary.simpleMessage("Toggle Visibility"),
         "trash": MessageLookupByLibrary.simpleMessage("Trash"),
         "updateInfoError":
             MessageLookupByLibrary.simpleMessage("Update error!"),
+        "userName": MessageLookupByLibrary.simpleMessage("UserName"),
         "view": MessageLookupByLibrary.simpleMessage("View")
       };
 }

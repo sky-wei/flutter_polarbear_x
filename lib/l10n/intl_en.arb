@@ -43,5 +43,9 @@
   "recall": "Recall",
   "restore": "Restore",
   "save": "Save",
+  "userName": "UserName",
+  "launcher": "Launcher",
+  "toggleVisibility": "Toggle Visibility",
+  "toggleInvisible": "Toggle Invisible",
   "end": "End"
 }

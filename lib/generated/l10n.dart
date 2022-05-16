@@ -490,6 +490,46 @@ class S {
     );
   }
 
+  /// `UserName`
+  String get userName {
+    return Intl.message(
+      'UserName',
+      name: 'userName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Launcher`
+  String get launcher {
+    return Intl.message(
+      'Launcher',
+      name: 'launcher',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Toggle Visibility`
+  String get toggleVisibility {
+    return Intl.message(
+      'Toggle Visibility',
+      name: 'toggleVisibility',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Toggle Invisible`
+  String get toggleInvisible {
+    return Intl.message(
+      'Toggle Invisible',
+      name: 'toggleInvisible',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `End`
   String get end {
     return Intl.message(
