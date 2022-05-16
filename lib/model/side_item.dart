@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_polarbear_x/theme/color.dart';
+
 enum SideType {
   favorite,
   allItems,
@@ -29,6 +32,7 @@ class SideItem {
   final String? icon;
   final String name;
   final SideType type;
+  final Color color;
   final dynamic data;
 
   SideItem({
@@ -36,10 +40,11 @@ class SideItem {
     required this.name,
     this.icon,
     this.type = SideType.none,
+    this.color = XColor.themeColor,
     dynamic value
   }): data = value;
 
-  SideItem.text(this.id, this.name): icon = null, type = SideType.none, data = null;
+  SideItem.text(this.id, this.name): icon = null, type = SideType.none, color = XColor.themeColor, data = null;
 
   @override
   bool operator ==(Object other) =>

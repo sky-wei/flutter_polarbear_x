@@ -41,6 +41,7 @@
   "clone": "Clone",
   "copy": "Copy",
   "recall": "Recall",
+  "restore": "Restore",
   "save": "Save",
   "end": "End"
 }

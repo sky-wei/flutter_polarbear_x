@@ -164,49 +164,37 @@ class AppRepository {
     return AccountMapper.transformEntities(entities);
   }
 
-  // /// 加载被删除账号
-  // Future<List<AccountItem>> loadTrashAccountBy(AdminItem item) async {
-  //
-  //   var entities = accountBox
-  //       .query(
-  //         AccountEntity_.adminId.equals(item.id)
-  //             .and(AccountEntity_.trash.equals(true))
-  //       )
-  //       .build()
-  //       .find();
-  //
-  //   return AccountMapper.transformEntities(entities);
-  // }
-  //
-  // /// 加载文件夹的账号
-  // Future<List<AccountItem>> loadFolderAccountBy(AdminItem item, int id) async {
-  //
-  //   var entities = accountBox
-  //       .query(
-  //         AccountEntity_.adminId.equals(item.id)
-  //             .and(AccountEntity_.trash.equals(false))
-  //             .and(AccountEntity_.folderId.equals(id))
-  //       )
-  //       .build()
-  //       .find();
-  //
-  //   return AccountMapper.transformEntities(entities);
-  // }
-  //
-  // /// 加载文件夹的账号
-  // Future<List<AccountItem>> loadNoFolderAccountBy(AdminItem item) async {
-  //
-  //   var entities = accountBox
-  //       .query(
-  //         AccountEntity_.adminId.equals(item.id)
-  //           .and(AccountEntity_.trash.equals(false))
-  //           .and(AccountEntity_.folderId.equals(0))
-  //       )
-  //       .build()
-  //       .find();
-  //
-  //   return AccountMapper.transformEntities(entities);
-  // }
+  /// 创建账号
+  Future<AccountItem> createAccount(AccountItem item) async {
+    var id = accountBox.put(AccountMapper.transformItem(item));
+    return item.copy(id: id);
+  }
+
+  /// 创建账号
+  Future<List<int>> createAccountList(List<AccountItem> items) async {
+    return accountBox.putMany(AccountMapper.transformItems(items));
+  }
+
+  /// 更新账号信息
+  Future<AccountItem> updateAccount(AccountItem item) async {
+
+    var result = accountBox.put(
+        AccountMapper.transformItem(item), mode: PutMode.update
+    );
+
+    if (result <= 0) {
+      throw DataException.type(type: ErrorType.updateError);
+    }
+    return item;
+  }
+
+  /// 删除账号
+  Future<AccountItem> deleteAccount(AccountItem item) async {
+    if (!accountBox.remove(item.id)) {
+      throw DataException.type(type: ErrorType.deleteError);
+    }
+    return item;
+  }
 
   /// 加密管理员的密码
   AdminItem encryptAdmin(AdminItem item) {
@@ -215,11 +203,13 @@ class AppRepository {
 
   /// 加密账号信息
   AccountItem encryptAccount(AdminItem admin, AccountItem account) {
-    return account.copy(password: encryptStore.encrypt(admin.password, account.password));
+    return account;
+    // return account.copy(password: encryptStore.encrypt(admin.password, account.password));
   }
 
   /// 解密账号信息
   AccountItem decryptAccount(AdminItem admin, AccountItem account) {
-    return account.copy(password: encryptStore.decrypt(admin.password, account.password));
+    return account;
+    // return account.copy(password: encryptStore.decrypt(admin.password, account.password));
   }
 }

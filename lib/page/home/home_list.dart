@@ -21,6 +21,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
+import 'package:flutter_polarbear_x/model/side_item.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_svg/svg.dart';
@@ -89,7 +90,9 @@ class _HomeListState extends State<HomeList> {
   /// 创建列表头
   Widget _buildListHead() {
     return Padding(
-      padding: const EdgeInsets.only(left: 20, top: 26, right: 20, bottom: 30),
+      padding: const EdgeInsets.only(
+        left: 20, top: 26, right: 20, bottom: 30
+      ),
       child: Row(
         children: [
           Expanded(
@@ -119,17 +122,24 @@ class _HomeListState extends State<HomeList> {
   Widget _buildAccountList() {
 
     if (_accountItems.isEmpty) {
-      return _buildAccountEmpty(_createAccount);
+      return ListEmptyWidget(
+        tips: S.of(context).emptyAccountListTip,
+        onPressed: _createAccount,
+      );
     }
+
+    final SideType type = _appModel.sideType;
 
     return ListView.separated(
       controller: _scrollController,
       itemBuilder: (context, index) {
         final item = _accountItems[index];
         return ListItemWidget(
+          type: type,
           item: item,
           onChoose: _isChooseItem,
           onPressed: _chooseHandler,
+          onFavorite: _handlerFavorite,
           onPointerDown: (event) => _onPointerDown(item, event),
         );
       },
@@ -140,43 +150,6 @@ class _HomeListState extends State<HomeList> {
           child: Divider(color: XColor.listChooseColor),
         );
       },
-    );
-  }
-
-  Widget _buildAccountEmpty(VoidCallback? onPressed) {
-    return Center(
-      child: Material(
-        child: Ink(
-          decoration: BoxDecoration(
-            color: XColor.listColor,
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(6),
-            onTap: onPressed,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 28, top: 24, right: 28, bottom: 24
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SvgPicture.asset(
-                      'assets/svg/ic_empty.svg',
-                      color: XColor.themeColor,
-                      width: 46,
-                      height: 46
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    S.of(context).emptyAccountListTip,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -265,6 +238,13 @@ class _HomeListState extends State<HomeList> {
 
   }
 
+  /// 处理收藏
+  void _handlerFavorite(AccountItem item) {
+    _appModel.favoriteAccount(item).catchError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+    });
+  }
+
   bool _isChooseItem(AccountItem item) => _curAccountItem == item;
 
   void _chooseHandler(AccountItem item) {
@@ -280,17 +260,21 @@ class _HomeListState extends State<HomeList> {
 
 class ListItemWidget extends StatefulWidget {
 
+  final SideType type;
   final AccountItem item;
   final ChooseItem<AccountItem> onChoose;
-  final ValueChanged<AccountItem>? onPressed;
+  final ValueChanged<AccountItem> onPressed;
+  final ValueChanged<AccountItem> onFavorite;
   final EdgeInsetsGeometry? padding;
   final PointerDownEventListener? onPointerDown;
 
   const ListItemWidget({
     Key? key,
+    required this.type,
     required this.item,
     required this.onChoose,
-    this.onPressed,
+    required this.onPressed,
+    required this.onFavorite,
     this.padding,
     this.onPointerDown
   }) : super(key: key);
@@ -301,9 +285,12 @@ class ListItemWidget extends StatefulWidget {
 
 class ListItemWidgetState extends State<ListItemWidget> {
 
-  bool _show = false;
+  bool _favoriteState = false;
 
-  final DateFormat _dateFormat = DateFormat.yMMMMd();
+  final DateFormat _dateFormat = DateFormat.yMMMMd()..add_Hm();
+
+  bool get favorite => SideType.trash != widget.type && widget.item.favorite;
+  bool get unFavorite => SideType.trash != widget.type && _favoriteState && !widget.item.favorite;
 
   @override
   Widget build(BuildContext context) {
@@ -311,21 +298,12 @@ class ListItemWidgetState extends State<ListItemWidget> {
     final choose = widget.onChoose(widget.item);
 
     return Padding(
-
       padding: widget.padding ?? const EdgeInsets.only(left: 10, right: 10),
       child: Material(
         color: XColor.transparent,
         child: MouseRegion(
-          onEnter: (event) {
-            setState(() {
-              _show = true;
-            });
-          },
-          onExit: (event) {
-            setState(() {
-              _show = false;
-            });
-          },
+          onEnter: (event) { _setFavorite(true); },
+          onExit: (event) { _setFavorite(false); },
           child: Listener(
             onPointerDown: widget.onPointerDown,
             child: Ink(
@@ -338,7 +316,7 @@ class ListItemWidgetState extends State<ListItemWidget> {
                 highlightColor: XColor.listChooseColor,
                 enableFeedback: false,
                 borderRadius: BorderRadius.circular(6),
-                onTap: () { if (widget.onPressed != null) widget.onPressed!(widget.item); },
+                onTap: () { widget.onPressed(widget.item); },
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: Stack(
@@ -381,39 +359,17 @@ class ListItemWidgetState extends State<ListItemWidget> {
                           ),
                         ],
                       ),
-                      if (widget.item.favorite)
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: IconButton(
-                              iconSize: 18,
-                              padding: const EdgeInsets.all(0),
-                              constraints: const BoxConstraints(
-                                  maxWidth: 18
-                              ),
-                              onPressed: () { },
-                              icon: SvgPicture.asset(
-                                'assets/svg/ic_favorite.svg',
-                                color: XColor.favoriteColor,
-                                width: 18,
-                              )
-                          ),
+                      if (favorite)
+                        _buildFavorite(
+                          icon: 'assets/svg/ic_favorite.svg',
+                          color: XColor.favoriteColor,
+                          onPressed: _handlerFavorite
                         ),
-                      if (!widget.item.favorite && _show)
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: IconButton(
-                              iconSize: 18,
-                              padding: const EdgeInsets.all(0),
-                              constraints: const BoxConstraints(
-                                  maxWidth: 18
-                              ),
-                              onPressed: () { },
-                              icon: SvgPicture.asset(
-                                'assets/svg/ic_un_favorite.svg',
-                                color: XColor.gray2Color,
-                                width: 18,
-                              )
-                          ),
+                      if (unFavorite)
+                        _buildFavorite(
+                          icon: 'assets/svg/ic_un_favorite.svg',
+                          color: XColor.gray2Color,
+                          onPressed: _handlerFavorite
                         ),
                     ],
                   ),
@@ -424,6 +380,42 @@ class ListItemWidgetState extends State<ListItemWidget> {
         ),
       ),
     );
+  }
+
+  /// 创建收藏控件
+  Widget _buildFavorite({
+    required String icon,
+    required Color color,
+    VoidCallback? onPressed
+  }) {
+    return Align(
+      alignment: Alignment.topRight,
+      child: IconButton(
+        iconSize: 18,
+        padding: const EdgeInsets.all(0),
+        constraints: const BoxConstraints(
+          maxWidth: 18
+        ),
+        onPressed: onPressed,
+        icon: SvgPicture.asset(
+          icon,
+          color: color,
+          width: 18,
+        )
+      ),
+    );
+  }
+
+  /// 处理收藏事件
+  void _handlerFavorite() {
+    widget.onFavorite(widget.item);
+  }
+
+  /// 设置收藏状态
+  void _setFavorite(bool show) {
+    setState(() {
+      _favoriteState = show;
+    });
   }
 }
 
@@ -457,27 +449,73 @@ class ListSearchWidget extends StatelessWidget {
         controller: controller,
         autofocus: autofocus,
         decoration: InputDecoration(
-            prefixIcon: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: SvgPicture.asset(
-                'assets/svg/$iconName',
-                color: XColor.black,
-                width: 12,
-                height: 12,
-              ),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: SvgPicture.asset(
+              'assets/svg/$iconName',
+              color: XColor.black,
+              width: 12,
+              height: 12,
             ),
-            hintText: labelText,
-            hintStyle: const TextStyle(
-              fontSize: 14
-            ),
-            border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(16))
-            ),
+          ),
+          hintText: labelText,
+          hintStyle: const TextStyle(
+            fontSize: 14
+          ),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16))
+          ),
         ),
         textInputAction: textInputAction,
         textAlignVertical: TextAlignVertical.bottom,
         keyboardType: keyboardType,
         onChanged: onChanged,
+      ),
+    );
+  }
+}
+
+class ListEmptyWidget extends StatelessWidget {
+
+  final String tips;
+  final VoidCallback? onPressed;
+
+  const ListEmptyWidget({
+    Key? key,
+    required this.tips,
+    this.onPressed
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: Ink(
+        decoration: BoxDecoration(
+          color: XColor.listColor,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(6),
+          onTap: onPressed,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 28, top: 24, right: 28, bottom: 24
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SvgPicture.asset(
+                  'assets/svg/ic_empty.svg',
+                  color: XColor.themeColor,
+                  width: 46,
+                  height: 46
+                ),
+                const SizedBox(height: 20),
+                Text(tips),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

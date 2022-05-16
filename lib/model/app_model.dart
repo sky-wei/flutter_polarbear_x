@@ -54,6 +54,8 @@ class AppModel extends AbstractModel {
   // 获取管理员信息
   AdminItem get admin => _admin;
 
+  SideType get sideType => _lastType;
+
   /// 文件夹
   List<FolderItem> get folders => folderNotifier.value;
 
@@ -264,6 +266,29 @@ class AppModel extends AbstractModel {
 
   /// 删除账号
   Future<AccountItem> deleteAccount(AccountItem item) async {
+    return item;
+  }
+
+  Future<AccountItem> updateAccount(AccountItem item) async {
+
+    final result = await _appRepository.updateAccount(item);
+
+    return result;
+  }
+
+  /// 收藏账号与取消
+  Future<AccountItem> favoriteAccount(AccountItem item) async {
+
+    final updateItem = item.copy(favorite: !item.favorite);
+
+
+
+
+    // final accounts = List<AccountItem>.of(_filterAccountItems);
+    // final index = folders.indexOf(result);
+    // folders.removeAt(index);
+    // folders.insert(index, result);
+
     return item;
   }
 

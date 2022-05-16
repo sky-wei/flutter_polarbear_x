@@ -49,9 +49,9 @@ class HomeSide extends StatefulWidget {
 class _HomeSideState extends State<HomeSide> {
 
   final List<SideItem> _fixed = [
-    SideItem(name: S.current.favorites, icon: 'assets/svg/ic_favorites.svg', type: SideType.favorite),
+    SideItem(name: S.current.favorites, icon: 'assets/svg/ic_favorites.svg', type: SideType.favorite, color: XColor.favoriteColor),
     SideItem(name: S.current.allItems, icon: 'assets/svg/ic_all_items.svg', type: SideType.allItems),
-    SideItem(name: S.current.trash, icon: 'assets/svg/ic_trash.svg', type: SideType.trash),
+    SideItem(name: S.current.trash, icon: 'assets/svg/ic_trash.svg', type: SideType.trash, color: XColor.deleteColor),
   ];
 
   final SideItem _noFolder =
@@ -309,7 +309,7 @@ class SideItemWidget extends StatelessWidget {
                     if (item.icon != null)
                       SvgPicture.asset(
                         item.icon!,
-                        color: choose ? XColor.themeColor : XColor.sideTextColor,
+                        color: choose ? item.color : XColor.sideTextColor,
                         width: 18,
                       ),
                     if (item.icon != null)

@@ -18,6 +18,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
+import 'package:flutter_polarbear_x/model/side_item.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/sub_title_widget.dart';
@@ -58,6 +59,7 @@ class HomeContentState extends State<HomeContent> {
     MenuType.delete: MenuItem(icon: 'assets/svg/ic_delete.svg', name: S.current.delete, type: MenuType.delete, color: XColor.deleteColor),
     MenuType.recall: MenuItem(icon: 'assets/svg/ic_recall.svg', name: S.current.recall, type: MenuType.recall),
     MenuType.save: MenuItem(icon: 'assets/svg/ic_save.svg', name: S.current.save, type: MenuType.save, color: XColor.themeColor),
+    MenuType.restore: MenuItem(icon: 'assets/svg/ic_restore.svg', name: S.current.restore, type: MenuType.restore),
   };
 
   late TextEditingController _nameController;
@@ -71,6 +73,8 @@ class HomeContentState extends State<HomeContent> {
   AccountItem _editAccountItem = AccountItem.empty;
 
   AccountState get accountState => _accountState;
+
+  SideType get sideType => _appModel.sideType;
 
   @override
   void initState() {
@@ -130,107 +134,83 @@ class HomeContentState extends State<HomeContent> {
   }
 
   Widget _buildViewContent() {
-    return Padding(
-      padding: EdgeInsets.only(left: 40, top: appWindow.titleBarHeight + 40, right: 40, bottom: 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SubListWidget(
-                  title: 'ITEM INFORMATION',
-                  children: [
-                    SubItemWidget(
-                      controller: _nameController,
-                      title: 'Name',
-                    ),
-                    const SubItemLine(),
-                    SubItemWidget(
-                      controller: _userNameController,
-                      title: 'UserName',
-                    ),
-                    const SubItemLine(),
-                    SubItemWidget(
-                      controller: _passwordController,
-                      title: 'Password',
-                      obscureText: true,
-                    ),
-                  ],
-                ),
-                XBox.vertical30,
-                SubListWidget(
-                  title: 'ITEM INFORMATION',
-                  children: [
-                    SubItemWidget(
-                      controller: _nameController,
-                      title: 'Name',
-                    ),
-                  ],
-                )
-              ],
+    return SubFrameWidget(
+      children: [
+        SubListWidget(
+          title: 'ITEM INFORMATION',
+          children: [
+            SubItemWidget(
+              controller: _nameController,
+              title: 'Name',
             ),
-          ),
-          XBox.horizontal20,
-          _buildMenuList(_buildMenuItems())
-        ],
-      ),
+            const SubItemLine(),
+            SubItemWidget(
+              controller: _userNameController,
+              title: 'UserName',
+            ),
+            const SubItemLine(),
+            SubItemWidget(
+              controller: _passwordController,
+              title: 'Password',
+              obscureText: true,
+            ),
+          ],
+        ),
+        XBox.vertical30,
+        SubListWidget(
+          title: 'ITEM INFORMATION',
+          children: [
+            SubItemWidget(
+              controller: _nameController,
+              title: 'Name',
+            ),
+          ],
+        )
+      ],
+      menu: _buildMenuList(_buildMenuItems()),
     );
   }
 
   Widget _buildEditContent() {
-    return Padding(
-      padding: EdgeInsets.only(left: 40, top: appWindow.titleBarHeight + 40, right: 40, bottom: 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SubListWidget(
-                  title: 'ITEM INFORMATION',
-                  children: [
-                    SubItemWidget(
-                      controller: _nameController,
-                      title: 'Name',
-                      readOnly: false,
-                      autofocus: true,
-                    ),
-                    const SubItemLine(),
-                    SubItemWidget(
-                      controller: _userNameController,
-                      title: 'UserName',
-                      readOnly: false,
-                    ),
-                    const SubItemLine(),
-                    SubItemWidget(
-                      controller: _passwordController,
-                      title: 'Password',
-                      readOnly: false,
-                      obscureText: true,
-                    ),
-                  ],
-                ),
-                XBox.vertical30,
-                SubListWidget(
-                  title: 'ITEM INFORMATION',
-                  children: [
-                    SubItemWidget(
-                      controller: _nameController,
-                      title: 'Name',
-                      readOnly: false,
-                    ),
-                  ],
-                )
-              ],
+    return SubFrameWidget(
+      children: [
+        SubListWidget(
+          title: 'ITEM INFORMATION',
+          children: [
+            SubItemWidget(
+              controller: _nameController,
+              title: 'Name',
+              readOnly: false,
+              autofocus: true,
             ),
-          ),
-          XBox.horizontal20,
-          _buildMenuList(_buildMenuItems())
-        ],
-      ),
+            const SubItemLine(),
+            SubItemWidget(
+              controller: _userNameController,
+              title: 'UserName',
+              readOnly: false,
+            ),
+            const SubItemLine(),
+            SubItemWidget(
+              controller: _passwordController,
+              title: 'Password',
+              readOnly: false,
+              obscureText: true,
+            ),
+          ],
+        ),
+        XBox.vertical30,
+        SubListWidget(
+          title: 'ITEM INFORMATION',
+          children: [
+            SubItemWidget(
+              controller: _nameController,
+              title: 'Name',
+              readOnly: false,
+            ),
+          ],
+        )
+      ],
+      menu: _buildMenuList(_buildMenuItems()),
     );
   }
 
@@ -313,15 +293,18 @@ class HomeContentState extends State<HomeContent> {
   /// 创建MenuItem
   List<MenuItem> _buildMenuItems() {
 
-    if (AccountState.view == accountState) {
-      return _buildMenuItem([MenuType.edit, MenuType.copy, MenuType.delete]);
+    if (SideType.trash == sideType) {
+      return _buildMenuItem([MenuType.restore, MenuType.delete]);
     }
 
-    if (AccountState.edit == accountState) {
-      return _buildMenuItem([MenuType.save, MenuType.recall, MenuType.delete]);
+    switch(accountState) {
+      case AccountState.view:
+        return _buildMenuItem([MenuType.edit, MenuType.copy, MenuType.delete]);
+      case AccountState.edit:
+        return _buildMenuItem([MenuType.save, MenuType.recall, MenuType.delete]);
+      case AccountState.none:
+        return [];
     }
-
-    return _buildMenuItem([MenuType.save, MenuType.recall, MenuType.delete]);
   }
 
   /// 创建MenuItem
@@ -334,6 +317,40 @@ class HomeContentState extends State<HomeContent> {
     }
 
     return items;
+  }
+}
+
+class SubFrameWidget extends StatelessWidget {
+
+  final List<Widget> children;
+  final Widget menu;
+
+  const SubFrameWidget({
+    Key? key,
+    required this.children,
+    required this.menu
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 40, top: appWindow.titleBarHeight + 40, right: 40, bottom: 20
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: children
+            ),
+          ),
+          XBox.horizontal20,
+          menu
+        ],
+      ),
+    );
   }
 }
 
@@ -448,7 +465,8 @@ enum MenuType {
   copy,
   delete,
   recall,
-  save
+  save,
+  restore
 }
 
 class MenuItem {

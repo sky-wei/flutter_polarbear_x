@@ -73,6 +73,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "passwordNotMatch":
             MessageLookupByLibrary.simpleMessage("Password does not match!"),
         "recall": MessageLookupByLibrary.simpleMessage("Recall"),
+        "restore": MessageLookupByLibrary.simpleMessage("Restore"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
