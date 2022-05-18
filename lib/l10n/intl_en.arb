@@ -31,8 +31,8 @@
   "editFolder": "Edit Folder",
   "deleteFolder": "Delete Folder",
   "deleteAccount": "Delete Account",
-  "addFolderTip": "Add folder",
-  "addAccountTip": "Add account",
+  "addFolderTip": "Add Folder",
+  "addAccountTip": "Add Account",
   "newAccount": "New Account",
   "emptyAccountListTip": "There are no items to list.",
   "deleteFolderMessage": "Are you sure you want to delete this folder!",
@@ -40,6 +40,7 @@
   "view": "View",
   "clone": "Clone",
   "copy": "Copy",
+  "copyValue": "Copy Value",
   "recall": "Recall",
   "restore": "Restore",
   "save": "Save",
@@ -47,5 +48,6 @@
   "launcher": "Launcher",
   "toggleVisibility": "Toggle Visibility",
   "toggleInvisible": "Toggle Invisible",
+  "copyToClipboard": "The current information has been copied!",
   "end": "End"
 }

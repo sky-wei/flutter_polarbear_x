@@ -17,18 +17,22 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/model/side_item.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
+import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/sub_title_widget.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../dialog/hint_dialog.dart';
 import '../../generated/l10n.dart';
 import '../../model/app_model.dart';
 import '../../util/error_util.dart';
+import '../../util/launch_util.dart';
 import '../../util/message_util.dart';
 
 enum AccountState {
@@ -52,6 +56,8 @@ class HomeContent extends StatefulWidget {
 }
 
 class HomeContentState extends State<HomeContent> {
+
+  final DateFormat _dateFormat = DateFormat.yMMMMd()..add_Hm();
   
   final Map<MenuType, MenuItem> _menus = {
     MenuType.edit: MenuItem(icon: 'assets/svg/ic_edit.svg', name: S.current.edit, type: MenuType.edit),
@@ -62,7 +68,7 @@ class HomeContentState extends State<HomeContent> {
     MenuType.restore: MenuItem(icon: 'assets/svg/ic_restore.svg', name: S.current.restore, type: MenuType.restore),
   };
 
-  final ActionItem _copyAction = ActionItem(icon: 'assets/svg/ic_copy.svg', name: S.current.copy);
+  final ActionItem _copyAction = ActionItem(icon: 'assets/svg/ic_copy.svg', name: S.current.copyValue);
   final ActionItem _visibilityAction = ActionItem(icon: 'assets/svg/ic_visibility.svg', name: S.current.toggleVisibility);
   final ActionItem _invisibleAction = ActionItem(icon: 'assets/svg/ic_invisible.svg', name: S.current.toggleInvisible);
   final ActionItem _launcherAction = ActionItem(icon: 'assets/svg/ic_launcher.svg', name: S.current.launcher);
@@ -70,6 +76,10 @@ class HomeContentState extends State<HomeContent> {
   late TextEditingController _nameController;
   late TextEditingController _userNameController;
   late TextEditingController _passwordController;
+  late TextEditingController _websiteController;
+  late TextEditingController _notesController;
+
+  bool _visibilityPassword = false;
 
   late AppModel _appModel;
 
@@ -88,6 +98,8 @@ class HomeContentState extends State<HomeContent> {
     _nameController = TextEditingController();
     _userNameController = TextEditingController();
     _passwordController = TextEditingController();
+    _websiteController = TextEditingController();
+    _notesController = TextEditingController();
   }
 
   @override
@@ -96,6 +108,8 @@ class HomeContentState extends State<HomeContent> {
     _nameController.dispose();
     _userNameController.dispose();
     _passwordController.dispose();
+    _websiteController.dispose();
+    _notesController.dispose();
   }
 
   /// 显示账号
@@ -120,9 +134,12 @@ class HomeContentState extends State<HomeContent> {
       _rawAccountItem = item;
       _editAccountItem = item.copy();
 
+      _visibilityPassword = false;
       _nameController.text = item.alias;
       _userNameController.text = item.name;
       _passwordController.text = item.password;
+      _websiteController.text = 'https://www.baidu.com';
+      _notesController.text = 'https://www.baidu.com';
     });
   }
 
@@ -153,26 +170,52 @@ class HomeContentState extends State<HomeContent> {
               controller: _userNameController,
               title: S.of(context).userName,
               actions: [_copyAction],
+              onAction: (action) => _handlerActionEvent(
+                action: action,
+                value: _userNameController.text
+              ),
             ),
             const SubItemLine(),
             SubItemWidget(
               controller: _passwordController,
               title: S.of(context).password,
-              obscureText: true,
-              actions: [_visibilityAction, _copyAction],
+              obscureText: !_visibilityPassword,
+              actions: [_visibilityPassword ? _invisibleAction : _visibilityAction, _copyAction],
+              onAction: (action) => _handlerActionEvent(
+                  action: action,
+                  value: _passwordController.text
+              ),
             ),
           ],
         ),
         XBox.vertical30,
         SubListWidget(
-          title: '',
+          title: 'URL',
           children: [
             SubItemWidget(
-              controller: _nameController,
-              title: 'Name',
+              controller: _websiteController,
+              // title: 'Website',
+              actions: [_launcherAction, _copyAction],
+              onAction: (action) => _handlerActionEvent(
+                  action: action,
+                  value: _websiteController.text
+              ),
             ),
           ],
-        )
+        ),
+        XBox.vertical30,
+        SubListWidget(
+          title: 'NOTES',
+          children: [
+            SubItemWidget(
+              controller: _notesController,
+            ),
+          ],
+        ),
+        // XBox.vertical40,
+        // SubTitleWidget(
+        //   title: 'Update: ${_dateFormat.format(_editAccountItem.updateDateTime)}',
+        // )
       ],
       menu: _buildMenuList(_buildMenuItems()),
     );
@@ -254,6 +297,28 @@ class HomeContentState extends State<HomeContent> {
     );
   }
 
+  /// 处理动作事件
+  void _handlerActionEvent({
+    required ActionItem action, required String value
+  }) {
+
+    if (action == _copyAction) {
+      // 复制内容
+      _copyToClipboard(value);
+    } else if (action == _visibilityAction) {
+      setState(() {
+        _visibilityPassword = true;
+      });
+    } else if (action == _invisibleAction) {
+      setState(() {
+        _visibilityPassword = false;
+      });
+    } else if (action == _launcherAction) {
+      // 打开浏览器
+      LaunchUtil.launchUrl(value);
+    }
+  }
+
   /// 处理菜单事件
   void _handlerMenuEvent(MenuItem item) {
     switch(item.type) {
@@ -323,6 +388,15 @@ class HomeContentState extends State<HomeContent> {
 
     return items;
   }
+
+  /// 复制到粘贴板
+  void _copyToClipboard(String value) {
+    Clipboard.setData(
+        ClipboardData(text:value)
+    ).then((value) {
+      MessageUtil.showMessage(context, S.of(context).copyToClipboard);
+    });
+  }
 }
 
 class SubFrameWidget extends StatelessWidget {
@@ -361,12 +435,12 @@ class SubFrameWidget extends StatelessWidget {
 
 class SubListWidget extends StatelessWidget {
   
-  final String title;
+  final String? title;
   final List<Widget> children;
 
   const SubListWidget({
     Key? key,
-    required this.title,
+    this.title,
     this.children = const <Widget>[]
   }) : super(key: key);
 
@@ -375,8 +449,8 @@ class SubListWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SubTitleWidget(title: title),
-        XBox.vertical10,
+        if (title != null) SubTitleWidget(title: title!),
+        if (title != null) XBox.vertical10,
         Material(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(6),
@@ -394,7 +468,7 @@ class SubListWidget extends StatelessWidget {
 
 class SubItemWidget extends StatelessWidget {
 
-  final String title;
+  final String? title;
   final TextEditingController? controller;
   final bool autofocus;
   final TextInputAction? textInputAction;
@@ -407,7 +481,7 @@ class SubItemWidget extends StatelessWidget {
 
   const SubItemWidget({
     Key? key,
-    required this.title,
+    this.title,
     this.controller,
     this.autofocus = false,
     this.textInputAction,
@@ -425,13 +499,14 @@ class SubItemWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        XBox.vertical5,
-        Text(
-          title,
-          style: const TextStyle(
-            color: XColor.grayColor
+        if (title != null) XBox.vertical5,
+        if (title != null)
+          Text(
+            title!,
+            style: const TextStyle(
+                color: XColor.grayColor
+            ),
           ),
-        ),
         XBox.vertical5,
         Row(
           children: [
@@ -524,4 +599,20 @@ class ActionItem {
     required this.icon,
     required this.name,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ActionItem &&
+          runtimeType == other.runtimeType &&
+          icon == other.icon &&
+          name == other.name;
+
+  @override
+  int get hashCode => icon.hashCode ^ name.hashCode;
+
+  @override
+  String toString() {
+    return 'ActionItem{icon: $icon, name: $name}';
+  }
 }

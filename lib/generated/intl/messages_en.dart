@@ -26,8 +26,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Account already exists!"),
         "accountPasswordError": MessageLookupByLibrary.simpleMessage(
             "Incorrect username or password!"),
-        "addAccountTip": MessageLookupByLibrary.simpleMessage("Add account"),
-        "addFolderTip": MessageLookupByLibrary.simpleMessage("Add folder"),
+        "addAccountTip": MessageLookupByLibrary.simpleMessage("Add Account"),
+        "addFolderTip": MessageLookupByLibrary.simpleMessage("Add Folder"),
         "allItems": MessageLookupByLibrary.simpleMessage("All Items"),
         "appName": MessageLookupByLibrary.simpleMessage("PasswordX"),
         "canNotEmpty": MessageLookupByLibrary.simpleMessage("Can not be empty"),
@@ -37,6 +37,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "confirmPassword":
             MessageLookupByLibrary.simpleMessage("Confirm Password"),
         "copy": MessageLookupByLibrary.simpleMessage("Copy"),
+        "copyToClipboard": MessageLookupByLibrary.simpleMessage(
+            "The current information has been copied!"),
+        "copyValue": MessageLookupByLibrary.simpleMessage("Copy Value"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleteAccount": MessageLookupByLibrary.simpleMessage("Delete Account"),
         "deleteAccountMessage": MessageLookupByLibrary.simpleMessage(

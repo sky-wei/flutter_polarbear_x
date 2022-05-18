@@ -370,20 +370,20 @@ class S {
     );
   }
 
-  /// `Add folder`
+  /// `Add Folder`
   String get addFolderTip {
     return Intl.message(
-      'Add folder',
+      'Add Folder',
       name: 'addFolderTip',
       desc: '',
       args: [],
     );
   }
 
-  /// `Add account`
+  /// `Add Account`
   String get addAccountTip {
     return Intl.message(
-      'Add account',
+      'Add Account',
       name: 'addAccountTip',
       desc: '',
       args: [],
@@ -460,6 +460,16 @@ class S {
     );
   }
 
+  /// `Copy Value`
+  String get copyValue {
+    return Intl.message(
+      'Copy Value',
+      name: 'copyValue',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Recall`
   String get recall {
     return Intl.message(
@@ -525,6 +535,16 @@ class S {
     return Intl.message(
       'Toggle Invisible',
       name: 'toggleInvisible',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The current information has been copied!`
+  String get copyToClipboard {
+    return Intl.message(
+      'The current information has been copied!',
+      name: 'copyToClipboard',
       desc: '',
       args: [],
     );
