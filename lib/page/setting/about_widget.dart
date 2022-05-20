@@ -15,6 +15,11 @@
  */
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/constant.dart';
+import 'package:flutter_polarbear_x/theme/color.dart';
+import 'package:flutter_polarbear_x/util/launch_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 
 import '../../generated/l10n.dart';
@@ -29,25 +34,83 @@ class AboutWidget extends StatefulWidget {
 
 class _AboutWidgetState extends State<AboutWidget> {
 
+  final String _mail = 'jingcai.wei@163.com';
+  final String _source = 'https://github.com/sky-wei/flutter_polarbear_x';
+
+  late TapGestureRecognizer _tapGestureRecognizer;
+
+  @override
+  void initState() {
+    super.initState();
+    _tapGestureRecognizer = TapGestureRecognizer()
+      ..onTap = _handlePress;
+  }
+
+  @override
+  void dispose() {
+    _tapGestureRecognizer.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        XBox.vertical80,
-        Image.asset(
-          'assets/image/ic_head_logo.png',
-          width: 100,
-          height: 100,
-        ),
-        Text(
-          S.of(context).appName,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          XBox.vertical30,
+          Image.asset(
+            'assets/image/ic_head_logo.png',
+            width: 100,
+            height: 100,
           ),
-        )
-      ],
+          Text(
+            S.of(context).appName,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold
+            ),
+          ),
+          XBox.vertical5,
+          Text(
+            S.of(context).versionX(XConstant.versionName),
+            style: const TextStyle(
+              fontSize: 12,
+            ),
+          ),
+          XBox.vertical40,
+          SelectableText(S.of(context).mailX(_mail)),
+          XBox.vertical10,
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(text: S.of(context).sourceX('')),
+                TextSpan(
+                  text: _source,
+                  style: const TextStyle(
+                    color: XColor.themeColor
+                  ),
+                  recognizer: _tapGestureRecognizer
+                )
+              ]
+            )
+          ),
+          XBox.vertical60,
+          Material(
+            color: Theme.of(context).backgroundColor,
+            borderRadius: BorderRadius.circular(6),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: SelectableText(S.of(context).license),
+            ),
+          ),
+        ],
+      ),
     );
+  }
+
+  /// 处理点击事件
+  void _handlePress() {
+    LaunchUtil.launchUrl(_source);
   }
 }
 

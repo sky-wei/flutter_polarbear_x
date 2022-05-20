@@ -20,6 +20,12 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(value) => "Mail: ${value}";
+
+  static String m1(value) => "Source: ${value}";
+
+  static String m2(value) => "Version: ${value}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "accountExists":
@@ -51,10 +57,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Delete error!"),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editFolder": MessageLookupByLibrary.simpleMessage("Edit Folder"),
+        "editItem": MessageLookupByLibrary.simpleMessage("Edit Item"),
         "emptyAccountListTip":
             MessageLookupByLibrary.simpleMessage("There are no items to list."),
         "end": MessageLookupByLibrary.simpleMessage("End"),
+        "favorite": MessageLookupByLibrary.simpleMessage("Favorite"),
         "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
+        "folder": MessageLookupByLibrary.simpleMessage("Folder"),
         "folderExists":
             MessageLookupByLibrary.simpleMessage("Folder already exists!"),
         "folders": MessageLookupByLibrary.simpleMessage("Folders"),
@@ -62,14 +71,20 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Forget Password?"),
         "handlerError":
             MessageLookupByLibrary.simpleMessage("Handling exceptions!"),
+        "itemInformation":
+            MessageLookupByLibrary.simpleMessage("Item Information"),
         "launcher": MessageLookupByLibrary.simpleMessage("Launcher"),
+        "license": MessageLookupByLibrary.simpleMessage(
+            "Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License."),
         "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
+        "mailX": m0,
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "newAccount": MessageLookupByLibrary.simpleMessage("New Account"),
         "noFolder": MessageLookupByLibrary.simpleMessage("No Folder"),
         "notSupport":
             MessageLookupByLibrary.simpleMessage("Not currently supported!"),
+        "notes": MessageLookupByLibrary.simpleMessage("Notes"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "passwordError":
@@ -79,8 +94,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "recall": MessageLookupByLibrary.simpleMessage("Recall"),
         "restore": MessageLookupByLibrary.simpleMessage("Restore"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
+        "sayWhat": MessageLookupByLibrary.simpleMessage("say what!"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
+        "sourceX": m1,
         "toggleInvisible":
             MessageLookupByLibrary.simpleMessage("Toggle Invisible"),
         "toggleVisibility":
@@ -88,7 +105,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "trash": MessageLookupByLibrary.simpleMessage("Trash"),
         "updateInfoError":
             MessageLookupByLibrary.simpleMessage("Update error!"),
+        "url": MessageLookupByLibrary.simpleMessage("Url"),
         "userName": MessageLookupByLibrary.simpleMessage("UserName"),
+        "versionX": m2,
         "view": MessageLookupByLibrary.simpleMessage("View")
       };
 }

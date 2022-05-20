@@ -22,7 +22,6 @@ enum SideType {
   allItems,
   trash,
   folder,
-  noFolder,
   none
 }
 

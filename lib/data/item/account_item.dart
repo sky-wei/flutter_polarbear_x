@@ -20,13 +20,13 @@ class AccountItem {
 
   final int id;
   final int adminId;
-  final String alias;
-  final String name;
-  final String password;
-  final List<String> urls;
-  final String node;
-  final int folderId;
-  final bool favorite;
+  String alias;
+  String name;
+  String password;
+  List<String> urls;
+  String node;
+  int folderId;
+  bool favorite;
   final bool trash;
   final int createTime;
   final int updateTime;

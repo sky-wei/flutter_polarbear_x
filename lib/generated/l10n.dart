@@ -540,11 +540,121 @@ class S {
     );
   }
 
+  /// `Favorite`
+  String get favorite {
+    return Intl.message(
+      'Favorite',
+      name: 'favorite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Folder`
+  String get folder {
+    return Intl.message(
+      'Folder',
+      name: 'folder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `say what!`
+  String get sayWhat {
+    return Intl.message(
+      'say what!',
+      name: 'sayWhat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notes`
+  String get notes {
+    return Intl.message(
+      'Notes',
+      name: 'notes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Url`
+  String get url {
+    return Intl.message(
+      'Url',
+      name: 'url',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Item`
+  String get editItem {
+    return Intl.message(
+      'Edit Item',
+      name: 'editItem',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Item Information`
+  String get itemInformation {
+    return Intl.message(
+      'Item Information',
+      name: 'itemInformation',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `The current information has been copied!`
   String get copyToClipboard {
     return Intl.message(
       'The current information has been copied!',
       name: 'copyToClipboard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Version: {value}`
+  String versionX(Object value) {
+    return Intl.message(
+      'Version: $value',
+      name: 'versionX',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Mail: {value}`
+  String mailX(Object value) {
+    return Intl.message(
+      'Mail: $value',
+      name: 'mailX',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Source: {value}`
+  String sourceX(Object value) {
+    return Intl.message(
+      'Source: $value',
+      name: 'sourceX',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the "License");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an "AS IS" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.`
+  String get license {
+    return Intl.message(
+      'Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the "License");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an "AS IS" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.',
+      name: 'license',
       desc: '',
       args: [],
     );

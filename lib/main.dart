@@ -37,7 +37,7 @@ class PolarBearX extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AppModel()),
       ],
       child: MaterialApp(
-        title: 'PolarBearX',
+        title: 'PasswordX',
         theme: XTheme.lightTheme(),
         darkTheme: XTheme.darkTheme(),
         debugShowCheckedModeBanner: false,

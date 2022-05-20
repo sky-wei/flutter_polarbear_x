@@ -86,7 +86,10 @@ class SettingWidgetState extends State<SettingWidget> {
       children: [
         _buildSide(),
         Expanded(
-          child: _buildContent(_curSideItem!),
+          child: Padding(
+            padding: const EdgeInsets.all(40),
+            child: _buildContent(_curSideItem!),
+          ),
         )
       ],
     );
@@ -123,7 +126,7 @@ class SettingWidgetState extends State<SettingWidget> {
         return const AboutWidget();
       default:
         return const Center(
-          child: Text('AAAAA'),
+          child: Text(''),
         );
     }
   }

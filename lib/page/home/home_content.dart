@@ -19,13 +19,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
+import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/model/side_item.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/sub_title_widget.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../dialog/hint_dialog.dart';
@@ -57,8 +56,6 @@ class HomeContent extends StatefulWidget {
 
 class HomeContentState extends State<HomeContent> {
 
-  final DateFormat _dateFormat = DateFormat.yMMMMd()..add_Hm();
-  
   final Map<MenuType, MenuItem> _menus = {
     MenuType.edit: MenuItem(icon: 'assets/svg/ic_edit.svg', name: S.current.edit, type: MenuType.edit),
     MenuType.copy: MenuItem(icon: 'assets/svg/ic_copy.svg', name: S.current.copy, type: MenuType.copy),
@@ -90,6 +87,14 @@ class HomeContentState extends State<HomeContent> {
   AccountState get accountState => _accountState;
 
   SideType get sideType => _appModel.sideType;
+
+  bool get _isEdit => accountState == AccountState.edit;
+
+  bool get _isView => accountState == AccountState.view;
+
+  bool get _visibilityNote => _isEdit || _rawAccountItem.node.isNotEmpty;
+
+  bool get _visibilityUrl => _isEdit || _rawAccountItem.urls.isNotEmpty;
 
   @override
   void initState() {
@@ -138,8 +143,8 @@ class HomeContentState extends State<HomeContent> {
       _nameController.text = item.alias;
       _userNameController.text = item.name;
       _passwordController.text = item.password;
-      _websiteController.text = 'https://www.baidu.com';
-      _notesController.text = 'https://www.baidu.com';
+      _websiteController.text = item.urls.isNotEmpty ? item.urls[0] : '';
+      _notesController.text = item.node;
     });
   }
 
@@ -147,28 +152,32 @@ class HomeContentState extends State<HomeContent> {
   Widget build(BuildContext context) {
     switch(accountState) {
       case AccountState.view:
-        return _buildViewContent();
       case AccountState.edit:
-        return _buildEditContent();
+        return _buildViewContent();
       case AccountState.none:
         return const Center();
     }
   }
 
   Widget _buildViewContent() {
+
+    final itemTitle = (_isEdit ? S.of(context).editItem : S.of(context).itemInformation).toUpperCase();
+
     return SubFrameWidget(
       children: [
         SubListWidget(
-          title: 'ITEM INFORMATION',
+          title: itemTitle,
           children: [
-            SubItemWidget(
+            SubTextWidget(
               controller: _nameController,
               title: S.of(context).name,
+              readOnly: !_isEdit,
             ),
             const SubItemLine(),
-            SubItemWidget(
+            SubTextWidget(
               controller: _userNameController,
               title: S.of(context).userName,
+              readOnly: !_isEdit,
               actions: [_copyAction],
               onAction: (action) => _handlerActionEvent(
                 action: action,
@@ -176,89 +185,82 @@ class HomeContentState extends State<HomeContent> {
               ),
             ),
             const SubItemLine(),
-            SubItemWidget(
+            SubTextWidget(
               controller: _passwordController,
               title: S.of(context).password,
+              readOnly: !_isEdit,
               obscureText: !_visibilityPassword,
               actions: [_visibilityPassword ? _invisibleAction : _visibilityAction, _copyAction],
               onAction: (action) => _handlerActionEvent(
-                  action: action,
-                  value: _passwordController.text
+                action: action,
+                value: _passwordController.text
               ),
             ),
           ],
         ),
-        XBox.vertical30,
-        SubListWidget(
-          title: 'URL',
-          children: [
-            SubItemWidget(
-              controller: _websiteController,
-              // title: 'Website',
-              actions: [_launcherAction, _copyAction],
-              onAction: (action) => _handlerActionEvent(
+        if (_isEdit) XBox.vertical30,
+        if (_isEdit)
+          SubListWidget(
+            // title: 'OPTIONS',
+            children: [
+              SubDropdownWidget(
+                title: S.of(context).folder,
+                value: _appModel.findFolderBy(_editAccountItem),
+                items: _appModel.folders,
+                onChanged: (value) {
+                  setState(() {
+                    _editAccountItem.folderId = value.id;
+                  });
+                },
+              ),
+              const SubItemLine(),
+              SubCheckBoxWidget(
+                title: S.of(context).favorite,
+                value: _editAccountItem.favorite,
+                onChanged: (value) {
+                  setState(() {
+                    _editAccountItem.favorite = value;
+                  });
+                },
+              ),
+            ],
+          ),
+        if (_visibilityUrl) XBox.vertical30,
+        if (_visibilityUrl)
+          SubListWidget(
+            title: S.of(context).url.toUpperCase(),
+            children: [
+              SubTextWidget(
+                controller: _websiteController,
+                hintText: 'ex. https://www.xxxxxx.com',
+                readOnly: !_isEdit,
+                actions: [_launcherAction, _copyAction],
+                onAction: (action) => _handlerActionEvent(
                   action: action,
                   value: _websiteController.text
+                ),
               ),
-            ),
-          ],
-        ),
-        XBox.vertical30,
-        SubListWidget(
-          title: 'NOTES',
-          children: [
-            SubItemWidget(
-              controller: _notesController,
-            ),
-          ],
-        ),
+            ],
+          ),
+        if (_visibilityNote) XBox.vertical30,
+        if (_visibilityNote)
+          SubListWidget(
+            title: S.of(context).notes.toUpperCase(),
+            children: [
+              SubTextWidget(
+                controller: _notesController,
+                hintText: S.of(context).sayWhat,
+                readOnly: !_isEdit,
+                maxLines: 8,
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.newline,
+              ),
+            ],
+          ),
         // XBox.vertical40,
         // SubTitleWidget(
         //   title: 'Update: ${_dateFormat.format(_editAccountItem.updateDateTime)}',
         // )
-      ],
-      menu: _buildMenuList(_buildMenuItems()),
-    );
-  }
-
-  Widget _buildEditContent() {
-    return SubFrameWidget(
-      children: [
-        SubListWidget(
-          title: 'EDIT ITEM',
-          children: [
-            SubItemWidget(
-              controller: _nameController,
-              title: 'Name',
-              readOnly: false,
-              autofocus: true,
-            ),
-            const SubItemLine(),
-            SubItemWidget(
-              controller: _userNameController,
-              title: 'UserName',
-              readOnly: false,
-            ),
-            const SubItemLine(),
-            SubItemWidget(
-              controller: _passwordController,
-              title: 'Password',
-              readOnly: false,
-              obscureText: true,
-            ),
-          ],
-        ),
-        XBox.vertical30,
-        SubListWidget(
-          title: 'ITEM INFORMATION',
-          children: [
-            SubItemWidget(
-              controller: _nameController,
-              title: 'Name',
-              readOnly: false,
-            ),
-          ],
-        )
       ],
       menu: _buildMenuList(_buildMenuItems()),
     );
@@ -420,8 +422,7 @@ class SubFrameWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: ListView(
               children: children
             ),
           ),
@@ -455,7 +456,7 @@ class SubListWidget extends StatelessWidget {
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(6),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 0, 20),
+            padding: const EdgeInsets.fromLTRB(20, 10, 0, 15),
             child: Column(
               children: children,
             ),
@@ -466,11 +467,100 @@ class SubListWidget extends StatelessWidget {
   }
 }
 
-class SubItemWidget extends StatelessWidget {
+class SubCheckBoxWidget extends StatelessWidget {
+
+  final String title;
+  final bool value;
+  final ValueChanged<bool>? onChanged;
+
+  const SubCheckBoxWidget({
+    Key? key,
+    required this.title,
+    this.value = false,
+    this.onChanged
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 5, 20, 5),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 16)
+            ),
+          ),
+          Checkbox(
+            value: value,
+            onChanged: (value) {
+              if (onChanged != null) onChanged!(value?? false);
+            },
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class SubDropdownWidget extends StatelessWidget {
+
+  final String title;
+  final FolderItem value;
+  final List<FolderItem> items;
+  final ValueChanged<FolderItem>? onChanged;
+
+  const SubDropdownWidget({
+    Key? key,
+    required this.title,
+    required this.value,
+    required this.items,
+    this.onChanged
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 16)
+            ),
+          ),
+          DropdownButton<FolderItem>(
+            value: value,
+            underline: const SizedBox(),
+            items: _buildMenuItem(items),
+            onChanged: (value) {
+              if (onChanged != null) onChanged!(value!);
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  List<DropdownMenuItem<FolderItem>> _buildMenuItem(List<FolderItem> items) {
+    return items.map<DropdownMenuItem<FolderItem>>((FolderItem value) {
+      return DropdownMenuItem<FolderItem> (
+        value: value,
+        child: Text(value.name),
+      );
+    }).toList();
+  }
+}
+
+class SubTextWidget extends StatelessWidget {
 
   final String? title;
   final TextEditingController? controller;
   final bool autofocus;
+  final int maxLines;
+  final String? hintText;
   final TextInputAction? textInputAction;
   final TextInputType keyboardType;
   final ValueChanged<String>? onChanged;
@@ -479,11 +569,13 @@ class SubItemWidget extends StatelessWidget {
   final bool obscureText;
   final List<ActionItem> actions;
 
-  const SubItemWidget({
+  const SubTextWidget({
     Key? key,
     this.title,
     this.controller,
     this.autofocus = false,
+    this.maxLines = 1,
+    this.hintText,
     this.textInputAction,
     this.keyboardType = TextInputType.text,
     this.onChanged,
@@ -512,16 +604,17 @@ class SubItemWidget extends StatelessWidget {
           children: [
             Expanded(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxHeight: 32,
+                constraints: BoxConstraints(
+                  maxHeight: maxLines == 1 ? 32 : 130,
                 ),
                 child: TextField(
                   controller: controller,
                   autofocus: autofocus,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: hintText,
                   ),
-                  maxLines: 1,
+                  maxLines: maxLines,
                   textInputAction: textInputAction,
                   textAlignVertical: TextAlignVertical.bottom,
                   keyboardType: keyboardType,
@@ -531,7 +624,7 @@ class SubItemWidget extends StatelessWidget {
                 ),
               ),
             ),
-            actions.isEmpty ? XBox.horizontal20 : XBox.horizontal60,
+            actions.isEmpty ? XBox.horizontal15 : XBox.horizontal60,
             for (var action in actions)
               Padding(
                 padding: const EdgeInsets.only(left: 5),
@@ -545,7 +638,7 @@ class SubItemWidget extends StatelessWidget {
                   )
                 ),
               ),
-            XBox.horizontal10,
+            if (actions.isNotEmpty) XBox.horizontal10,
           ],
         ),
       ],

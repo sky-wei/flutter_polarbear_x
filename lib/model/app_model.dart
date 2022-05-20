@@ -27,6 +27,7 @@ import '../data/item/admin_item.dart';
 import '../data/item/folder_item.dart';
 import '../data/objectbox.dart';
 import '../data/repository/app_repository.dart';
+import '../generated/l10n.dart';
 
 
 typedef AccountFilter = bool Function(AccountItem account);
@@ -156,10 +157,28 @@ class AppModel extends AbstractModel {
     return result;
   }
 
+  /// 查找文件夹
+  FolderItem findFolderBy(AccountItem account) {
+
+    for (var item in folders) {
+      if (item.id == account.folderId) {
+        return item;
+      }
+    }
+    return folders[folders.length - 1];
+  }
+
   /// 加载文件夹
   Future<List<FolderItem>> loadFolders() async {
 
-    folderNotifier.value = await _appRepository.loadFoldersBy(admin);
+    // 加载所有文件夹
+    final items = await _appRepository.loadFoldersBy(admin);
+
+    items.add(
+      FolderItem(adminId: admin.id, name: S.current.noFolder)
+    );
+
+    folderNotifier.value = items;
 
     return folders;
   }
@@ -176,7 +195,7 @@ class AppModel extends AbstractModel {
 
     _allAccountItems.addAll(
       [
-        AccountItem(id: 1, adminId: 1, alias: 'Sky1', name: 'jingcai.wei@163.com', password: 'AAAAA', urls: [ "http://www.baidu.com" ], favorite: true),
+        AccountItem(id: 1, adminId: 1, alias: 'Sky1', name: 'jingcai.wei@163.com', password: 'AAAAA', urls: [ "http://www.baidu.com" ], node: 'AAABB', favorite: true),
         AccountItem(id: 2, adminId: 1, alias: 'Sky2', name: 'jingcai.wei@163.com', password: 'AAAAA', folderId: 18),
         AccountItem(id: 3, adminId: 1, alias: 'Sky3', name: 'jingcai.wei@163.com', password: 'AAAAA'),
         AccountItem(id: 4, adminId: 1, alias: 'Sky4', name: 'jingcai.wei@163.com', password: 'AAAAA', folderId: 17),
@@ -224,12 +243,6 @@ class AppModel extends AbstractModel {
         items = _filterAccount(
             accounts: _allAccountItems,
             filter: (item) => item.folderId == folderId
-        );
-        break;
-      case SideType.noFolder:
-        items = _filterAccount(
-            accounts: _allAccountItems,
-            filter: (item) => item.folderId == 0
         );
         break;
       default:

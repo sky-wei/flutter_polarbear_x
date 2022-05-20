@@ -54,9 +54,6 @@ class _HomeSideState extends State<HomeSide> {
     SideItem(name: S.current.trash, icon: 'assets/svg/ic_trash.svg', type: SideType.trash, color: XColor.deleteColor),
   ];
 
-  final SideItem _noFolder =
-    SideItem(name: S.current.noFolder, icon: 'assets/svg/ic_folder.svg', type: SideType.noFolder);
-
   final List<SideItem> _folders = [];
 
   SideItem? _curSideItem;
@@ -128,7 +125,7 @@ class _HomeSideState extends State<HomeSide> {
           onChoose: _isChooseItem,
           onPressed: _chooseHandler,
           onPointerDown: (event) =>
-            _noFolder != item ? _onPointerDown(item, event) : null,
+          item.id > 0 ? _onPointerDown(item, event) : null,
         );
       },
       itemCount: _folders.length,
@@ -231,8 +228,6 @@ class _HomeSideState extends State<HomeSide> {
     final items = _appModel.folders;
     final folders = items.map((value) => _buildSideItem(value)).toList();
 
-    folders.add(_noFolder);
-
     setState(() {
       _folders.clear();
       _folders.addAll(folders);
@@ -242,11 +237,11 @@ class _HomeSideState extends State<HomeSide> {
   /// 创建SideItem
   SideItem _buildSideItem(FolderItem item) {
     return SideItem(
-        id: item.id,
-        name: item.name,
-        icon: 'assets/svg/ic_folder.svg',
-        type: SideType.folder,
-        value: item
+      id: item.id,
+      name: item.name,
+      icon: 'assets/svg/ic_folder.svg',
+      type: SideType.folder,
+      value: item
     );
   }
   
