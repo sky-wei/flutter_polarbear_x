@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+// enum FolderType {
+//   favorite,
+//   allItems,
+//   trash,
+//   folder
+// }
+
 class FolderItem {
 
   final int id;

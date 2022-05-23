@@ -290,6 +290,16 @@ class S {
     );
   }
 
+  /// `{value} can not be empty!`
+  String xCanNotEmpty(Object value) {
+    return Intl.message(
+      '$value can not be empty!',
+      name: 'xCanNotEmpty',
+      desc: '',
+      args: [value],
+    );
+  }
+
   /// `Cancel`
   String get cancel {
     return Intl.message(

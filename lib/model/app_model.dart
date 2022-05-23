@@ -188,31 +188,26 @@ class AppModel extends AbstractModel {
 
     final items = await _appRepository.loadAllAccountBy(admin);
 
+    // items.addAll(
+    //   [
+    //     AccountItem(id: 1, adminId: 1, alias: 'Sky1', name: 'jingcai.wei@163.com', password: 'AAAAA', urls: [ "http://www.baidu.com" ], node: 'AAABB', favorite: true),
+    //     AccountItem(id: 2, adminId: 1, alias: 'Sky2', name: 'jingcai.wei@163.com', password: 'AAAAA', folderId: 18),
+    //     AccountItem(id: 3, adminId: 1, alias: 'Sky3', name: 'jingcai.wei@163.com', password: 'AAAAA'),
+    //     AccountItem(id: 4, adminId: 1, alias: 'Sky4', name: 'jingcai.wei@163.com', password: 'AAAAA', folderId: 17),
+    //     AccountItem(id: 5, adminId: 1, alias: 'Sky5', name: 'jingcai.wei@163.com', password: 'AAAAA', favorite: true),
+    //     AccountItem(id: 6, adminId: 1, alias: 'Sky6', name: 'jingcai.wei@163.com', password: 'AAAAA', trash: true),
+    //     AccountItem(id: 7, adminId: 1, alias: 'Sky7', name: 'jingcai.wei@163.com', password: 'AAAAA', trash: true),
+    //   ]
+    // );
+
     _allAccountItems = _filterAccount(
         accounts: items,
         filter: (item) => !item.trash
     );
 
-    _allAccountItems.addAll(
-      [
-        AccountItem(id: 1, adminId: 1, alias: 'Sky1', name: 'jingcai.wei@163.com', password: 'AAAAA', urls: [ "http://www.baidu.com" ], node: 'AAABB', favorite: true),
-        AccountItem(id: 2, adminId: 1, alias: 'Sky2', name: 'jingcai.wei@163.com', password: 'AAAAA', folderId: 18),
-        AccountItem(id: 3, adminId: 1, alias: 'Sky3', name: 'jingcai.wei@163.com', password: 'AAAAA'),
-        AccountItem(id: 4, adminId: 1, alias: 'Sky4', name: 'jingcai.wei@163.com', password: 'AAAAA', folderId: 17),
-        AccountItem(id: 5, adminId: 1, alias: 'Sky5', name: 'jingcai.wei@163.com', password: 'AAAAA', favorite: true),
-      ]
-    );
-
     _trashAccountItems = _filterAccount(
         accounts: items,
         filter: (item) => item.trash
-    );
-
-    _trashAccountItems.addAll(
-        [
-          AccountItem(id: 6, adminId: 1, alias: 'Sky6', name: 'jingcai.wei@163.com', password: 'AAAAA'),
-          AccountItem(id: 7, adminId: 1, alias: 'Sky7', name: 'jingcai.wei@163.com', password: 'AAAAA'),
-        ]
     );
 
     return await loadAccounts(type: SideType.allItems);
@@ -277,6 +272,16 @@ class AppModel extends AbstractModel {
     return accounts;
   }
 
+  /// 创建账号
+  Future<AccountItem> createAccount(AccountItem item) async {
+
+    final result = await _appRepository.createAccount(item);
+
+
+
+    return result;
+  }
+
   /// 删除账号
   Future<AccountItem> deleteAccount(AccountItem item) async {
     return item;
@@ -303,6 +308,11 @@ class AppModel extends AbstractModel {
     // folders.insert(index, result);
 
     return item;
+  }
+
+  /// 创建空的账号
+  AccountItem newEmptyAccount() {
+    return AccountItem(adminId: admin.id, alias: '', name: '', password: '');
   }
 
   /// 过滤账号

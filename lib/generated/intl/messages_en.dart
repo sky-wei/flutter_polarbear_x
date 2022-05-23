@@ -26,6 +26,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m2(value) => "Version: ${value}";
 
+  static String m3(value) => "${value} can not be empty!";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "accountExists":
@@ -108,6 +110,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "url": MessageLookupByLibrary.simpleMessage("Url"),
         "userName": MessageLookupByLibrary.simpleMessage("UserName"),
         "versionX": m2,
-        "view": MessageLookupByLibrary.simpleMessage("View")
+        "view": MessageLookupByLibrary.simpleMessage("View"),
+        "xCanNotEmpty": m3
       };
 }

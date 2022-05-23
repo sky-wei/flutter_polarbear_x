@@ -23,6 +23,7 @@
   "trash": "Trash",
   "loading": "Loading...",
   "canNotEmpty": "Can not be empty",
+  "xCanNotEmpty": "{value} can not be empty!",
   "cancel": "Cancel",
   "ok": "OK",
   "close": "Close",

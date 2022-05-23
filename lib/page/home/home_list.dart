@@ -17,7 +17,6 @@
 import 'dart:ui';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
@@ -165,15 +164,16 @@ class _HomeListState extends State<HomeList> {
         .findRenderObject() as RenderBox;
 
     final menuItem = await showMenu<int>(
-        context: context,
-        items: [
-          PopupMenuItem(value: 1, child: Text(S.of(context).view)),
+      context: context,
+      items: [
+        PopupMenuItem(value: 1, child: Text(S.of(context).view)),
+        if (!item.trash)
           PopupMenuItem(value: 2, child: Text(S.of(context).edit)),
-          PopupMenuItem(value: 3, child: Text(S.of(context).delete)),
-        ],
-        position: RelativeRect.fromSize(
-            event.position & const Size(48.0, 48.0), overlay.size
-        )
+        PopupMenuItem(value: 3, child: Text(S.of(context).delete)),
+      ],
+      position: RelativeRect.fromSize(
+        event.position & const Size(48.0, 48.0), overlay.size
+      )
     );
 
     switch (menuItem) {
@@ -235,7 +235,7 @@ class _HomeListState extends State<HomeList> {
 
   /// 创建账号
   void _createAccount() {
-
+    HomeContent.of(context).createAccount();
   }
 
   /// 处理收藏
@@ -488,31 +488,36 @@ class ListEmptyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Ink(
-        decoration: BoxDecoration(
-          color: XColor.listColor,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(6),
-          onTap: onPressed,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 28, top: 24, right: 28, bottom: 24
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 130),
+        child: Material(
+          child: Ink(
+            decoration: BoxDecoration(
+              color: XColor.listColor,
+              borderRadius: BorderRadius.circular(6),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgPicture.asset(
-                  'assets/svg/ic_empty.svg',
-                  color: XColor.themeColor,
-                  width: 46,
-                  height: 46
+            child: InkWell(
+              borderRadius: BorderRadius.circular(6),
+              onTap: onPressed,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 28, top: 24, right: 28, bottom: 24
                 ),
-                const SizedBox(height: 20),
-                Text(tips),
-              ],
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/svg/ic_empty.svg',
+                      color: XColor.themeColor,
+                      width: 46,
+                      height: 46
+                    ),
+                    const SizedBox(height: 20),
+                    Text(tips),
+                  ],
+                ),
+              ),
             ),
           ),
         ),

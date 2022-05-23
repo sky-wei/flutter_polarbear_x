@@ -127,9 +127,19 @@ class HomeContentState extends State<HomeContent> {
     _setContent(AccountState.edit, item);
   }
 
+  /// 创建新账号
+  void createAccount() {
+    _setContent(AccountState.edit, _appModel.newEmptyAccount());
+  }
+
   /// 清除账号
-  void clearAccount(AccountItem item) {
+  void _clearAccount() {
     _setContent(AccountState.none, AccountItem.empty);
+  }
+
+  /// 是否修改了账号
+  bool isModifyAccount() {
+    return _isEdit && !_rawAccountItem.unanimous(_editAccountItem);
   }
 
   /// 设置信息
@@ -155,7 +165,7 @@ class HomeContentState extends State<HomeContent> {
       case AccountState.edit:
         return _buildViewContent();
       case AccountState.none:
-        return const Center();
+        return _buildEmptyWidget();
     }
   }
 
@@ -171,6 +181,7 @@ class HomeContentState extends State<HomeContent> {
             SubTextWidget(
               controller: _nameController,
               title: S.of(context).name,
+              autofocus: true,
               readOnly: !_isEdit,
             ),
             const SubItemLine(),
@@ -299,6 +310,43 @@ class HomeContentState extends State<HomeContent> {
     );
   }
 
+  /// 空内容
+  Widget _buildEmptyWidget() {
+    return Center(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            'assets/image/ic_head_logo.png',
+            width: 65,
+            color: XColor.gray2Color,
+          ),
+          XBox.horizontal10,
+          const DefaultTextStyle(
+            style: TextStyle(
+              color: XColor.gray2Color,
+              fontSize: 28,
+              // fontWeight: FontWeight.w400
+            ),
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(text: 'Password'),
+                  TextSpan(
+                      text: 'X',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      )
+                  )
+                ]
+              )
+            )
+          )
+        ],
+      ),
+    );
+  }
+
   /// 处理动作事件
   void _handlerActionEvent({
     required ActionItem action, required String value
@@ -333,13 +381,80 @@ class HomeContentState extends State<HomeContent> {
         _deleteAccount(_rawAccountItem);
         break;
       case MenuType.recall:
-        _setContent(AccountState.view, _rawAccountItem);
+        if (_editAccountItem.id == 0) {
+          _clearAccount();    // 清除账号信息
+        } else {
+          _setContent(AccountState.view, _rawAccountItem);
+        }
         break;
-      case MenuType.save:
+      case MenuType.save: // 保存账号信息
+        _saveAccount();
         break;
       case MenuType.restore:
         break;
     }
+  }
+
+  /// 保存账号
+  void _saveAccount() {
+
+    final name = _nameController.text;
+    final userName = _userNameController.text;
+    final password = _passwordController.text;
+    final website = _websiteController.text;
+    final notes = _notesController.text;
+
+    if (name.isEmpty) {
+      MessageUtil.showMessage(context, S.of(context).xCanNotEmpty(S.of(context).name));
+      return;
+    }
+
+    if (userName.isEmpty) {
+      MessageUtil.showMessage(context, S.of(context).xCanNotEmpty(S.of(context).userName));
+      return;
+    }
+
+    if (password.isEmpty) {
+      MessageUtil.showMessage(context, S.of(context).xCanNotEmpty(S.of(context).password));
+      return;
+    }
+
+    _editAccountItem.alias = name;
+    _editAccountItem.name = userName;
+    _editAccountItem.password = password;
+
+    _editAccountItem.urls.clear();
+    if (website.isNotEmpty) {
+      _editAccountItem.urls.add(website);
+    }
+
+    _editAccountItem.node = notes;
+
+    if (_editAccountItem.id == 0) {
+      _createAccount(_editAccountItem);
+    } else {
+      _updateAccount(_editAccountItem);
+    }
+  }
+
+  /// 创建账号
+  Future<void> _createAccount(AccountItem item) async {
+
+    _appModel.createAccount(item).then((value) {
+
+    }).catchError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+    });
+  }
+
+  /// 更新账号
+  Future<void> _updateAccount(AccountItem item) async {
+
+    _appModel.updateAccount(item).then((value) {
+
+    }).catchError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+    });
   }
 
   /// 删除账号
@@ -373,7 +488,9 @@ class HomeContentState extends State<HomeContent> {
       case AccountState.view:
         return _buildMenuItem([MenuType.edit, MenuType.copy, MenuType.delete]);
       case AccountState.edit:
-        return _buildMenuItem([MenuType.save, MenuType.recall, MenuType.delete]);
+        return _buildMenuItem(
+          [MenuType.save, MenuType.recall, if (_editAccountItem.id != 0) MenuType.delete]
+        );
       case AccountState.none:
         return [];
     }

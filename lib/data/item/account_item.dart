@@ -124,6 +124,19 @@ class AccountItem {
     return false;
   }
 
+  /// 判断账号信息是否一致
+  bool unanimous(AccountItem original) {
+    return id == original.id &&
+        adminId == original.adminId &&
+        alias == original.alias &&
+        name == original.name &&
+        password == original.password &&
+        urls == original.urls &&
+        node == original.node &&
+        folderId == original.folderId &&
+        favorite == original.favorite;
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
