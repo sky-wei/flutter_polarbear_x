@@ -27,6 +27,7 @@ import 'package:flutter_polarbear_x/widget/sub_title_widget.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/item/sort_item.dart';
 import '../../dialog/hint_dialog.dart';
 import '../../generated/l10n.dart';
 import '../../model/app_model.dart';
@@ -86,7 +87,7 @@ class HomeContentState extends State<HomeContent> {
 
   AccountState get accountState => _accountState;
 
-  SideType get sideType => _appModel.sideType;
+  SortType get sortType => _appModel.sortType;
 
   bool get _isEdit => accountState == AccountState.edit;
 
@@ -94,7 +95,7 @@ class HomeContentState extends State<HomeContent> {
 
   bool get _visibilityNote => _isEdit || _rawAccountItem.node.isNotEmpty;
 
-  bool get _visibilityUrl => _isEdit || _rawAccountItem.urls.isNotEmpty;
+  bool get _visibilityUrl => _isEdit || _rawAccountItem.url.isNotEmpty;
 
   @override
   void initState() {
@@ -153,7 +154,7 @@ class HomeContentState extends State<HomeContent> {
       _nameController.text = item.alias;
       _userNameController.text = item.name;
       _passwordController.text = item.password;
-      _websiteController.text = item.urls.isNotEmpty ? item.urls[0] : '';
+      _websiteController.text = item.url;
       _notesController.text = item.node;
     });
   }
@@ -423,11 +424,7 @@ class HomeContentState extends State<HomeContent> {
     _editAccountItem.name = userName;
     _editAccountItem.password = password;
 
-    _editAccountItem.urls.clear();
-    if (website.isNotEmpty) {
-      _editAccountItem.urls.add(website);
-    }
-
+    _editAccountItem.url = website;
     _editAccountItem.node = notes;
 
     if (_editAccountItem.id == 0) {
@@ -480,7 +477,7 @@ class HomeContentState extends State<HomeContent> {
   /// 创建MenuItem
   List<MenuItem> _buildMenuItems() {
 
-    if (SideType.trash == sideType) {
+    if (SortType.trash == sortType) {
       return _buildMenuItem([MenuType.restore, MenuType.delete]);
     }
 

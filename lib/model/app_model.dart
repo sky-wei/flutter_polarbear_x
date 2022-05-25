@@ -25,6 +25,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../data/item/admin_item.dart';
 import '../data/item/folder_item.dart';
+import '../data/item/sort_item.dart';
 import '../data/objectbox.dart';
 import '../data/repository/app_repository.dart';
 import '../generated/l10n.dart';
@@ -46,16 +47,16 @@ class AppModel extends AbstractModel {
 
   AdminItem _admin = AdminItem(id: 1, name: 'Sky', password: '123456');
 
-  SideType _lastType = SideType.allItems;
+  int _lastFolderId = 0;
+  SortType _lastType = SortType.allItems;
   String _lastKeyword = '';
   List<AccountItem> _allAccountItems = [];
   List<AccountItem> _trashAccountItems = [];
   List<AccountItem> _filterAccountItems = [];
-
-  // 获取管理员信息
+  
   AdminItem get admin => _admin;
-
-  SideType get sideType => _lastType;
+  int get folderId => _lastFolderId;
+  SortType get sortType => _lastType;
 
   /// 文件夹
   List<FolderItem> get folders => folderNotifier.value;
@@ -124,7 +125,7 @@ class AppModel extends AbstractModel {
     );
 
     final folders = List<FolderItem>.of(this.folders)
-      ..add(item);
+      ..insert(this.folders.length - 1, item);
     folderNotifier.value = folders;
 
     return item;
@@ -149,6 +150,18 @@ class AppModel extends AbstractModel {
   Future<FolderItem> deleteFolder(FolderItem item) async {
 
     final result = await _appRepository.deleteFolder(item);
+
+    final items = _filterAccount(
+      accounts: _allAccountItems + _trashAccountItems,
+      filter: (account) => item.id == account.folderId
+    );
+    for (var item in items) {
+      item.folderId = FolderItem.noFolder;
+    }
+
+    if (items.isNotEmpty) {
+      await _appRepository.updateAccounts(items);
+    }
 
     final folders = List<FolderItem>.of(this.folders)
       ..remove(result);
@@ -210,31 +223,34 @@ class AppModel extends AbstractModel {
         filter: (item) => item.trash
     );
 
-    return await loadAccounts(type: SideType.allItems);
+    return await loadAccounts(type: SortType.allItems);
   }
 
-  /// 加载账号列表
+  /// 过滤账号列表
   Future<List<AccountItem>> loadAccounts({
     int folderId = 0,
-    required SideType type
+    required SortType type
   }) async {
+
+    _lastFolderId = folderId;
+    _lastType = type;
 
     final List<AccountItem> items;
 
     switch(type) {
-      case SideType.favorite:
+      case SortType.favorite:
         items = _filterAccount(
             accounts: _allAccountItems,
             filter: (item) => item.favorite
         );
         break;
-      case SideType.allItems:
+      case SortType.allItems:
         items = List.of(_allAccountItems);
         break;
-      case SideType.trash:
+      case SortType.trash:
         items = List.of(_trashAccountItems);
         break;
-      case SideType.folder:
+      case SortType.folder:
         items = _filterAccount(
             accounts: _allAccountItems,
             filter: (item) => item.folderId == folderId
@@ -244,7 +260,6 @@ class AppModel extends AbstractModel {
         items = [];
     }
 
-    _lastType = type;
     _filterAccountItems = items;
 
     return await searchAccount(keyword: _lastKeyword);
@@ -276,8 +291,6 @@ class AppModel extends AbstractModel {
   Future<AccountItem> createAccount(AccountItem item) async {
 
     final result = await _appRepository.createAccount(item);
-
-
 
     return result;
   }

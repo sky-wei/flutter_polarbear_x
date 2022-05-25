@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import 'package:flutter_polarbear_x/data/item/folder_item.dart';
+
 class AccountItem {
 
   static final AccountItem empty = AccountItem(adminId: 0, alias: '', name: '', password: '');
@@ -23,7 +25,7 @@ class AccountItem {
   String alias;
   String name;
   String password;
-  List<String> urls;
+  String url;
   String node;
   int folderId;
   bool favorite;
@@ -41,9 +43,9 @@ class AccountItem {
     required this.alias,
     required this.name,
     required this.password,
-    this.urls = const [],
+    this.url = '',
     this.node = '',
-    this.folderId = 0,
+    this.folderId = FolderItem.noFolder,
     this.favorite = false,
     this.trash = false,
     int? createTime,
@@ -57,7 +59,7 @@ class AccountItem {
     String? alias,
     String? name,
     String? password,
-    List<String>? urls,
+    String? url,
     String? node,
     int? folderId,
     bool? favorite,
@@ -71,7 +73,7 @@ class AccountItem {
         alias: alias ?? this.alias,
         name: name ?? this.name,
         password: password ?? this.password,
-        urls: urls ?? this.urls,
+        url: url ?? this.url,
         node: node ?? this.node,
         folderId: folderId ?? this.folderId,
         favorite: favorite ?? this.favorite,
@@ -87,7 +89,7 @@ class AccountItem {
     alias: json['alias'],
     name: json['name'],
     password: json['password'],
-    urls: json['urls'],
+    url: json['urls'],
     node: json['node'],
     folderId: json['folderId'],
     favorite: json['favorite'],
@@ -102,7 +104,7 @@ class AccountItem {
     'alias': alias,
     'name': name,
     'password': password,
-    'urls': urls,
+    'url': url,
     'node': node,
     'folderId': folderId,
     'favorite': favorite,
@@ -112,7 +114,7 @@ class AccountItem {
   };
 
   bool contains(String keyword) {
-    return alias.contains(keyword) || name.contains(keyword) || _contains(urls, keyword);
+    return alias.contains(keyword) || name.contains(keyword) || url.contains(keyword);
   }
 
   bool _contains(List<String> values, String keyword) {
@@ -131,7 +133,7 @@ class AccountItem {
         alias == original.alias &&
         name == original.name &&
         password == original.password &&
-        urls == original.urls &&
+        url == original.url &&
         node == original.node &&
         folderId == original.folderId &&
         favorite == original.favorite;
@@ -150,6 +152,6 @@ class AccountItem {
 
   @override
   String toString() {
-    return 'AccountItem{id: $id, adminId: $adminId, alias: $alias, name: $name, password: $password, urls: $urls, node: $node, folderId: $folderId, favorite: $favorite, trash: $trash, createTime: $createTime, updateTime: $updateTime}';
+    return 'AccountItem{id: $id, adminId: $adminId, alias: $alias, name: $name, password: $password, url: $url, node: $node, folderId: $folderId, favorite: $favorite, trash: $trash, createTime: $createTime, updateTime: $updateTime}';
   }
 }

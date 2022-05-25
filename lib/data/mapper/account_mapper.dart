@@ -15,8 +15,6 @@
  */
 
 
-import 'dart:convert';
-
 import '../entity/account_entity.dart';
 import '../item/account_item.dart';
 
@@ -35,7 +33,7 @@ class AccountMapper {
       alias: entity.alias,
       name: entity.name,
       password: entity.password,
-      urls: json.decode(entity.url),
+      url: entity.url,
       node: entity.node,
       folderId: entity.folderId,
       favorite: entity.favorite,
@@ -56,7 +54,7 @@ class AccountMapper {
       alias: item.alias,
       name: item.name,
       password: item.password,
-      url: json.encode(item.urls),
+      url: item.url,
       node: item.node,
       folderId: item.folderId,
       favorite: item.favorite,

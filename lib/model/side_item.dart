@@ -15,22 +15,17 @@
  */
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_polarbear_x/data/item/sort_item.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 
-enum SideType {
-  favorite,
-  allItems,
-  trash,
-  folder,
-  none
-}
+class SideItem implements SortItem {
 
-class SideItem {
-
+  @override
   final int id;
   final String? icon;
   final String name;
-  final SideType type;
+  @override
+  final SortType type;
   final Color color;
   final dynamic data;
 
@@ -38,12 +33,12 @@ class SideItem {
     this.id = 0,
     required this.name,
     this.icon,
-    this.type = SideType.none,
+    this.type = SortType.none,
     this.color = XColor.themeColor,
     dynamic value
   }): data = value;
 
-  SideItem.text(this.id, this.name): icon = null, type = SideType.none, color = XColor.themeColor, data = null;
+  SideItem.text(this.id, this.name): icon = null, type = SortType.none, color = XColor.themeColor, data = null;
 
   @override
   bool operator ==(Object other) =>

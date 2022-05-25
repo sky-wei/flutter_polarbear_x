@@ -20,13 +20,13 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
-import 'package:flutter_polarbear_x/model/side_item.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/item/sort_item.dart';
 import '../../dialog/hint_dialog.dart';
 import '../../generated/l10n.dart';
 import '../../model/app_model.dart';
@@ -47,7 +47,7 @@ class _HomeListState extends State<HomeList> {
 
   final List<AccountItem> _accountItems = [];
 
-  AccountItem? _curAccountItem;
+  AccountItem? _chooseItem;
   late AppModel _appModel;
 
   late ScrollController _scrollController;
@@ -127,7 +127,7 @@ class _HomeListState extends State<HomeList> {
       );
     }
 
-    final SideType type = _appModel.sideType;
+    final SortType type = _appModel.sortType;
 
     return ListView.separated(
       controller: _scrollController,
@@ -177,13 +177,13 @@ class _HomeListState extends State<HomeList> {
     );
 
     switch (menuItem) {
-      case 1:
+      case 1: // 显示账号
         _viewAccount(item: item);
         break;
-      case 2:
+      case 2: // 编辑账号
         _editAccount(item: item);
         break;
-      case 3:
+      case 3: // 删除账号
         _deleteAccount(item: item);
         break;
       default:
@@ -204,7 +204,9 @@ class _HomeListState extends State<HomeList> {
     );
 
     if (result == 1) {
-      _appModel.deleteAccount(item).catchError((error, stackTrace) {
+      _appModel.deleteAccount(item).then((value) {
+        if (_isChooseItem(item)) _clearChoose();
+      }).catchError((error, stackTrace) {
         MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
       });
     }
@@ -220,14 +222,6 @@ class _HomeListState extends State<HomeList> {
     HomeContent.of(context).editAccount(item);
   }
 
-  /// 信息修改
-  void _infoChange() {
-    setState(() {
-      _accountItems.clear();
-      _accountItems.addAll(_appModel.accounts);
-    });
-  }
-
   /// 搜索
   void _infoSearch(String keyword) {
     _appModel.searchAccount(keyword: keyword);
@@ -238,6 +232,14 @@ class _HomeListState extends State<HomeList> {
     HomeContent.of(context).createAccount();
   }
 
+  /// 信息修改
+  void _infoChange() {
+    setState(() {
+      _accountItems.clear();
+      _accountItems.addAll(_appModel.accounts);
+    });
+  }
+
   /// 处理收藏
   void _handlerFavorite(AccountItem item) {
     _appModel.favoriteAccount(item).catchError((error, stackTrace) {
@@ -245,22 +247,29 @@ class _HomeListState extends State<HomeList> {
     });
   }
 
-  bool _isChooseItem(AccountItem item) => _curAccountItem == item;
+  bool _isChooseItem(AccountItem item) => _chooseItem == item;
 
   void _chooseHandler(AccountItem item) {
 
     if (_isChooseItem(item)) return;
 
     setState(() {
-      _curAccountItem = item;
+      _chooseItem = item;
       _viewAccount(item: item);
+    });
+  }
+
+  /// 清除选择
+  void _clearChoose() {
+    setState(() {
+      _chooseItem = null;
     });
   }
 }
 
 class ListItemWidget extends StatefulWidget {
 
-  final SideType type;
+  final SortType type;
   final AccountItem item;
   final ChooseItem<AccountItem> onChoose;
   final ValueChanged<AccountItem> onPressed;
@@ -289,8 +298,8 @@ class ListItemWidgetState extends State<ListItemWidget> {
 
   final DateFormat _dateFormat = DateFormat.yMMMMd()..add_Hm();
 
-  bool get favorite => SideType.trash != widget.type && widget.item.favorite;
-  bool get unFavorite => SideType.trash != widget.type && _favoriteState && !widget.item.favorite;
+  bool get favorite => SortType.trash != widget.type && widget.item.favorite;
+  bool get unFavorite => SortType.trash != widget.type && _favoriteState && !widget.item.favorite;
 
   @override
   Widget build(BuildContext context) {

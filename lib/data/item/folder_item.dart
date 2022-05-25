@@ -23,13 +23,15 @@
 
 class FolderItem {
 
+  static const int noFolder = 0;
+
   final int id;
   int adminId;
   final String name;
   final int createTime;
 
   FolderItem({
-    this.id = 0,
+    this.id = noFolder,
     required this.adminId,
     required this.name,
     this.createTime = 0

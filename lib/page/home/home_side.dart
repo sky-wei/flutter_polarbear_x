@@ -19,6 +19,7 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
+import 'package:flutter_polarbear_x/data/item/sort_item.dart';
 import 'package:flutter_polarbear_x/dialog/hint_dialog.dart';
 import 'package:flutter_polarbear_x/model/app_model.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
@@ -48,21 +49,23 @@ class HomeSide extends StatefulWidget {
 
 class _HomeSideState extends State<HomeSide> {
 
-  final List<SideItem> _fixed = [
-    SideItem(name: S.current.favorites, icon: 'assets/svg/ic_favorites.svg', type: SideType.favorite, color: XColor.favoriteColor),
-    SideItem(name: S.current.allItems, icon: 'assets/svg/ic_all_items.svg', type: SideType.allItems),
-    SideItem(name: S.current.trash, icon: 'assets/svg/ic_trash.svg', type: SideType.trash, color: XColor.deleteColor),
+  final List<SideItem> _fixedSide = [
+    SideItem(name: S.current.favorites, icon: 'assets/svg/ic_favorites.svg', type: SortType.favorite, color: XColor.favoriteColor),
+    SideItem(name: S.current.allItems, icon: 'assets/svg/ic_all_items.svg', type: SortType.allItems),
+    SideItem(name: S.current.trash, icon: 'assets/svg/ic_trash.svg', type: SortType.trash, color: XColor.deleteColor),
   ];
 
-  final List<SideItem> _folders = [];
+  final List<SideItem> _sideItems = [];
 
-  SideItem? _curSideItem;
+  late SideItem _chooseItem;
   late AppModel _appModel;
+  
+  SideItem get allItems => _fixedSide[1];
 
   @override
   void initState() {
     super.initState();
-    _curSideItem = _fixed[1];
+    _chooseItem = allItems;
     _appModel = context.read<AppModel>();
     _appModel.folderNotifier.addListener(_infoChange);
 
@@ -95,7 +98,7 @@ class _HomeSideState extends State<HomeSide> {
               admin: _appModel.admin,
             ),
             XBox.vertical5,
-            for (var item in _fixed)
+            for (var item in _fixedSide)
               SideItemWidget(
                 item: item,
                 onChoose: _isChooseItem,
@@ -119,7 +122,7 @@ class _HomeSideState extends State<HomeSide> {
   Widget _buildFolderSideList() {
     return ListView.builder(
       itemBuilder: (context, index) {
-        final item = _folders[index];
+        final item = _sideItems[index];
         return SideItemWidget(
           item: item,
           onChoose: _isChooseItem,
@@ -128,7 +131,7 @@ class _HomeSideState extends State<HomeSide> {
           item.id > 0 ? _onPointerDown(item, event) : null,
         );
       },
-      itemCount: _folders.length,
+      itemCount: _sideItems.length,
     );
   }
 
@@ -155,18 +158,20 @@ class _HomeSideState extends State<HomeSide> {
     );
     
     switch (menuItem) {
-      case 1:
-        _editFolder(item: item.data);
+      case 1: // 编辑
+        _editFolder(item: item);
         break;
-      case 2:
-        _deleteFolder(item: item.data);
+      case 2: // 删除
+        _deleteFolder(item: item);
         break;
       default:
     }
   }
 
   /// 编辑文件夹
-  Future<void> _editFolder({FolderItem? item}) async {
+  Future<void> _editFolder({SideItem? item}) async {
+
+    final FolderItem? folder = item?.data;
 
     final result = await showDialog<String>(
       context: context,
@@ -174,7 +179,7 @@ class _HomeSideState extends State<HomeSide> {
         return InputDialog(
           title: S.of(context).editFolder,
           labelText: S.of(context).name,
-          value: item?.name ?? '',
+          value: folder?.name ?? '',
         );
       }
     );
@@ -188,7 +193,7 @@ class _HomeSideState extends State<HomeSide> {
       return;
     }
 
-    if (item == null) {
+    if (folder == null) {
       // 创建文件夹
       _appModel.createFolder(result).catchError((error, stackTrace) {
         MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
@@ -197,13 +202,15 @@ class _HomeSideState extends State<HomeSide> {
     }
 
     // 更新文件夹
-    _appModel.updateFolder(item.copy(name: result)).catchError((error, stackTrace) {
+    _appModel.updateFolder(folder.copy(name: result)).catchError((error, stackTrace) {
       MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
     });
   }
 
   /// 删除文件夹
-  Future<void> _deleteFolder({required FolderItem item}) async {
+  Future<void> _deleteFolder({required SideItem item}) async {
+
+    final FolderItem folder = item.data;
 
     final result = await showDialog<int>(
       context: context,
@@ -216,21 +223,27 @@ class _HomeSideState extends State<HomeSide> {
     );
 
     if (result == 1) {
-      _appModel.deleteFolder(item).catchError((error, stackTrace) {
+      _appModel.deleteFolder(folder).then((value) {
+        if (_isChooseItem(item)) {
+          _chooseHandler(allItems);
+        } else {
+          _appModel.loadAccounts(folderId: item.id, type: item.type);
+        }
+      }).catchError((error, stackTrace) {
         MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
       });
     }
   }
 
   /// 信息修改
-  void _infoChange() {
+  Future<void> _infoChange() async {
 
     final items = _appModel.folders;
-    final folders = items.map((value) => _buildSideItem(value)).toList();
+    final sideItems = items.map((value) => _buildSideItem(value)).toList();
 
     setState(() {
-      _folders.clear();
-      _folders.addAll(folders);
+      _sideItems.clear();
+      _sideItems.addAll(sideItems);
     });
   }
 
@@ -240,19 +253,21 @@ class _HomeSideState extends State<HomeSide> {
       id: item.id,
       name: item.name,
       icon: 'assets/svg/ic_folder.svg',
-      type: SideType.folder,
+      type: SortType.folder,
       value: item
     );
   }
-  
-  bool _isChooseItem(SideItem item) => _curSideItem == item;
-  
+
+  /// 是否选择
+  bool _isChooseItem(SideItem item) => _chooseItem == item;
+
+  /// 选择处理
   void _chooseHandler(SideItem item) {
 
     if (_isChooseItem(item)) return;
 
     setState(() {
-      _curSideItem = item;
+      _chooseItem = item;
       _appModel.loadAccounts(folderId: item.id, type: item.type);
     });
   }

@@ -188,6 +188,19 @@ class AppRepository {
     return item;
   }
 
+  /// 更新账号信息
+  Future<List<AccountItem>> updateAccounts(List<AccountItem> items) async {
+
+    var result = accountBox.putMany(
+        AccountMapper.transformItems(items), mode: PutMode.update
+    );
+
+    if (result.isEmpty) {
+      throw DataException.type(type: ErrorType.updateError);
+    }
+    return items;
+  }
+
   /// 删除账号
   Future<AccountItem> deleteAccount(AccountItem item) async {
     if (!accountBox.remove(item.id)) {
