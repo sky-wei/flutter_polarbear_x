@@ -105,9 +105,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "toggleVisibility":
             MessageLookupByLibrary.simpleMessage("Toggle Visibility"),
         "trash": MessageLookupByLibrary.simpleMessage("Trash"),
+        "unsavedChanges":
+            MessageLookupByLibrary.simpleMessage("Unsaved Changes"),
+        "unsavedChangesMessage": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to leave? If you leave now them your current information will not be saved."),
         "updateInfoError":
             MessageLookupByLibrary.simpleMessage("Update error!"),
         "url": MessageLookupByLibrary.simpleMessage("Url"),
+        "urlEx": MessageLookupByLibrary.simpleMessage(
+            "\'ex. https://www.xxxxxx.com\'"),
         "userName": MessageLookupByLibrary.simpleMessage("UserName"),
         "versionX": m2,
         "view": MessageLookupByLibrary.simpleMessage("View"),

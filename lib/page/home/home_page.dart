@@ -18,7 +18,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 
 import '../../widget/window_buttons.dart';
-import 'home_content.dart';
+import 'home_info.dart';
 import 'home_list.dart';
 import 'home_side.dart';
 
@@ -56,7 +56,7 @@ class _HomePageState extends State {
       children: [
         const HomeSide(),
         const HomeList(),
-        Expanded(child: HomeContent())
+        Expanded(child: HomeInfo())
       ],
     );
   }

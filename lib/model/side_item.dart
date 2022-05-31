@@ -46,12 +46,14 @@ class SideItem implements SortItem {
       other is SideItem &&
           runtimeType == other.runtimeType &&
           id == other.id &&
-          icon == other.icon &&
-          name == other.name &&
           type == other.type;
 
   @override
-  int get hashCode =>
-      id.hashCode ^ icon.hashCode ^ name.hashCode ^ type.hashCode;
+  int get hashCode => id.hashCode ^ type.hashCode;
+
+  @override
+  String toString() {
+    return 'SideItem{id: $id, icon: $icon, name: $name, type: $type, color: $color, data: $data}';
+  }
 }
 

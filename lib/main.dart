@@ -40,6 +40,7 @@ class PolarBearX extends StatelessWidget {
         title: 'PasswordX',
         theme: XTheme.lightTheme(),
         darkTheme: XTheme.darkTheme(),
+        // themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
         routes: {
           XRoute.splash: (BuildContext context) => const SplashPage(),

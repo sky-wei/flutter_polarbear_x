@@ -49,27 +49,15 @@ class HomeSide extends StatefulWidget {
 
 class _HomeSideState extends State<HomeSide> {
 
-  final List<SideItem> _fixedSide = [
-    SideItem(name: S.current.favorites, icon: 'assets/svg/ic_favorites.svg', type: SortType.favorite, color: XColor.favoriteColor),
-    SideItem(name: S.current.allItems, icon: 'assets/svg/ic_all_items.svg', type: SortType.allItems),
-    SideItem(name: S.current.trash, icon: 'assets/svg/ic_trash.svg', type: SortType.trash, color: XColor.deleteColor),
-  ];
+  late AppModel _appModel;
 
   final List<SideItem> _sideItems = [];
-
-  late SideItem _chooseItem;
-  late AppModel _appModel;
-  
-  SideItem get allItems => _fixedSide[1];
 
   @override
   void initState() {
     super.initState();
-    _chooseItem = allItems;
     _appModel = context.read<AppModel>();
     _appModel.folderNotifier.addListener(_infoChange);
-
-    /// 加载文件夹
     _appModel.loadFolders();
   }
 
@@ -98,7 +86,7 @@ class _HomeSideState extends State<HomeSide> {
               admin: _appModel.admin,
             ),
             XBox.vertical5,
-            for (var item in _fixedSide)
+            for (var item in _appModel.fixedSide)
               SideItemWidget(
                 item: item,
                 onChoose: _isChooseItem,
@@ -225,9 +213,9 @@ class _HomeSideState extends State<HomeSide> {
     if (result == 1) {
       _appModel.deleteFolder(folder).then((value) {
         if (_isChooseItem(item)) {
-          _chooseHandler(allItems);
+          _chooseHandler(_appModel.allItems);
         } else {
-          _appModel.loadAccounts(folderId: item.id, type: item.type);
+          _appModel.refreshAccounts();
         }
       }).catchError((error, stackTrace) {
         MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
@@ -259,17 +247,15 @@ class _HomeSideState extends State<HomeSide> {
   }
 
   /// 是否选择
-  bool _isChooseItem(SideItem item) => _chooseItem == item;
+  bool _isChooseItem(SideItem item) => _appModel.chooseSide == item;
 
   /// 选择处理
   void _chooseHandler(SideItem item) {
-
-    if (_isChooseItem(item)) return;
-
-    setState(() {
-      _chooseItem = item;
-      _appModel.loadAccounts(folderId: item.id, type: item.type);
-    });
+    if (!_isChooseItem(item)) {
+      setState(() {
+        _appModel.switchSide(side: item);
+      });
+    }
   }
 }
 

@@ -15,13 +15,12 @@
  */
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
-import 'package:flutter_polarbear_x/model/side_item.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
+import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/sub_title_widget.dart';
 import 'package:flutter_svg/svg.dart';
@@ -35,27 +34,22 @@ import '../../util/error_util.dart';
 import '../../util/launch_util.dart';
 import '../../util/message_util.dart';
 
-enum AccountState {
-  view,
-  edit,
-  none
-}
 
-class HomeContent extends StatefulWidget {
+class HomeInfo extends StatefulWidget {
 
   static final GlobalKey _globalKey = GlobalKey();
 
-  static HomeContentState of(BuildContext context) {
-    return _globalKey.currentState! as HomeContentState;
+  static HomeInfoState of(BuildContext context) {
+    return _globalKey.currentState! as HomeInfoState;
   }
 
-  HomeContent({Key? key}) : super(key: _globalKey);
+  HomeInfo({Key? key}) : super(key: _globalKey);
 
   @override
-  State<StatefulWidget> createState() => HomeContentState();
+  State<StatefulWidget> createState() => HomeInfoState();
 }
 
-class HomeContentState extends State<HomeContent> {
+class HomeInfoState extends State<HomeInfo> {
 
   final Map<MenuType, MenuItem> _menus = {
     MenuType.edit: MenuItem(icon: 'assets/svg/ic_edit.svg', name: S.current.edit, type: MenuType.edit),
@@ -81,26 +75,25 @@ class HomeContentState extends State<HomeContent> {
 
   late AppModel _appModel;
 
-  AccountState _accountState = AccountState.none;
-  AccountItem _rawAccountItem = AccountItem.empty;
-  AccountItem _editAccountItem = AccountItem.empty;
-
-  AccountState get accountState => _accountState;
+  FunState get funState => _appModel.funState;
 
   SortType get sortType => _appModel.sortType;
 
-  bool get _isEdit => accountState == AccountState.edit;
+  bool get _isEdit => funState == FunState.edit;
+  bool get _isView => funState == FunState.view;
 
-  bool get _isView => accountState == AccountState.view;
+  AccountItem get _chooseAccount => _appModel.chooseAccount;
+  AccountItem get _editAccount => _appModel.editAccount;
 
-  bool get _visibilityNote => _isEdit || _rawAccountItem.node.isNotEmpty;
-
-  bool get _visibilityUrl => _isEdit || _rawAccountItem.url.isNotEmpty;
+  bool get _visibilityNote => _isEdit || _chooseAccount.node.isNotEmpty;
+  bool get _visibilityUrl => _isEdit || _chooseAccount.url.isNotEmpty;
 
   @override
   void initState() {
     super.initState();
     _appModel = context.read<AppModel>();
+    _appModel.infoNotifier.addListener(_infoChange);
+    _appModel.funStateNotifier.addListener(_funStateChange);
     _nameController = TextEditingController();
     _userNameController = TextEditingController();
     _passwordController = TextEditingController();
@@ -110,62 +103,24 @@ class HomeContentState extends State<HomeContent> {
 
   @override
   void dispose() {
-    super.dispose();
+    _appModel.infoNotifier.removeListener(_infoChange);
+    _appModel.funStateNotifier.removeListener(_funStateChange);
     _nameController.dispose();
     _userNameController.dispose();
     _passwordController.dispose();
     _websiteController.dispose();
     _notesController.dispose();
-  }
-
-  /// 显示账号
-  void viewAccount(AccountItem item) {
-    _setContent(AccountState.view, item);
-  }
-
-  /// 显示账号
-  void editAccount(AccountItem item) {
-    _setContent(AccountState.edit, item);
-  }
-
-  /// 创建新账号
-  void createAccount() {
-    _setContent(AccountState.edit, _appModel.newEmptyAccount());
-  }
-
-  /// 清除账号
-  void _clearAccount() {
-    _setContent(AccountState.none, AccountItem.empty);
-  }
-
-  /// 是否修改了账号
-  bool isModifyAccount() {
-    return _isEdit && !_rawAccountItem.unanimous(_editAccountItem);
-  }
-
-  /// 设置信息
-  void _setContent(AccountState state, AccountItem item) {
-    setState(() {
-      _accountState = state;
-      _rawAccountItem = item;
-      _editAccountItem = item.copy();
-
-      _visibilityPassword = false;
-      _nameController.text = item.alias;
-      _userNameController.text = item.name;
-      _passwordController.text = item.password;
-      _websiteController.text = item.url;
-      _notesController.text = item.node;
-    });
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    switch(accountState) {
-      case AccountState.view:
-      case AccountState.edit:
+    
+    switch(funState) {
+      case FunState.view:
+      case FunState.edit:
         return _buildViewContent();
-      case AccountState.none:
+      case FunState.none:
         return _buildEmptyWidget();
     }
   }
@@ -184,12 +139,14 @@ class HomeContentState extends State<HomeContent> {
               title: S.of(context).name,
               autofocus: true,
               readOnly: !_isEdit,
+              onChanged: (value) => _editAccount.alias = value,
             ),
             const SubItemLine(),
             SubTextWidget(
               controller: _userNameController,
               title: S.of(context).userName,
               readOnly: !_isEdit,
+              onChanged: (value) => _editAccount.name = value,
               actions: [_copyAction],
               onAction: (action) => _handlerActionEvent(
                 action: action,
@@ -202,6 +159,7 @@ class HomeContentState extends State<HomeContent> {
               title: S.of(context).password,
               readOnly: !_isEdit,
               obscureText: !_visibilityPassword,
+              onChanged: (value) => _editAccount.password = value,
               actions: [_visibilityPassword ? _invisibleAction : _visibilityAction, _copyAction],
               onAction: (action) => _handlerActionEvent(
                 action: action,
@@ -217,21 +175,21 @@ class HomeContentState extends State<HomeContent> {
             children: [
               SubDropdownWidget(
                 title: S.of(context).folder,
-                value: _appModel.findFolderBy(_editAccountItem),
+                value: _appModel.findFolderBy(_editAccount),
                 items: _appModel.folders,
                 onChanged: (value) {
                   setState(() {
-                    _editAccountItem.folderId = value.id;
+                    _editAccount.folderId = value.id;
                   });
                 },
               ),
               const SubItemLine(),
               SubCheckBoxWidget(
                 title: S.of(context).favorite,
-                value: _editAccountItem.favorite,
+                value: _editAccount.favorite,
                 onChanged: (value) {
                   setState(() {
-                    _editAccountItem.favorite = value;
+                    _editAccount.favorite = value;
                   });
                 },
               ),
@@ -244,12 +202,13 @@ class HomeContentState extends State<HomeContent> {
             children: [
               SubTextWidget(
                 controller: _websiteController,
-                hintText: 'ex. https://www.xxxxxx.com',
+                hintText: S.of(context).urlEx,
                 readOnly: !_isEdit,
+                onChanged: (value) => _editAccount.url = value,
                 actions: [_launcherAction, _copyAction],
                 onAction: (action) => _handlerActionEvent(
                   action: action,
-                  value: _websiteController.text
+                  value: _editAccount.url
                 ),
               ),
             ],
@@ -263,6 +222,7 @@ class HomeContentState extends State<HomeContent> {
                 controller: _notesController,
                 hintText: S.of(context).sayWhat,
                 readOnly: !_isEdit,
+                onChanged: (value) => _editAccount.node = value,
                 maxLines: 8,
                 keyboardType: TextInputType.multiline,
                 textInputAction: TextInputAction.newline,
@@ -373,27 +333,57 @@ class HomeContentState extends State<HomeContent> {
   /// 处理菜单事件
   void _handlerMenuEvent(MenuItem item) {
     switch(item.type) {
-      case MenuType.edit:
-        _setContent(AccountState.edit, _rawAccountItem);
+      case MenuType.edit: // 编辑
+        _editAccountBy(_chooseAccount);
         break;
-      case MenuType.copy:
+      case MenuType.copy: // 复制
+        _copyAccount(_chooseAccount);
         break;
-      case MenuType.delete:
-        _deleteAccount(_rawAccountItem);
+      case MenuType.delete: // 删除
+        _deleteAccount(_chooseAccount);
         break;
-      case MenuType.recall:
-        if (_editAccountItem.id == 0) {
-          _clearAccount();    // 清除账号信息
-        } else {
-          _setContent(AccountState.view, _rawAccountItem);
-        }
+      case MenuType.recall:   // 撤回
+        _recallAccount();
         break;
-      case MenuType.save: // 保存账号信息
+      case MenuType.save:   // 保存信息
         _saveAccount();
         break;
-      case MenuType.restore:
+      case MenuType.restore:  // 恢复
+        _restoreAccount();
         break;
     }
+  }
+
+  void _funStateChange() {
+    setState(() {
+      _visibilityPassword = false;
+      _nameController.text = _editAccount.alias;
+      _userNameController.text = _editAccount.name;
+      _passwordController.text = _editAccount.password;
+      _websiteController.text = _editAccount.url;
+      _notesController.text = _editAccount.node;
+    });
+  }
+
+  /// 信息修改
+  void _infoChange() {
+    setState(() {});
+  }
+
+  /// 撤回
+  void _recallAccount() {
+    if (_editAccount.id == 0) {
+      _appModel.clearAccount();
+    } else {
+      _appModel.viewAccountBy(_chooseAccount);
+    }
+  }
+
+  /// 恢复
+  void _restoreAccount() {
+    _appModel.restoreAccount(_chooseAccount).catchError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+    });
   }
 
   /// 保存账号
@@ -420,38 +410,41 @@ class HomeContentState extends State<HomeContent> {
       return;
     }
 
-    _editAccountItem.alias = name;
-    _editAccountItem.name = userName;
-    _editAccountItem.password = password;
+    _editAccount.alias = name;
+    _editAccount.name = userName;
+    _editAccount.password = password;
+    _editAccount.url = website;
+    _editAccount.node = notes;
 
-    _editAccountItem.url = website;
-    _editAccountItem.node = notes;
-
-    if (_editAccountItem.id == 0) {
-      _createAccount(_editAccountItem);
+    if (_editAccount.id == 0) {
+      _createAccount(_editAccount);
     } else {
-      _updateAccount(_editAccountItem);
+      _updateAccount(_editAccount);
     }
   }
 
   /// 创建账号
   Future<void> _createAccount(AccountItem item) async {
-
-    _appModel.createAccount(item).then((value) {
-
-    }).catchError((error, stackTrace) {
+    _appModel.createAccount(item).catchError((error, stackTrace) {
       MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
     });
   }
 
   /// 更新账号
   Future<void> _updateAccount(AccountItem item) async {
-
-    _appModel.updateAccount(item).then((value) {
-
-    }).catchError((error, stackTrace) {
+    _appModel.updateAccount(item).catchError((error, stackTrace) {
       MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
     });
+  }
+
+  /// 编辑账号
+  Future<void> _editAccountBy(AccountItem item) async {
+    _appModel.editAccountBy(item);
+  }
+
+  /// 复制账号
+  Future<void> _copyAccount(AccountItem item) async {
+    _appModel.editAccountBy(item.copy(id: 0, alias: '${item.alias} - copy'));
   }
 
   /// 删除账号
@@ -477,18 +470,18 @@ class HomeContentState extends State<HomeContent> {
   /// 创建MenuItem
   List<MenuItem> _buildMenuItems() {
 
-    if (SortType.trash == sortType) {
+    if (SortType.trash == sortType && _isView) {
       return _buildMenuItem([MenuType.restore, MenuType.delete]);
     }
 
-    switch(accountState) {
-      case AccountState.view:
+    switch(funState) {
+      case FunState.view:
         return _buildMenuItem([MenuType.edit, MenuType.copy, MenuType.delete]);
-      case AccountState.edit:
+      case FunState.edit:
         return _buildMenuItem(
-          [MenuType.save, MenuType.recall, if (_editAccountItem.id != 0) MenuType.delete]
+          [MenuType.save, MenuType.recall, if (_editAccount.id != 0) MenuType.delete]
         );
-      case AccountState.none:
+      case FunState.none:
         return [];
     }
   }
@@ -508,7 +501,7 @@ class HomeContentState extends State<HomeContent> {
   /// 复制到粘贴板
   void _copyToClipboard(String value) {
     Clipboard.setData(
-        ClipboardData(text:value)
+      ClipboardData(text:value)
     ).then((value) {
       MessageUtil.showMessage(context, S.of(context).copyToClipboard);
     });

@@ -29,9 +29,9 @@ class AccountItem {
   String node;
   int folderId;
   bool favorite;
-  final bool trash;
+  bool trash;
   final int createTime;
-  final int updateTime;
+  int updateTime;
 
   DateTime get createDateTime => DateTime.fromMillisecondsSinceEpoch(createTime);
 
@@ -81,6 +81,10 @@ class AccountItem {
         createTime: createTime ?? this.createTime,
         updateTime: updateTime ?? this.updateTime
     );
+  }
+
+  factory AccountItem.formAdmin(int id) {
+    return AccountItem(adminId: id, alias: '', name: '', password: '');
   }
 
   factory AccountItem.fromJson(Map<String, dynamic> json) => AccountItem(

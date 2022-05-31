@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/repository/encrypt_store.dart';
 import 'package:flutter_polarbear_x/model/side_item.dart';
 import 'package:flutter_polarbear_x/util/easy_notifier.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../data/item/admin_item.dart';
@@ -29,6 +26,7 @@ import '../data/item/sort_item.dart';
 import '../data/objectbox.dart';
 import '../data/repository/app_repository.dart';
 import '../generated/l10n.dart';
+import '../theme/color.dart';
 
 
 typedef AccountFilter = bool Function(AccountItem account);
@@ -37,37 +35,54 @@ class AbstractModel extends EasyNotifier {
 
 }
 
+enum FunState {
+  view,
+  edit,
+  none
+}
+
 class AppModel extends AbstractModel {
 
   bool _init = false;
   late AppRepository _appRepository;
 
-  final ValueNotifier<List<FolderItem>> folderNotifier = ValueNotifier([]);
-  final ValueNotifier<List<AccountItem>> accountNotifier = ValueNotifier([]);
-
   AdminItem _admin = AdminItem(id: 1, name: 'Sky', password: '123456');
 
-  int _lastFolderId = 0;
-  SortType _lastType = SortType.allItems;
-  String _lastKeyword = '';
-  List<AccountItem> _allAccountItems = [];
-  List<AccountItem> _trashAccountItems = [];
-  List<AccountItem> _filterAccountItems = [];
+  final List<SideItem> fixedSide = [
+    SideItem(name: S.current.favorites, icon: 'assets/svg/ic_favorites.svg', type: SortType.favorite, color: XColor.favoriteColor),
+    SideItem(name: S.current.allItems, icon: 'assets/svg/ic_all_items.svg', type: SortType.allItems),
+    SideItem(name: S.current.trash, icon: 'assets/svg/ic_trash.svg', type: SortType.trash, color: XColor.deleteColor),
+  ];
+
+  SideItem get allItems => fixedSide[1];
+
+  final EasyNotifier folderNotifier = EasyNotifier();
+  final EasyNotifier listNotifier = EasyNotifier();
+  final EasyNotifier infoNotifier = EasyNotifier();
+  final EasyNotifier funStateNotifier = EasyNotifier();
+
+  final List<FolderItem> folders = [];    /// 文件夹
+  final List<AccountItem> accounts = [];  /// 账号
+
+  late SideItem chooseSide;
+  SortType get sortType => chooseSide.type;
+  AccountItem chooseAccount = AccountItem.empty;
+  String keyword = '';
+  FunState funState = FunState.none;
+  AccountItem editAccount = AccountItem.empty;
   
-  AdminItem get admin => _admin;
-  int get folderId => _lastFolderId;
-  SortType get sortType => _lastType;
+  List<AccountItem> _allAccountItems = [];      // 当前用户可用的账号列表
+  List<AccountItem> _filterAccountItems = [];   // 当前账号列表
+  
+  AdminItem get admin => _admin;        // 当前管理员信息
 
-  /// 文件夹
-  List<FolderItem> get folders => folderNotifier.value;
-
-  /// 账号
-  List<AccountItem> get accounts => accountNotifier.value;
 
   @override
   void dispose() {
     folderNotifier.dispose();
-    accountNotifier.dispose();
+    listNotifier.dispose();
+    infoNotifier.dispose();
+    funStateNotifier.dispose();
     super.dispose();
   }
 
@@ -75,6 +90,7 @@ class AppModel extends AbstractModel {
   Future<AppModel> initialize() async {
     if (!_init) {
       _init = true;
+      chooseSide = allItems;
       final dir = await getApplicationSupportDirectory();
       _appRepository = AppRepository(
         objectBox: await ObjectBox.create(directory: dir.path),
@@ -124,9 +140,10 @@ class AppModel extends AbstractModel {
       FolderItem(adminId: admin.id, name: name)
     );
 
-    final folders = List<FolderItem>.of(this.folders)
-      ..insert(this.folders.length - 1, item);
-    folderNotifier.value = folders;
+    folderNotifier.notify(() {
+      folders.insert(folders.length - 1, item);
+    });
+    infoNotifier.notifyListeners();
 
     return item;
   }
@@ -136,12 +153,12 @@ class AppModel extends AbstractModel {
 
     final result = await _appRepository.updateFolder(item);
 
-    final folders = List<FolderItem>.of(this.folders);
-    final index = folders.indexOf(result);
-    folders.removeAt(index);
-    folders.insert(index, result);
-
-    folderNotifier.value = folders;
+    folderNotifier.notify(() {
+      final index = folders.indexOf(result);
+      folders.removeAt(index);
+      folders.insert(index, result);
+    });
+    infoNotifier.notifyListeners();
 
     return result;
   }
@@ -152,7 +169,7 @@ class AppModel extends AbstractModel {
     final result = await _appRepository.deleteFolder(item);
 
     final items = _filterAccount(
-      accounts: _allAccountItems + _trashAccountItems,
+      accounts: _allAccountItems,
       filter: (account) => item.id == account.folderId
     );
     for (var item in items) {
@@ -160,12 +177,14 @@ class AppModel extends AbstractModel {
     }
 
     if (items.isNotEmpty) {
+      // 更新账号信息
       await _appRepository.updateAccounts(items);
     }
 
-    final folders = List<FolderItem>.of(this.folders)
-      ..remove(result);
-    folderNotifier.value = folders;
+    folderNotifier.notify(() {
+      folders.remove(result);
+    });
+    infoNotifier.notifyListeners();
 
     return result;
   }
@@ -190,8 +209,11 @@ class AppModel extends AbstractModel {
     items.add(
       FolderItem(adminId: admin.id, name: S.current.noFolder)
     );
-
-    folderNotifier.value = items;
+    
+    folderNotifier.notify(() {
+      folders.clear();
+      folders.addAll(items);
+    });
 
     return folders;
   }
@@ -199,61 +221,49 @@ class AppModel extends AbstractModel {
   /// 加载所有账号
   Future<List<AccountItem>> loadAllAccount() async {
 
-    final items = await _appRepository.loadAllAccountBy(admin);
+    _allAccountItems = await _appRepository.loadAllAccountBy(admin);
 
-    // items.addAll(
-    //   [
-    //     AccountItem(id: 1, adminId: 1, alias: 'Sky1', name: 'jingcai.wei@163.com', password: 'AAAAA', urls: [ "http://www.baidu.com" ], node: 'AAABB', favorite: true),
-    //     AccountItem(id: 2, adminId: 1, alias: 'Sky2', name: 'jingcai.wei@163.com', password: 'AAAAA', folderId: 18),
-    //     AccountItem(id: 3, adminId: 1, alias: 'Sky3', name: 'jingcai.wei@163.com', password: 'AAAAA'),
-    //     AccountItem(id: 4, adminId: 1, alias: 'Sky4', name: 'jingcai.wei@163.com', password: 'AAAAA', folderId: 17),
-    //     AccountItem(id: 5, adminId: 1, alias: 'Sky5', name: 'jingcai.wei@163.com', password: 'AAAAA', favorite: true),
-    //     AccountItem(id: 6, adminId: 1, alias: 'Sky6', name: 'jingcai.wei@163.com', password: 'AAAAA', trash: true),
-    //     AccountItem(id: 7, adminId: 1, alias: 'Sky7', name: 'jingcai.wei@163.com', password: 'AAAAA', trash: true),
-    //   ]
-    // );
+    return await switchSide(side: allItems);
+  }
 
-    _allAccountItems = _filterAccount(
-        accounts: items,
-        filter: (item) => !item.trash
-    );
-
-    _trashAccountItems = _filterAccount(
-        accounts: items,
-        filter: (item) => item.trash
-    );
-
-    return await loadAccounts(type: SortType.allItems);
+  /// 刷新账号
+  Future<List<AccountItem>> refreshAccounts() async {
+    return await switchSide(side: chooseSide);
   }
 
   /// 过滤账号列表
-  Future<List<AccountItem>> loadAccounts({
-    int folderId = 0,
-    required SortType type
+  Future<List<AccountItem>> switchSide({
+    required SideItem side
   }) async {
 
-    _lastFolderId = folderId;
-    _lastType = type;
+    chooseSide = side;
 
     final List<AccountItem> items;
 
-    switch(type) {
+    switch(side.type) {
       case SortType.favorite:
         items = _filterAccount(
             accounts: _allAccountItems,
-            filter: (item) => item.favorite
+            filter: (item) => item.favorite && !item.trash
         );
         break;
       case SortType.allItems:
-        items = List.of(_allAccountItems);
-        break;
-      case SortType.trash:
-        items = List.of(_trashAccountItems);
-        break;
-      case SortType.folder:
         items = _filterAccount(
             accounts: _allAccountItems,
-            filter: (item) => item.folderId == folderId
+            filter: (item) => !item.trash
+        );
+        break;
+      case SortType.trash:
+        items = _filterAccount(
+            accounts: _allAccountItems,
+            filter: (item) => item.trash
+        );
+        break;
+      case SortType.folder:
+        FolderItem folder = side.data;
+        items = _filterAccount(
+            accounts: _allAccountItems,
+            filter: (item) => item.folderId == folder.id && !item.trash
         );
         break;
       default:
@@ -262,7 +272,7 @@ class AppModel extends AbstractModel {
 
     _filterAccountItems = items;
 
-    return await searchAccount(keyword: _lastKeyword);
+    return await searchAccount(keyword: keyword);
   }
 
   /// 搜索账号
@@ -270,10 +280,10 @@ class AppModel extends AbstractModel {
     required String keyword
   }) async {
 
-    _lastKeyword = keyword;
+    this.keyword = keyword;
 
     if (keyword.isEmpty) {
-      accountNotifier.value = _filterAccountItems;
+      _updateAccounts(_filterAccountItems);
       return accounts;
     }
 
@@ -282,7 +292,7 @@ class AppModel extends AbstractModel {
       filter: (item) => item.contains(keyword)
     );
 
-    accountNotifier.value = items;
+    _updateAccounts(items);
     
     return accounts;
   }
@@ -292,17 +302,48 @@ class AppModel extends AbstractModel {
 
     final result = await _appRepository.createAccount(item);
 
+    _allAccountItems.add(result);
+
+    refreshAccounts();
+    viewAccountBy(result);
+
     return result;
   }
 
   /// 删除账号
   Future<AccountItem> deleteAccount(AccountItem item) async {
+
+    if (SortType.trash == chooseSide.type) {
+      // 需要清除数据
+      _allAccountItems.remove(item);
+      await _appRepository.deleteAccount(item);
+    } else {
+      // 移动到垃圾箱
+      item.trash = true;
+      _updateListAccount(item);
+      await _appRepository.updateAccount(item);
+    }
+
+    // 刷新账号
+    await refreshAccounts();
+
+    if (chooseAccount == item) {
+      clearChooseAccount();
+      clearAccount();
+    }
+
     return item;
   }
 
   Future<AccountItem> updateAccount(AccountItem item) async {
 
+    item.updateTime = DateTime.now().millisecondsSinceEpoch;
     final result = await _appRepository.updateAccount(item);
+
+    _updateListAccount(result);
+
+    refreshAccounts();
+    viewAccountBy(result);
 
     return result;
   }
@@ -310,22 +351,81 @@ class AppModel extends AbstractModel {
   /// 收藏账号与取消
   Future<AccountItem> favoriteAccount(AccountItem item) async {
 
-    final updateItem = item.copy(favorite: !item.favorite);
+    item.favorite = !item.favorite;
+    item.updateTime = DateTime.now().millisecondsSinceEpoch;
+    final result = await _appRepository.updateAccount(item);
 
+    _updateListAccount(result);
+    refreshAccounts();
 
+    return result;
+  }
 
+  /// 恢复账号
+  Future<AccountItem> restoreAccount(AccountItem item) async {
 
-    // final accounts = List<AccountItem>.of(_filterAccountItems);
-    // final index = folders.indexOf(result);
-    // folders.removeAt(index);
-    // folders.insert(index, result);
+    // 移出垃圾箱
+    item.trash = false;
+
+    await _appRepository.updateAccount(item);
+
+    // 刷新账号
+    await refreshAccounts();
+
+    if (chooseAccount == item) {
+      clearChooseAccount();
+      clearAccount();
+    }
 
     return item;
   }
 
-  /// 创建空的账号
-  AccountItem newEmptyAccount() {
-    return AccountItem(adminId: admin.id, alias: '', name: '', password: '');
+  void viewAccountBy(AccountItem item) {
+    listNotifier.notify();
+    funStateNotifier.notify(() {
+      chooseAccount = item;
+      editAccount = item.copy();
+      funState = FunState.view;
+    });
+  }
+
+  void editAccountBy(AccountItem item) {
+    listNotifier.notify();
+    funStateNotifier.notify(() {
+      chooseAccount = item;
+      editAccount = item.copy();
+      funState = FunState.edit;
+    });
+  }
+
+  void newAccount() {
+    listNotifier.notify();
+    funStateNotifier.notify(() {
+      chooseAccount = AccountItem.formAdmin(admin.id);
+      editAccount = chooseAccount.copy();
+      funState = FunState.edit;
+    });
+  }
+
+  /// 清除列表选择
+  void clearChooseAccount() {
+    listNotifier.notify(() {
+      chooseAccount = AccountItem.empty;
+    });
+  }
+
+  /// 清除账号
+  void clearAccount() {
+    funStateNotifier.notify(() {
+      chooseAccount = AccountItem.empty;
+      editAccount = AccountItem.empty;
+      funState = FunState.none;
+    });
+  }
+
+  /// 是否修改了账号
+  bool isModifyAccount() {
+    return FunState.edit == funState && !chooseAccount.unanimous(editAccount);
   }
 
   /// 过滤账号
@@ -347,5 +447,27 @@ class AppModel extends AbstractModel {
   AdminItem _updateAdmin(AdminItem item) {
     notify(() => _admin = item);
     return item;
+  }
+  
+  /// 更新账号
+  List<AccountItem> _updateAccounts(List<AccountItem> items) {
+
+    // final result = List.of(items);
+    // result.sort((a, b) => -a.updateTime.compareTo(b.updateTime));
+
+    listNotifier.notify(() {
+      accounts.clear();
+      accounts.addAll(items);
+    });
+    return items;
+  }
+
+  /// 更新列表中的账号
+  void _updateListAccount(AccountItem item) {
+    final index = _allAccountItems.indexOf(item);
+    if (index != -1) {
+      _allAccountItems.removeAt(index);
+      _allAccountItems.insert(index, item);
+    }
   }
 }

@@ -32,7 +32,6 @@ import '../../generated/l10n.dart';
 import '../../model/app_model.dart';
 import '../../util/error_util.dart';
 import '../../util/message_util.dart';
-import 'home_content.dart';
 import 'home_side.dart';
 
 class HomeList extends StatefulWidget {
@@ -47,7 +46,6 @@ class _HomeListState extends State<HomeList> {
 
   final List<AccountItem> _accountItems = [];
 
-  AccountItem? _chooseItem;
   late AppModel _appModel;
 
   late ScrollController _scrollController;
@@ -57,14 +55,14 @@ class _HomeListState extends State<HomeList> {
     super.initState();
     _scrollController = ScrollController();
     _appModel = context.read<AppModel>();
-    _appModel.accountNotifier.addListener(_infoChange);
+    _appModel.listNotifier.addListener(_infoChange);
     _appModel.loadAllAccount();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _appModel.accountNotifier.removeListener(_infoChange);
+    _appModel.listNotifier.removeListener(_infoChange);
     _scrollController.dispose();
   }
   
@@ -103,7 +101,7 @@ class _HomeListState extends State<HomeList> {
           ),
           XBox.horizontal5,
           IconButton(
-            onPressed: _createAccount,
+            onPressed: _newAccount,
             icon: SvgPicture.asset(
               'assets/svg/ic_add.svg',
               color: XColor.black,
@@ -123,11 +121,11 @@ class _HomeListState extends State<HomeList> {
     if (_accountItems.isEmpty) {
       return ListEmptyWidget(
         tips: S.of(context).emptyAccountListTip,
-        onPressed: _createAccount,
+        onPressed: _newAccount,
       );
     }
 
-    final SortType type = _appModel.sortType;
+    final SortType type = _appModel.chooseSide.type;
 
     return ListView.separated(
       controller: _scrollController,
@@ -194,19 +192,17 @@ class _HomeListState extends State<HomeList> {
   Future<void> _deleteAccount({required AccountItem item}) async {
 
     final result = await showDialog<int>(
-        context: context,
-        builder: (context) {
-          return HintDialog(
-            title: S.of(context).deleteAccount,
-            message: S.of(context).deleteAccountMessage,
-          );
-        }
+      context: context,
+      builder: (context) {
+        return HintDialog(
+          title: S.of(context).deleteAccount,
+          message: S.of(context).deleteAccountMessage,
+        );
+      }
     );
 
     if (result == 1) {
-      _appModel.deleteAccount(item).then((value) {
-        if (_isChooseItem(item)) _clearChoose();
-      }).catchError((error, stackTrace) {
+      _appModel.deleteAccount(item).catchError((error, stackTrace) {
         MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
       });
     }
@@ -214,12 +210,16 @@ class _HomeListState extends State<HomeList> {
 
   /// 显示账号
   Future<void> _viewAccount({required AccountItem item}) async {
-    HomeContent.of(context).viewAccount(item);
+    if (!await checkModifyAccount()) {
+      _appModel.viewAccountBy(item);
+    }
   }
 
   /// 编辑账号
   Future<void> _editAccount({required AccountItem item}) async {
-    HomeContent.of(context).editAccount(item);
+    if (!await checkModifyAccount()) {
+      _appModel.editAccountBy(item);
+    }
   }
 
   /// 搜索
@@ -228,8 +228,10 @@ class _HomeListState extends State<HomeList> {
   }
 
   /// 创建账号
-  void _createAccount() {
-    HomeContent.of(context).createAccount();
+  Future<void> _newAccount() async {
+    if (!await checkModifyAccount()) {
+      _appModel.newAccount();
+    }
   }
 
   /// 信息修改
@@ -247,23 +249,32 @@ class _HomeListState extends State<HomeList> {
     });
   }
 
-  bool _isChooseItem(AccountItem item) => _chooseItem == item;
+  /// 处理账号修改
+  Future<bool> checkModifyAccount() async {
 
-  void _chooseHandler(AccountItem item) {
+    if (!_appModel.isModifyAccount()) {
+      return false;
+    }
 
-    if (_isChooseItem(item)) return;
+    final result = await showDialog<int>(
+        context: context,
+        builder: (context) {
+          return HintDialog(
+            title: S.of(context).unsavedChanges,
+            message: S.of(context).unsavedChangesMessage,
+          );
+        }
+    );
 
-    setState(() {
-      _chooseItem = item;
-      _viewAccount(item: item);
-    });
+    return result != 1;
   }
 
-  /// 清除选择
-  void _clearChoose() {
-    setState(() {
-      _chooseItem = null;
-    });
+  bool _isChooseItem(AccountItem item) => _appModel.chooseAccount == item;
+
+  void _chooseHandler(AccountItem item) {
+    if (!_isChooseItem(item)) {
+      _viewAccount(item: item);
+    }
   }
 }
 
