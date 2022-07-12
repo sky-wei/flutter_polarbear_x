@@ -670,6 +670,56 @@ class S {
     );
   }
 
+  /// `Account Information`
+  String get accountInformation {
+    return Intl.message(
+      'Account Information',
+      name: 'accountInformation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logout`
+  String get logout {
+    return Intl.message(
+      'Logout',
+      name: 'logout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change Name`
+  String get changeName {
+    return Intl.message(
+      'Change Name',
+      name: 'changeName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change Notes`
+  String get changeNotes {
+    return Intl.message(
+      'Change Notes',
+      name: 'changeNotes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change Password`
+  String get changePassword {
+    return Intl.message(
+      'Change Password',
+      name: 'changePassword',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the "License");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an "AS IS" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.`
   String get license {
     return Intl.message(

@@ -43,6 +43,11 @@ class AppRepository {
     required this.encryptStore
   });
 
+  /// 释放资源
+  void dispose() {
+    objectBox.dispose();
+  }
+
   /// 创建管理员账号
   Future<AdminItem> createAdmin(AdminItem item) async {
 

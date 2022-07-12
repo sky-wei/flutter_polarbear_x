@@ -32,6 +32,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "accountExists":
             MessageLookupByLibrary.simpleMessage("Account already exists!"),
+        "accountInformation":
+            MessageLookupByLibrary.simpleMessage("Account Information"),
         "accountPasswordError": MessageLookupByLibrary.simpleMessage(
             "Incorrect username or password!"),
         "addAccountTip": MessageLookupByLibrary.simpleMessage("Add Account"),
@@ -40,6 +42,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "appName": MessageLookupByLibrary.simpleMessage("PasswordX"),
         "canNotEmpty": MessageLookupByLibrary.simpleMessage("Can not be empty"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "changeName": MessageLookupByLibrary.simpleMessage("Change Name"),
+        "changeNotes": MessageLookupByLibrary.simpleMessage("Change Notes"),
+        "changePassword":
+            MessageLookupByLibrary.simpleMessage("Change Password"),
         "clone": MessageLookupByLibrary.simpleMessage("Clone"),
         "close": MessageLookupByLibrary.simpleMessage("Close"),
         "confirmPassword":
@@ -80,6 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License."),
         "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
+        "logout": MessageLookupByLibrary.simpleMessage("Logout"),
         "mailX": m0,
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "newAccount": MessageLookupByLibrary.simpleMessage("New Account"),

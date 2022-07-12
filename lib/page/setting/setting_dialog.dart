@@ -69,7 +69,7 @@ class SettingWidgetState extends State<SettingWidget> {
   final List<SideItem> _items = [
     SideItem(id: 0, name: 'Account', icon: 'assets/svg/ic_user.svg'),
     SideItem(id: 1, name: 'Preference', icon: 'assets/svg/ic_all_items.svg'),
-    SideItem(id: 2, name: 'About', icon: 'assets/svg/ic_trash.svg'),
+    SideItem(id: 2, name: 'About', icon: 'assets/svg/ic_about.svg'),
   ];
 
   SideItem? _curSideItem;

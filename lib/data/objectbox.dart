@@ -35,6 +35,7 @@ class ObjectBox {
     folderBox = Box<FolderEntity>(store);
   }
 
+  /// 创建ObjectBox
   static Future<ObjectBox> create({
     String? directory
   }) async {
@@ -42,6 +43,11 @@ class ObjectBox {
       directory: directory
     );
     return ObjectBox._create(store);
+  }
+
+  /// 释放资源
+  void dispose() {
+    if (!store.isClosed()) store.close();
   }
 }
 

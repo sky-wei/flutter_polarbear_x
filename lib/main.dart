@@ -13,7 +13,11 @@ import 'generated/l10n.dart';
 import 'model/app_model.dart';
 
 void main() {
-  runApp(const PolarBearX());
+  runApp(
+    const RestartWidget(
+      child: PolarBearX(),
+    )
+  );
   doWhenWindowReady(() {
     final win = appWindow;
     const initialSize = Size(1500, 1000);
@@ -60,6 +64,46 @@ class PolarBearX extends StatelessWidget {
     );
   }
 }
+
+
+class RestartWidget extends StatefulWidget {
+
+  final Widget child;
+
+  const RestartWidget({
+    Key? key,
+    required this.child
+  }) : super(key: key);
+
+  static void restartApp(BuildContext context) {
+    //查找顶层_RestartWidgetState并重启
+    context.findAncestorStateOfType<_RestartState>()?.restartApp();
+  }
+
+  @override
+  State<StatefulWidget> createState() => _RestartState();
+}
+
+
+class _RestartState extends State<RestartWidget> {
+
+  Key key = UniqueKey();
+
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();//重新生成key导致控件重新build
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: key,
+      child: widget.child,
+    );
+  }
+}
+
 
 class _MyNavigatorObserver extends NavigatorObserver {
 

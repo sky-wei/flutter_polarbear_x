@@ -83,6 +83,7 @@ class AppModel extends AbstractModel {
     listNotifier.dispose();
     infoNotifier.dispose();
     funStateNotifier.dispose();
+    _appRepository.dispose();
     super.dispose();
   }
 
@@ -96,6 +97,7 @@ class AppModel extends AbstractModel {
         objectBox: await ObjectBox.create(directory: dir.path),
         encryptStore: EncryptStore()
       );
+      await Future.delayed(const Duration(milliseconds: 200));
     }
     return this;
   }

@@ -31,9 +31,10 @@ class PreferenceWidgetState extends State<PreferenceWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        XBox.vertical40,
-        const Text('AAAAAA')
+        XBox.vertical10,
+        const Text('Theme')
       ],
     );
   }
