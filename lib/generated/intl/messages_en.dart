@@ -90,11 +90,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "mailX": m0,
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "newAccount": MessageLookupByLibrary.simpleMessage("New Account"),
+        "newPassword": MessageLookupByLibrary.simpleMessage("New Password"),
         "noFolder": MessageLookupByLibrary.simpleMessage("No Folder"),
         "notSupport":
             MessageLookupByLibrary.simpleMessage("Not currently supported!"),
         "notes": MessageLookupByLibrary.simpleMessage("Notes"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
+        "oldPassword": MessageLookupByLibrary.simpleMessage("Old Password"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "passwordError":
             MessageLookupByLibrary.simpleMessage("Wrong password!"),
@@ -118,6 +120,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Are you sure you want to leave? If you leave now them your current information will not be saved."),
         "updateInfoError":
             MessageLookupByLibrary.simpleMessage("Update error!"),
+        "updated": MessageLookupByLibrary.simpleMessage("Updated"),
         "url": MessageLookupByLibrary.simpleMessage("Url"),
         "urlEx": MessageLookupByLibrary.simpleMessage(
             "\'ex. https://www.xxxxxx.com\'"),

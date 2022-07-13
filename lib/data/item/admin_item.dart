@@ -23,7 +23,7 @@ class AdminItem {
   final String password;
   final String desc;
   final int createTime;
-  final int updateTime;
+  int updateTime;
 
   AdminItem({
    this.id = 0,
@@ -34,6 +34,8 @@ class AdminItem {
     int? updateTime,
   }): createTime = createTime ?? DateTime.now().millisecondsSinceEpoch,
     updateTime = updateTime ?? DateTime.now().millisecondsSinceEpoch;
+
+  DateTime get updateDateTime => DateTime.fromMillisecondsSinceEpoch(updateTime);
 
   AdminItem.valueOf(AdminItem item) :
     id = item.id,

@@ -34,7 +34,12 @@ class PreferenceWidgetState extends State<PreferenceWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         XBox.vertical10,
-        const Text('Theme')
+        const Text(
+          'Theme',
+          style: TextStyle(
+              fontWeight: FontWeight.w600
+          ),
+        )
       ],
     );
   }

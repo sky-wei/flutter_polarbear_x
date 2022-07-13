@@ -108,16 +108,28 @@ class AppModel extends AbstractModel {
     required String password
   }) async {
 
-    var item = _appRepository.encryptAdmin(
+    final item = _appRepository.encryptAdmin(
       AdminItem(
         name: name,
         password: password
       )
     );
 
-    var admin = await _appRepository.createAdmin(item);
+    final admin = await _appRepository.createAdmin(item);
 
     return _updateAdmin(admin.copy(password: password));
+  }
+
+  /// 更新账号信息
+  Future<AdminItem> updateAdmin(AdminItem admin) async {
+
+    admin.updateTime = DateTime.now().millisecondsSinceEpoch;
+
+    await _appRepository.updateAdmin(
+        _appRepository.encryptAdmin(admin)
+    );
+
+    return _updateAdmin(admin);
   }
 
   /// 登录账号

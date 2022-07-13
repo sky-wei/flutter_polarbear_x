@@ -26,12 +26,14 @@ class InputDialog extends StatelessWidget {
   final String title;
   final String? labelText;
   final String value;
+  final int maxLines;
 
   const InputDialog({
     Key? key,
     required this.title,
     this.labelText,
-    this.value = ''
+    this.value = '',
+    this.maxLines = 1
   }) : super(key: key);
 
   @override
@@ -43,6 +45,7 @@ class InputDialog extends StatelessWidget {
           title: title,
           labelText: labelText,
           value: value,
+          maxLines: maxLines,
         ),
       ),
     );
@@ -54,12 +57,15 @@ class InputWidget extends StatefulWidget {
   final String title;
   final String? labelText;
   final String value;
+  final int maxLines;
+
 
   const InputWidget({
     Key? key,
     required this.title,
     this.labelText,
-    this.value = ''
+    this.value = '',
+    this.maxLines = 1
   }) : super(key: key);
 
   @override
@@ -107,9 +113,10 @@ class InputWidgetState extends State<InputWidget> {
                   borderRadius: BorderRadius.all(Radius.circular(6))
               )
             ),
-            textInputAction: TextInputAction.done,
+            maxLines: widget.maxLines,
+            textInputAction: widget.maxLines > 1 ? TextInputAction.newline : TextInputAction.done,
             textAlignVertical: TextAlignVertical.bottom,
-            keyboardType: TextInputType.text,
+            keyboardType: widget.maxLines > 1 ? TextInputType.multiline : TextInputType.text,
             onSubmitted: (value) => _ok(),
           ),
         ),

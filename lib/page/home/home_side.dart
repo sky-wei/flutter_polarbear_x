@@ -82,9 +82,7 @@ class _HomeSideState extends State<HomeSide> {
               logo: 'assets/image/ic_head_logo.png',
               title: S.of(context).appName,
             ),
-            HomeUserInfoWidget(
-              admin: _appModel.admin,
-            ),
+            HomeUserInfoWidget(),
             XBox.vertical5,
             for (var item in _appModel.fixedSide)
               SideItemWidget(

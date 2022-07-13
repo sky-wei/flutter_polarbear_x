@@ -65,6 +65,23 @@ class AppRepository {
     return item.copy(id: id);
   }
 
+  /// 更新管理员账号
+  Future<AdminItem> updateAdmin(AdminItem item) async {
+
+    var entity = adminBox
+        .query(AdminEntity_.id.equals(item.id))
+        .build()
+        .findFirst();
+
+    if (entity == null) {
+      throw DataException.type(type: ErrorType.updateError);
+    }
+
+    adminBox.put(AdminMapper.transformItem(item), mode: PutMode.update);
+
+    return item;
+  }
+
   /// 登录账号
   Future<AdminItem> loginByAdmin(AdminItem item) async {
 

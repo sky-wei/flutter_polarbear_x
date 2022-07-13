@@ -15,28 +15,38 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_polarbear_x/data/item/admin_item.dart';
 import 'package:flutter_polarbear_x/page/setting/setting_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
-import '../../route.dart';
+import '../../model/app_model.dart';
 import '../../theme/color.dart';
 import '../../util/size_box_util.dart';
 
 class HomeUserInfoWidget extends StatefulWidget {
 
-  final AdminItem admin;
-
-  const HomeUserInfoWidget({
-    Key? key,
-    required this.admin
-  }) : super(key: key);
+  const HomeUserInfoWidget({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _HomeUserInfoState();
 }
 
 class _HomeUserInfoState extends State<HomeUserInfoWidget> {
+
+  late AppModel _appModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _appModel = context.read<AppModel>();
+    _appModel.addListener(_infoChange);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _appModel.removeListener(_infoChange);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +76,7 @@ class _HomeUserInfoState extends State<HomeUserInfoWidget> {
                   XBox.horizontal15,
                   Expanded(
                     child: Text(
-                      widget.admin.name,
+                      _appModel.admin.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -87,6 +97,13 @@ class _HomeUserInfoState extends State<HomeUserInfoWidget> {
         ),
       ),
     );
+  }
+
+  /// 信息修改
+  void _infoChange() {
+    setState(() {
+      // 信息修改需要刷新
+    });
   }
 
   /// 打开设置
