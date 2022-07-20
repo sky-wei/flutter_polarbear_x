@@ -20,7 +20,6 @@ import 'package:flutter_polarbear_x/main.dart';
 import 'package:flutter_polarbear_x/page/setting/password_dialog.dart';
 import 'package:flutter_polarbear_x/page/setting/sub_text_widget.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -119,7 +118,7 @@ class _AccountWidgetState extends State<AccountWidget> {
             padding: const EdgeInsets.only(top: 50, right: 10),
             child: _buildHeadWidget(
               onPressed: () {
-
+                MessageUtil.showMessage(context, '功能暂未开放！');
               }
             ),
           ),
@@ -201,7 +200,22 @@ class _AccountWidgetState extends State<AccountWidget> {
       return;
     }
 
-    XLog.d('>>>>>>>>>>>>>>>> $result');
+    final oldPassword = result.oldPassword;
+    final newPassword = result.newPassword;
+
+    if (admin.password != oldPassword) {
+      MessageUtil.showMessage(context, S.of(context).passwordError);
+      return;
+    }
+
+    // 更新管理员密码
+    _appModel.updateAdminPassword(
+        newPassword
+    ).catchError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+    }).then((value) => {
+      MessageUtil.showMessage(context, S.of(context).updateCompleted)
+    });
   }
 
   /// 修改用户备注

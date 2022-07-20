@@ -118,6 +118,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Unsaved Changes"),
         "unsavedChangesMessage": MessageLookupByLibrary.simpleMessage(
             "Are you sure you want to leave? If you leave now them your current information will not be saved."),
+        "updateCompleted":
+            MessageLookupByLibrary.simpleMessage("Update Completed!"),
         "updateInfoError":
             MessageLookupByLibrary.simpleMessage("Update error!"),
         "updated": MessageLookupByLibrary.simpleMessage("Updated"),

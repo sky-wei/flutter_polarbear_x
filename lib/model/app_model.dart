@@ -20,6 +20,7 @@ import 'package:flutter_polarbear_x/model/side_item.dart';
 import 'package:flutter_polarbear_x/util/easy_notifier.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../data/data_exception.dart';
 import '../data/item/admin_item.dart';
 import '../data/item/folder_item.dart';
 import '../data/item/sort_item.dart';
@@ -127,6 +128,26 @@ class AppModel extends AbstractModel {
 
     await _appRepository.updateAdmin(
         _appRepository.encryptAdmin(admin)
+    );
+
+    return _updateAdmin(admin);
+  }
+
+  /// 更新账号密码
+  Future<AdminItem> updateAdminPassword(String newPassword) async {
+
+    final admin = this.admin.copy(password: newPassword);
+
+    admin.updateTime = DateTime.now().millisecondsSinceEpoch;
+
+    await _appRepository.updateAdmin(
+        _appRepository.encryptAdmin(admin)
+    );
+
+    await _appRepository.updateAccounts(
+      _allAccountItems.map((account) {
+        return _appRepository.encryptAccount(admin, account);
+      }).toList()
     );
 
     return _updateAdmin(admin);

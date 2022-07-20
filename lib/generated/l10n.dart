@@ -770,6 +770,16 @@ class S {
     );
   }
 
+  /// `Update Completed!`
+  String get updateCompleted {
+    return Intl.message(
+      'Update Completed!',
+      name: 'updateCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Are you sure you want to leave? If you leave now them your current information will not be saved.`
   String get unsavedChangesMessage {
     return Intl.message(
