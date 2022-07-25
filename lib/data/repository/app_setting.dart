@@ -15,6 +15,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/data/repository/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../page/setting/preference_widget.dart';
@@ -25,16 +26,12 @@ class AppSetting {
 
   AppSetting(this._preferences);
 
-  Future<void> load() async {
-
+  int getDarkMode() {
+    return _preferences.getInt('dark_mode') ?? ThemeItem.system;
   }
 
-  int getTheme() {
-    return _preferences.getInt('theme_mode') ?? ThemeItem.system;
-  }
-
-  Future<bool> setTheme(int mode) async {
-    return await _preferences.setInt('theme_mode', mode);
+  Future<bool> setDarkMode(int mode) async {
+    return await _preferences.setInt('dark_mode', mode);
   }
 
   Locale? getLocale() {
@@ -60,5 +57,9 @@ class AppSetting {
         'language', '${locale.languageCode}_${locale.countryCode ?? ''}'
     );
   }
+
+  // AppTheme getAppTheme() {
+  //   Theme.of(context).
+  // }
 }
 

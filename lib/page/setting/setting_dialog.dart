@@ -99,9 +99,9 @@ class SettingWidgetState extends State<SettingWidget> {
   Widget _buildSide() {
     return Container(
       constraints: const BoxConstraints.expand(width: 230),
-      decoration: const BoxDecoration(
-        color: XColor.listColor,
-        borderRadius: BorderRadius.all(Radius.circular(4))
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.background,
+        borderRadius: const BorderRadius.all(Radius.circular(4))
       ),
       child: Column(
         children: [

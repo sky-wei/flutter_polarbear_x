@@ -2,12 +2,12 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
+import 'package:flutter_polarbear_x/data/repository/app_theme.dart';
 import 'package:flutter_polarbear_x/page/home/home_page.dart';
 import 'package:flutter_polarbear_x/page/launcher/launcher_page.dart';
 import 'package:flutter_polarbear_x/page/setting/preference_widget.dart';
 import 'package:flutter_polarbear_x/page/splash/splash_page.dart';
 import 'package:flutter_polarbear_x/route.dart';
-import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_polarbear_x/util/logger.dart';
 import 'package:provider/provider.dart';
@@ -50,15 +50,14 @@ class PolarBearX extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AppModel(appSetting: appSetting)),
       ],
       child: MaterialApp(
         title: 'PasswordX',
-        theme: XTheme.lightTheme(),
-        darkTheme: XTheme.darkTheme(),
+        theme: AppTheme.lightTheme(),
+        darkTheme: AppTheme.darkTheme(),
         themeMode: _getThemeMode(),
         debugShowCheckedModeBanner: false,
         routes: {
@@ -82,7 +81,7 @@ class PolarBearX extends StatelessWidget {
 
   /// 获取主题模式
   ThemeMode _getThemeMode() {
-    final mode = appSetting.getTheme();
+    final mode = appSetting.getDarkMode();
     return ThemeItem.light == mode ? ThemeMode.light : ThemeItem.dark == mode ? ThemeMode.dark : ThemeMode.system;
   }
 }

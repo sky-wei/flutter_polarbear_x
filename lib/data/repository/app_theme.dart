@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import 'package:flutter/material.dart';
 
-import 'color.dart';
+import '../../theme/color.dart';
 
-class XTheme {
+class AppTheme {
 
-  XTheme._();
+  final Color mainTextColor;
+
+  AppTheme({
+    required this.mainTextColor
+  });
+
 
   static ThemeData lightTheme() => ThemeData(
     primarySwatch: XColor.red,
@@ -33,4 +37,3 @@ class XTheme {
     backgroundColor: const Color(0xFF101010),
   );
 }
-

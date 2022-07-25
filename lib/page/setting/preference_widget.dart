@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:provider/provider.dart';
 
 import '../../generated/l10n.dart';
@@ -120,7 +117,7 @@ class PreferenceWidgetState extends State<PreferenceWidget> {
   }
 
   ThemeItem _getCurTheme() {
-    final mode = _appSetting.getTheme();
+    final mode = _appSetting.getDarkMode();
     return _modeItems.firstWhere((element) => element.value == mode);
   }
   
@@ -130,14 +127,13 @@ class PreferenceWidgetState extends State<PreferenceWidget> {
       return;
     }
 
-    _appSetting.setTheme(theme.value).then((value) {
+    _appSetting.setDarkMode(theme.value).then((value) {
       RestartWidget.restartApp(context);
     });
   }
 
   LocaleItem _getCurLocale() {
     final locale = _appSetting.getLocale();
-    XLog.d('>>>>>>>>>>>>>>>>>> $locale');
     return _localItems.firstWhere((element) => element.locale == locale, orElse: () {
       return _localItems[0];
     });

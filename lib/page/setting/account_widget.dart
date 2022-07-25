@@ -118,7 +118,7 @@ class _AccountWidgetState extends State<AccountWidget> {
             padding: const EdgeInsets.only(top: 50, right: 10),
             child: _buildHeadWidget(
               onPressed: () {
-                MessageUtil.showMessage(context, '功能暂未开放！');
+                MessageUtil.showMessage(context, S.of(context).notSupport);
               }
             ),
           ),
