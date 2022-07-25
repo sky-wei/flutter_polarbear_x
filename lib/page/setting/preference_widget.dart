@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-import 'package:flutter/cupertino.dart';
+import 'dart:ui';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
+import 'package:flutter_polarbear_x/theme/color.dart';
+import 'package:flutter_polarbear_x/util/log_util.dart';
+import 'package:provider/provider.dart';
+
+import '../../generated/l10n.dart';
+import '../../main.dart';
+import '../../model/app_model.dart';
 import '../../util/size_box_util.dart';
 
 class PreferenceWidget extends StatefulWidget {
@@ -28,20 +37,182 @@ class PreferenceWidget extends StatefulWidget {
 
 class PreferenceWidgetState extends State<PreferenceWidget> {
 
+  final List<ThemeItem> _modeItems = [
+    ThemeItem(S.current.followSystem, ThemeItem.system),
+    ThemeItem(S.current.brightColorMode, ThemeItem.light),
+    ThemeItem(S.current.darkMode, ThemeItem.dark),
+  ];
+
+  final List<LocaleItem> _localItems = [
+    LocaleItem(S.current.followSystem, null),
+    LocaleItem(S.current.english, const Locale.fromSubtags(languageCode: 'en')),
+    LocaleItem(S.current.simplifiedChinese, const Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN')),
+  ];
+
+  late AppSetting _appSetting;
+
+  @override
+  void initState() {
+    super.initState();
+    _appSetting = context.read<AppModel>().getAppSetting();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         XBox.vertical10,
-        const Text(
-          'Theme',
-          style: TextStyle(
+        Text(
+          S.of(context).preference,
+          style: const TextStyle(
               fontWeight: FontWeight.w600
           ),
+        ),
+        XBox.vertical30,
+        Text(
+          S.of(context).theme,
+          style: const TextStyle(
+              color: XColor.grayColor
+          ),
+        ),
+        XBox.vertical5,
+        ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 180,
+          ),
+          child: DropdownButton<ThemeItem>(
+            value: _getCurTheme(),
+            isExpanded: true,
+            style: const TextStyle(
+                fontSize: 14,
+                color: XColor.black
+            ),
+            items: _buildThemeMenuItem(_modeItems),
+            onChanged: (value) => setTheme(value!),
+          ),
+        ),
+        XBox.vertical30,
+        Text(
+          S.of(context).language,
+          style: const TextStyle(
+              color: XColor.grayColor
+          ),
+        ),
+        XBox.vertical5,
+        ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 180,
+          ),
+          child: DropdownButton<LocaleItem>(
+            value: _getCurLocale(),
+            isExpanded: true,
+            style: const TextStyle(
+                fontSize: 14,
+                color: XColor.black
+            ),
+            items: _buildLocalMenuItem(_localItems),
+            onChanged: (value) => setLocale(value!),
+          )
         )
       ],
     );
   }
+
+  ThemeItem _getCurTheme() {
+    final mode = _appSetting.getTheme();
+    return _modeItems.firstWhere((element) => element.value == mode);
+  }
+  
+  void setTheme(ThemeItem theme) {
+
+    if (theme == _getCurTheme()) {
+      return;
+    }
+
+    _appSetting.setTheme(theme.value).then((value) {
+      RestartWidget.restartApp(context);
+    });
+  }
+
+  LocaleItem _getCurLocale() {
+    final locale = _appSetting.getLocale();
+    XLog.d('>>>>>>>>>>>>>>>>>> $locale');
+    return _localItems.firstWhere((element) => element.locale == locale, orElse: () {
+      return _localItems[0];
+    });
+  }
+
+  void setLocale(LocaleItem locale) {
+
+    if (locale == _getCurLocale()) {
+      return;
+    }
+
+    _appSetting.setLocale(locale.locale).then((value) {
+      RestartWidget.restartApp(context);
+    });
+  }
+
+  List<DropdownMenuItem<ThemeItem>> _buildThemeMenuItem(List<ThemeItem> items) {
+    return items.map<DropdownMenuItem<ThemeItem>>((ThemeItem value) {
+      return DropdownMenuItem<ThemeItem> (
+        value: value,
+        child: Text(value.name),
+      );
+    }).toList();
+  }
+
+  List<DropdownMenuItem<LocaleItem>> _buildLocalMenuItem(List<LocaleItem> items) {
+    return items.map<DropdownMenuItem<LocaleItem>>((LocaleItem value) {
+      return DropdownMenuItem<LocaleItem> (
+        value: value,
+        child: Text(value.name),
+      );
+    }).toList();
+  }
+}
+
+class ThemeItem {
+
+  static const int system = 0;
+  static const int light = 1;
+  static const int dark = 2;
+
+  final String name;
+  final int value;
+
+  ThemeItem(this.name, this.value);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ThemeItem &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          value == other.value;
+
+  @override
+  int get hashCode => name.hashCode ^ value.hashCode;
+}
+
+
+class LocaleItem {
+
+  final String name;
+  final Locale? locale;
+
+  LocaleItem(this.name, this.locale);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LocaleItem &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          locale == other.locale;
+
+  @override
+  int get hashCode => name.hashCode ^ locale.hashCode;
 }
 

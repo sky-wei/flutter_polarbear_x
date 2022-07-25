@@ -73,6 +73,16 @@
   "unsavedChanges": "Unsaved Changes",
   "updateCompleted": "Update Completed!",
   "unsavedChangesMessage": "Are you sure you want to leave? If you leave now them your current information will not be saved.",
-  "end": "End"
+  "end": "End",
+  "followSystem": "Follow System",
+  "brightColorMode": "Bright color Mode",
+  "darkMode": "Dark mode",
+  "theme": "Theme",
+  "language": "Language",
+  "preference": "Preference",
+  "account": "Account",
+  "about": "About",
+  "english": "English",
+  "simplifiedChinese": "简体中文"
 }
 

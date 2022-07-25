@@ -22,6 +22,7 @@ import 'package:flutter_polarbear_x/page/setting/preference_widget.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../generated/l10n.dart';
 import '../../model/side_item.dart';
 import '../../util/size_box_util.dart';
 
@@ -67,9 +68,9 @@ class SettingWidget extends StatefulWidget {
 class SettingWidgetState extends State<SettingWidget> {
 
   final List<SideItem> _items = [
-    SideItem(id: 0, name: 'Account', icon: 'assets/svg/ic_user.svg'),
-    SideItem(id: 1, name: 'Preference', icon: 'assets/svg/ic_all_items.svg'),
-    SideItem(id: 2, name: 'About', icon: 'assets/svg/ic_about.svg'),
+    SideItem(id: 0, name: S.current.account, icon: 'assets/svg/ic_user.svg'),
+    SideItem(id: 1, name: S.current.preference, icon: 'assets/svg/ic_all_items.svg'),
+    SideItem(id: 2, name: S.current.about, icon: 'assets/svg/ic_about.svg'),
   ];
 
   SideItem? _curSideItem;

@@ -30,6 +30,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "about": MessageLookupByLibrary.simpleMessage("About"),
+        "account": MessageLookupByLibrary.simpleMessage("Account"),
         "accountExists":
             MessageLookupByLibrary.simpleMessage("Account already exists!"),
         "accountInformation":
@@ -40,6 +42,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "addFolderTip": MessageLookupByLibrary.simpleMessage("Add Folder"),
         "allItems": MessageLookupByLibrary.simpleMessage("All Items"),
         "appName": MessageLookupByLibrary.simpleMessage("PasswordX"),
+        "brightColorMode":
+            MessageLookupByLibrary.simpleMessage("Bright color Mode"),
         "canNotEmpty": MessageLookupByLibrary.simpleMessage("Can not be empty"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "changeName": MessageLookupByLibrary.simpleMessage("Change Name"),
@@ -54,6 +58,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "copyToClipboard": MessageLookupByLibrary.simpleMessage(
             "The current information has been copied!"),
         "copyValue": MessageLookupByLibrary.simpleMessage("Copy Value"),
+        "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleteAccount": MessageLookupByLibrary.simpleMessage("Delete Account"),
         "deleteAccountMessage": MessageLookupByLibrary.simpleMessage(
@@ -69,18 +74,21 @@ class MessageLookup extends MessageLookupByLibrary {
         "emptyAccountListTip":
             MessageLookupByLibrary.simpleMessage("There are no items to list."),
         "end": MessageLookupByLibrary.simpleMessage("End"),
+        "english": MessageLookupByLibrary.simpleMessage("English"),
         "favorite": MessageLookupByLibrary.simpleMessage("Favorite"),
         "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
         "folder": MessageLookupByLibrary.simpleMessage("Folder"),
         "folderExists":
             MessageLookupByLibrary.simpleMessage("Folder already exists!"),
         "folders": MessageLookupByLibrary.simpleMessage("Folders"),
+        "followSystem": MessageLookupByLibrary.simpleMessage("Follow System"),
         "forgetPassword":
             MessageLookupByLibrary.simpleMessage("Forget Password?"),
         "handlerError":
             MessageLookupByLibrary.simpleMessage("Handling exceptions!"),
         "itemInformation":
             MessageLookupByLibrary.simpleMessage("Item Information"),
+        "language": MessageLookupByLibrary.simpleMessage("Language"),
         "launcher": MessageLookupByLibrary.simpleMessage("Launcher"),
         "license": MessageLookupByLibrary.simpleMessage(
             "Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License."),
@@ -102,13 +110,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Wrong password!"),
         "passwordNotMatch":
             MessageLookupByLibrary.simpleMessage("Password does not match!"),
+        "preference": MessageLookupByLibrary.simpleMessage("Preference"),
         "recall": MessageLookupByLibrary.simpleMessage("Recall"),
         "restore": MessageLookupByLibrary.simpleMessage("Restore"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "sayWhat": MessageLookupByLibrary.simpleMessage("say what!"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
+        "simplifiedChinese": MessageLookupByLibrary.simpleMessage("简体中文"),
         "sourceX": m1,
+        "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "toggleInvisible":
             MessageLookupByLibrary.simpleMessage("Toggle Invisible"),
         "toggleVisibility":

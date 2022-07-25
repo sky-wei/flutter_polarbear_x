@@ -1,23 +1,32 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/page/home/home_page.dart';
 import 'package:flutter_polarbear_x/page/launcher/launcher_page.dart';
+import 'package:flutter_polarbear_x/page/setting/preference_widget.dart';
 import 'package:flutter_polarbear_x/page/splash/splash_page.dart';
 import 'package:flutter_polarbear_x/route.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/log_util.dart';
+import 'package:flutter_polarbear_x/util/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'generated/l10n.dart';
 import 'model/app_model.dart';
 
 void main() {
-  runApp(
-    const RestartWidget(
-      child: PolarBearX(),
-    )
-  );
+  initLogger(() async {
+    final appSetting = AppSetting(
+      await SharedPreferences.getInstance()
+    );
+    runApp(
+      RestartWidget(
+        child: PolarBearX(appSetting: appSetting)
+      )
+    );
+  });
   doWhenWindowReady(() {
     final win = appWindow;
     const initialSize = Size(1500, 1000);
@@ -31,20 +40,26 @@ void main() {
 
 class PolarBearX extends StatelessWidget {
 
-  const PolarBearX({Key? key}) : super(key: key);
+  final AppSetting appSetting;
+
+  const PolarBearX({
+    Key? key,
+    required this.appSetting
+  }) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AppModel()),
+        ChangeNotifierProvider(create: (context) => AppModel(appSetting: appSetting)),
       ],
       child: MaterialApp(
         title: 'PasswordX',
         theme: XTheme.lightTheme(),
         darkTheme: XTheme.darkTheme(),
-        // themeMode: ThemeMode.dark,
+        themeMode: _getThemeMode(),
         debugShowCheckedModeBanner: false,
         routes: {
           XRoute.splash: (BuildContext context) => const SplashPage(),
@@ -52,6 +67,7 @@ class PolarBearX extends StatelessWidget {
           XRoute.home: (BuildContext context) => const HomePage(),
         },
         initialRoute: XRoute.splash,
+        locale: appSetting.getLocale(),
         localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -62,6 +78,12 @@ class PolarBearX extends StatelessWidget {
         navigatorObservers: [_MyNavigatorObserver()],
       ),
     );
+  }
+
+  /// 获取主题模式
+  ThemeMode _getThemeMode() {
+    final mode = appSetting.getTheme();
+    return ThemeItem.light == mode ? ThemeMode.light : ThemeItem.dark == mode ? ThemeMode.dark : ThemeMode.system;
   }
 }
 

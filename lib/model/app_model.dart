@@ -15,12 +15,12 @@
  */
 
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
+import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/data/repository/encrypt_store.dart';
 import 'package:flutter_polarbear_x/model/side_item.dart';
 import 'package:flutter_polarbear_x/util/easy_notifier.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../data/data_exception.dart';
 import '../data/item/admin_item.dart';
 import '../data/item/folder_item.dart';
 import '../data/item/sort_item.dart';
@@ -46,6 +46,7 @@ class AppModel extends AbstractModel {
 
   bool _init = false;
   late AppRepository _appRepository;
+  final AppSetting _appSetting;
 
   AdminItem _admin = AdminItem(id: 1, name: 'Sky', password: '123456');
 
@@ -77,6 +78,9 @@ class AppModel extends AbstractModel {
   
   AdminItem get admin => _admin;        // 当前管理员信息
 
+  AppModel({
+    required AppSetting appSetting
+  }): _appSetting = appSetting;
 
   @override
   void dispose() {
@@ -461,6 +465,11 @@ class AppModel extends AbstractModel {
   /// 是否修改了账号
   bool isModifyAccount() {
     return FunState.edit == funState && !chooseAccount.unanimous(editAccount);
+  }
+
+  /// 获取主题
+  AppSetting getAppSetting() {
+    return _appSetting;
   }
 
   /// 过滤账号
