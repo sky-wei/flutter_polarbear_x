@@ -15,8 +15,7 @@
  */
 
 import 'package:flutter/cupertino.dart';
-
-import '../theme/color.dart';
+import 'package:flutter/material.dart';
 
 class SubTitleWidget extends StatelessWidget {
 
@@ -35,9 +34,8 @@ class SubTitleWidget extends StatelessWidget {
       padding: padding,
       child: Text(
         title,
-        style: const TextStyle(
-          fontSize: 14,
-          color: XColor.grayColor,
+        style: TextStyle(
+          color: Theme.of(context).hintColor,
         ),
       ),
     );

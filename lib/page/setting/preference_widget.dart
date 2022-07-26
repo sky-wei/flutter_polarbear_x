@@ -69,8 +69,8 @@ class PreferenceWidgetState extends State<PreferenceWidget> {
         XBox.vertical30,
         Text(
           S.of(context).theme,
-          style: const TextStyle(
-              color: XColor.grayColor
+          style: TextStyle(
+              color: Theme.of(context).hintColor
           ),
         ),
         XBox.vertical5,
@@ -81,9 +81,9 @@ class PreferenceWidgetState extends State<PreferenceWidget> {
           child: DropdownButton<ThemeItem>(
             value: _getCurTheme(),
             isExpanded: true,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 14,
-                color: XColor.black
+                color: Theme.of(context).colorScheme.onSurface
             ),
             items: _buildThemeMenuItem(_modeItems),
             onChanged: (value) => setTheme(value!),
@@ -92,8 +92,8 @@ class PreferenceWidgetState extends State<PreferenceWidget> {
         XBox.vertical30,
         Text(
           S.of(context).language,
-          style: const TextStyle(
-              color: XColor.grayColor
+          style: TextStyle(
+              color: Theme.of(context).hintColor
           ),
         ),
         XBox.vertical5,
@@ -104,9 +104,9 @@ class PreferenceWidgetState extends State<PreferenceWidget> {
           child: DropdownButton<LocaleItem>(
             value: _getCurLocale(),
             isExpanded: true,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 14,
-                color: XColor.black
+                color: Theme.of(context).colorScheme.onSurface
             ),
             items: _buildLocalMenuItem(_localItems),
             onChanged: (value) => setLocale(value!),

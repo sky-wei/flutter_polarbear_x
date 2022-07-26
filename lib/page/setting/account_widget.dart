@@ -19,7 +19,7 @@ import 'package:flutter_polarbear_x/data/item/admin_item.dart';
 import 'package:flutter_polarbear_x/main.dart';
 import 'package:flutter_polarbear_x/page/setting/password_dialog.dart';
 import 'package:flutter_polarbear_x/page/setting/sub_text_widget.dart';
-import 'package:flutter_polarbear_x/theme/color.dart';
+import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -106,7 +106,9 @@ class _AccountWidgetState extends State<AccountWidget> {
               },
               style: ButtonStyle(
                 elevation: MaterialStateProperty.all(0),
-                backgroundColor: MaterialStateProperty.all(XColor.deleteColor)
+                backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).deleteColor
+                )
               ),
               child: Text(S.of(context).logout),
             )

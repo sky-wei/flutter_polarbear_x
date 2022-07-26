@@ -15,6 +15,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 
 import '../../theme/color.dart';
@@ -49,8 +50,8 @@ class _SubTextState extends State<SubTextWidget> {
       children: [
         Text(
           widget.title,
-          style: const TextStyle(
-            color: XColor.grayColor
+          style: TextStyle(
+            color: Theme.of(context).hintColor
           ),
         ),
         XBox.vertical15,
@@ -59,8 +60,11 @@ class _SubTextState extends State<SubTextWidget> {
           onExit: (event) { setActionState(false); },
           child: Row(
             children: [
-              Text(
-                widget.content
+              Padding(
+                padding: const EdgeInsets.only(top: 2, bottom: 4),
+                child: Text(
+                    widget.content
+                ),
               ),
               XBox.horizontal30,
               if (widget.action != null && _actionState)
@@ -68,8 +72,8 @@ class _SubTextState extends State<SubTextWidget> {
                   onTap: widget.onPressed,
                   child: Text(
                     widget.action!,
-                    style: const TextStyle(
-                      color: XColor.themeColor
+                    style: TextStyle(
+                      color: Theme.of(context).themeColor
                     ),
                   ),
                 )

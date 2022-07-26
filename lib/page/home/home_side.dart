@@ -23,6 +23,7 @@ import 'package:flutter_polarbear_x/data/item/sort_item.dart';
 import 'package:flutter_polarbear_x/dialog/hint_dialog.dart';
 import 'package:flutter_polarbear_x/model/app_model.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
+import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -70,36 +71,31 @@ class _HomeSideState extends State<HomeSide> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: XColor.sideColor,
+      color: Theme.of(context).sideColor,
       constraints: const BoxConstraints.expand(width: 260),
-      child: DefaultTextStyle(
-        style: const TextStyle(
-          color: XColor.white
-        ),
-        child: Column(
-          children: [
-            HeadLogoWidget(
-              logo: 'assets/image/ic_head_logo.png',
-              title: S.of(context).appName,
+      child: Column(
+        children: [
+          HeadLogoWidget(
+            logo: 'assets/image/ic_head_logo.png',
+            title: S.of(context).appName,
+          ),
+          const HomeUserInfoWidget(),
+          XBox.vertical5,
+          for (var item in _appModel.fixedSide)
+            SideItemWidget(
+              item: item,
+              onChoose: _isChooseItem,
+              onPressed: _chooseHandler,
             ),
-            HomeUserInfoWidget(),
-            XBox.vertical5,
-            for (var item in _appModel.fixedSide)
-              SideItemWidget(
-                item: item,
-                onChoose: _isChooseItem,
-                onPressed: _chooseHandler,
-              ),
-            XBox.vertical10,
-            SideFolderWidget(
-              name: S.of(context).folders,
-              onPressed: _editFolder,
-            ),
-            Expanded(
+          XBox.vertical10,
+          SideFolderWidget(
+            name: S.of(context).folders,
+            onPressed: _editFolder,
+          ),
+          Expanded(
               child: _buildFolderSideList()
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
@@ -287,12 +283,12 @@ class SideItemWidget extends StatelessWidget {
           onPointerDown: onPointerDown,
           child: Ink(
             decoration: BoxDecoration(
-              color: choose ? XColor.sideChooseColor : XColor.transparent,
+              color: choose ? Theme.of(context).sideChooseColor : XColor.transparent,
               borderRadius: BorderRadius.circular(6),
             ),
             child: InkWell(
-              splashColor: XColor.sideChooseColor,
-              highlightColor: XColor.sideChooseColor,
+              splashColor: Theme.of(context).sideChooseColor,
+              highlightColor: Theme.of(context).sideChooseColor,
               enableFeedback: false,
               borderRadius: BorderRadius.circular(6),
               onTap: () { if (onPressed != null) onPressed!(item); },
@@ -303,7 +299,7 @@ class SideItemWidget extends StatelessWidget {
                     if (item.icon != null)
                       SvgPicture.asset(
                         item.icon!,
-                        color: choose ? item.color : XColor.sideTextColor,
+                        color: choose ? item.color : Theme.of(context).sideTextColor,
                         width: 18,
                       ),
                     if (item.icon != null)
@@ -313,8 +309,8 @@ class SideItemWidget extends StatelessWidget {
                         item.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: XColor.sideTextColor,
+                        style: TextStyle(
+                          color: Theme.of(context).sideTextColor,
                           fontWeight: FontWeight.normal,
                         ),
                       ),
@@ -351,7 +347,7 @@ class SideFolderWidget extends StatelessWidget {
             child: Text(
               name,
               style: const TextStyle(
-                color: Color(0xFF97B9E8),
+                color: XColor.hintColor,
                 fontWeight: FontWeight.normal
               ),
             )
@@ -360,7 +356,7 @@ class SideFolderWidget extends StatelessWidget {
             onPressed: onPressed,
             icon: SvgPicture.asset(
               'assets/svg/ic_add.svg',
-              color: XColor.sideTextColor,
+              color: Theme.of(context).sideTextColor,
               width: 16,
             ),
             tooltip: S.of(context).addFolderTip,

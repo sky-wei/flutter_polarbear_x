@@ -18,6 +18,7 @@ import 'package:flutter_polarbear_x/data/entity/folder_entity.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/data/mapper/account_mapper.dart';
 import 'package:flutter_polarbear_x/data/mapper/folder_mapper.dart';
+import 'package:flutter_polarbear_x/util/log_util.dart';
 
 import '../data_exception.dart';
 import '../entity/account_entity.dart';
@@ -160,21 +161,6 @@ class AppRepository {
     return FolderMapper.transformEntities(entities);
   }
 
-  // /// 加载收藏账号
-  // Future<List<AccountItem>> loadFavoriteAccountBy(AdminItem item) async {
-  //
-  //   var entities = accountBox
-  //       .query(
-  //         AccountEntity_.adminId.equals(item.id)
-  //             .and(AccountEntity_.trash.equals(false))
-  //             .and(AccountEntity_.favorite.equals(true))
-  //       )
-  //       .build()
-  //       .find();
-  //
-  //   return AccountMapper.transformEntities(entities);
-  // }
-
   /// 加载所有账号(包括删除的账号)
   Future<List<AccountItem>> loadAllAccountBy(AdminItem item) async {
 
@@ -192,10 +178,10 @@ class AppRepository {
     return item.copy(id: id);
   }
 
-  /// 创建账号
-  Future<List<int>> createAccountList(List<AccountItem> items) async {
-    return accountBox.putMany(AccountMapper.transformItems(items));
-  }
+  // /// 创建账号
+  // Future<List<int>> createAccountList(List<AccountItem> items) async {
+  //   return accountBox.putMany(AccountMapper.transformItems(items));
+  // }
 
   /// 更新账号信息
   Future<AccountItem> updateAccount(AccountItem item) async {
@@ -238,13 +224,13 @@ class AppRepository {
 
   /// 加密账号信息
   AccountItem encryptAccount(AdminItem admin, AccountItem account) {
-    return account;
-    // return account.copy(password: encryptStore.encrypt(admin.password, account.password));
+    XLog.d('>>>>>>>>>>>>>>>>>>>>> encryptAccount $account');
+    return account.copy(password: encryptStore.encrypt(admin.password, account.password));
   }
 
   /// 解密账号信息
   AccountItem decryptAccount(AdminItem admin, AccountItem account) {
-    return account;
-    // return account.copy(password: encryptStore.decrypt(admin.password, account.password));
+    XLog.d('>>>>>>>>>>>>>>>>>>>>> decryptAccount $account');
+    return account.copy(password: encryptStore.decrypt(admin.password, account.password));
   }
 }

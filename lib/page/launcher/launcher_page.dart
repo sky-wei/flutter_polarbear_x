@@ -17,6 +17,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/page/launcher/register_widget.dart';
+import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 
 import '../../generated/l10n.dart';
@@ -73,7 +74,8 @@ class _LauncherPageState extends State<LauncherPage> {
             child: HeadLogoWidget(
               logo: 'assets/image/ic_head_logo.png',
               title: S.of(context).appName,
-              logoColor: XColor.logoTextColor,
+              logoColor: Theme.of(context).themeColor,
+              titleColor: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           _buildLauncherWidget(),

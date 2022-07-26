@@ -16,6 +16,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/page/setting/setting_dialog.dart';
+import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
@@ -60,8 +61,8 @@ class _HomeUserInfoState extends State<HomeUserInfoWidget> {
           ),
           child: InkWell(
             borderRadius: BorderRadius.circular(6),
-            splashColor: XColor.sideChooseColor,
-            highlightColor: XColor.sideChooseColor,
+            splashColor: Theme.of(context).sideChooseColor,
+            highlightColor: Theme.of(context).sideChooseColor,
             onTap: _settings,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
@@ -79,15 +80,15 @@ class _HomeUserInfoState extends State<HomeUserInfoWidget> {
                       _appModel.admin.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          color: XColor.sideTextColor
+                      style: TextStyle(
+                          color: Theme.of(context).sideTextColor
                       ),
                     ),
                   ),
                   XBox.horizontal15,
                   SvgPicture.asset(
                     'assets/svg/ic_settings.svg',
-                    color: XColor.gray2Color,
+                    color: Theme.of(context).settingsColor,
                     width: 20,
                   )
                 ],

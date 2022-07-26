@@ -37,7 +37,7 @@ class _HomePageState extends State {
     return Scaffold(
       body: Stack(
         children: [
-          _buildHomeFrame(),
+          _buildHomeFrame(context),
           WindowTitleBarBox(
             child: Row(
               children: [
@@ -51,12 +51,12 @@ class _HomePageState extends State {
     );
   }
 
-  Widget _buildHomeFrame() {
+  Widget _buildHomeFrame(BuildContext context) {
     return Row(
       children: [
         const HomeSide(),
         const HomeList(),
-        Expanded(child: HomeInfo())
+        Expanded(child: HomeInfo(themeData: Theme.of(context)))
       ],
     );
   }

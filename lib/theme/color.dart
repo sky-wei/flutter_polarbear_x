@@ -26,13 +26,9 @@ class XColor {
 
   static const Color black = Color(0xFF000000);
 
+  static const Color hintColor = Color(0xFFA4A4A4);
+
   static const Color backgroundColor = Color(0xFFF7F7F7);
-
-  static const Color iconColor = Color(0xFF8A8A8A);
-
-  static const Color grayColor = Color(0xFF888888);
-
-  static const Color gray2Color = Color(0xFFBFBFBF);
 
   static const Color sideColor = Color(0xFF222530);
 
@@ -48,16 +44,12 @@ class XColor {
 
   static const Color logoTextColor = Color(0xFFC1CAD7);
 
-  static const Color setSideTextColor = Color(0xFF262626);
-
-  static const Color setSideChooseColor = Color(0xFFDBE3F3);
-
   static const Color favoriteColor = Color(0xFFFFB806);
 
   static const Color themeColor = Color(_redPrimaryValue);
 
 
-  static const MaterialColor red = MaterialColor(
+  static const MaterialColor blue = MaterialColor(
     _redPrimaryValue,
     <int, Color>{
       50: Color(0xFFebf5fb),

@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/constant.dart';
-import 'package:flutter_polarbear_x/theme/color.dart';
+import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/launch_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 
@@ -86,8 +85,8 @@ class _AboutWidgetState extends State<AboutWidget> {
                 TextSpan(text: S.of(context).sourceX('')),
                 TextSpan(
                   text: _source,
-                  style: const TextStyle(
-                    color: XColor.themeColor
+                  style: TextStyle(
+                    color: Theme.of(context).themeColor
                   ),
                   recognizer: _tapGestureRecognizer
                 )

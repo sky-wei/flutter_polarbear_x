@@ -20,6 +20,7 @@ import 'package:flutter_polarbear_x/page/setting/about_widget.dart';
 import 'package:flutter_polarbear_x/page/setting/account_widget.dart';
 import 'package:flutter_polarbear_x/page/setting/preference_widget.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
+import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../generated/l10n.dart';
@@ -46,7 +47,7 @@ class SettingDialog extends StatelessWidget {
               child: IconButton(
                 padding: const EdgeInsets.all(12),
                 onPressed: () { Navigator.pop(context); },
-                icon: CloseIcon(color: XColor.black)
+                icon: CloseIcon(color: Theme.of(context).closeColor)
               ),
             ),
             const SettingWidget()
@@ -100,7 +101,7 @@ class SettingWidgetState extends State<SettingWidget> {
     return Container(
       constraints: const BoxConstraints.expand(width: 230),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).listColor,
         borderRadius: const BorderRadius.all(Radius.circular(4))
       ),
       child: Column(
@@ -167,12 +168,12 @@ class SideItemWidget extends StatelessWidget {
         color: XColor.transparent,
         child: Ink(
           decoration: BoxDecoration(
-            color: choose ? XColor.setSideChooseColor : XColor.transparent,
+            color: choose ? Theme.of(context).listChooseColor : XColor.transparent,
             borderRadius: BorderRadius.circular(6),
           ),
           child: InkWell(
-            splashColor: XColor.setSideChooseColor,
-            highlightColor: XColor.setSideChooseColor,
+            splashColor: Theme.of(context).listChooseColor,
+            highlightColor: Theme.of(context).listChooseColor,
             enableFeedback: false,
             borderRadius: BorderRadius.circular(6),
             onTap: () { if (onPressed != null) onPressed!(item); },
@@ -183,7 +184,7 @@ class SideItemWidget extends StatelessWidget {
                   if (item.icon != null)
                     SvgPicture.asset(
                       item.icon!,
-                      color: XColor.setSideTextColor,
+                      color: Theme.of(context).colorScheme.onSurface,
                       width: 18,
                     ),
                   if (item.icon != null)
@@ -192,8 +193,8 @@ class SideItemWidget extends StatelessWidget {
                     item.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        color: XColor.setSideTextColor,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.normal
                     ),
                   ),

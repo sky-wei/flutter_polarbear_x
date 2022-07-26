@@ -2,12 +2,12 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
-import 'package:flutter_polarbear_x/data/repository/app_theme.dart';
 import 'package:flutter_polarbear_x/page/home/home_page.dart';
 import 'package:flutter_polarbear_x/page/launcher/launcher_page.dart';
 import 'package:flutter_polarbear_x/page/setting/preference_widget.dart';
 import 'package:flutter_polarbear_x/page/splash/splash_page.dart';
 import 'package:flutter_polarbear_x/route.dart';
+import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_polarbear_x/util/logger.dart';
 import 'package:provider/provider.dart';
@@ -56,8 +56,8 @@ class PolarBearX extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'PasswordX',
-        theme: AppTheme.lightTheme(),
-        darkTheme: AppTheme.darkTheme(),
+        theme: XTheme.lightTheme(),
+        darkTheme: XTheme.darkTheme(),
         themeMode: _getThemeMode(),
         debugShowCheckedModeBanner: false,
         routes: {

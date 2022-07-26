@@ -15,7 +15,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_polarbear_x/data/repository/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../page/setting/preference_widget.dart';
@@ -57,9 +56,5 @@ class AppSetting {
         'language', '${locale.languageCode}_${locale.countryCode ?? ''}'
     );
   }
-
-  // AppTheme getAppTheme() {
-  //   Theme.of(context).
-  // }
 }
 

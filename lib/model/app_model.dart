@@ -217,7 +217,11 @@ class AppModel extends AbstractModel {
 
     if (items.isNotEmpty) {
       // 更新账号信息
-      await _appRepository.updateAccounts(items);
+      await _appRepository.updateAccounts(
+        items.map((account) {
+          return _appRepository.encryptAccount(admin, account);
+        }).toList()
+      );
     }
 
     folderNotifier.notify(() {
@@ -260,7 +264,11 @@ class AppModel extends AbstractModel {
   /// 加载所有账号
   Future<List<AccountItem>> loadAllAccount() async {
 
-    _allAccountItems = await _appRepository.loadAllAccountBy(admin);
+    final items = await _appRepository.loadAllAccountBy(admin);
+
+    _allAccountItems = items.map((account) {
+      return _appRepository.decryptAccount(admin, account);
+    }).toList();
 
     return await switchSide(side: allItems);
   }
@@ -339,14 +347,17 @@ class AppModel extends AbstractModel {
   /// 创建账号
   Future<AccountItem> createAccount(AccountItem item) async {
 
-    final result = await _appRepository.createAccount(item);
+    final result = await _appRepository.createAccount(
+      _appRepository.encryptAccount(admin, item)
+    );
+    final account = result.copy(password: item.password);
 
-    _allAccountItems.add(result);
+    _allAccountItems.add(account);
 
     refreshAccounts();
-    viewAccountBy(result);
+    viewAccountBy(account);
 
-    return result;
+    return account;
   }
 
   /// 删除账号
@@ -360,7 +371,9 @@ class AppModel extends AbstractModel {
       // 移动到垃圾箱
       item.trash = true;
       _updateListAccount(item);
-      await _appRepository.updateAccount(item);
+      await _appRepository.updateAccount(
+        _appRepository.encryptAccount(admin, item)
+      );
     }
 
     // 刷新账号
@@ -377,14 +390,17 @@ class AppModel extends AbstractModel {
   Future<AccountItem> updateAccount(AccountItem item) async {
 
     item.updateTime = DateTime.now().millisecondsSinceEpoch;
-    final result = await _appRepository.updateAccount(item);
+    final result = await _appRepository.updateAccount(
+        _appRepository.encryptAccount(admin, item)
+    );
+    final account = result.copy(password: item.password);
 
-    _updateListAccount(result);
+    _updateListAccount(account);
 
     refreshAccounts();
-    viewAccountBy(result);
+    viewAccountBy(account);
 
-    return result;
+    return account;
   }
 
   /// 收藏账号与取消
@@ -392,12 +408,15 @@ class AppModel extends AbstractModel {
 
     item.favorite = !item.favorite;
     item.updateTime = DateTime.now().millisecondsSinceEpoch;
-    final result = await _appRepository.updateAccount(item);
+    final result = await _appRepository.updateAccount(
+      _appRepository.encryptAccount(admin, item)
+    );
+    final account = result.copy(password: item.password);
 
-    _updateListAccount(result);
+    _updateListAccount(account);
     refreshAccounts();
 
-    return result;
+    return account;
   }
 
   /// 恢复账号
@@ -406,17 +425,20 @@ class AppModel extends AbstractModel {
     // 移出垃圾箱
     item.trash = false;
 
-    await _appRepository.updateAccount(item);
+    final result = await _appRepository.updateAccount(
+        _appRepository.encryptAccount(admin, item)
+    );
+    final account = result.copy(password: item.password);
 
     // 刷新账号
     await refreshAccounts();
 
-    if (chooseAccount == item) {
+    if (chooseAccount == account) {
       clearChooseAccount();
       clearAccount();
     }
 
-    return item;
+    return account;
   }
 
   void viewAccountBy(AccountItem item) {

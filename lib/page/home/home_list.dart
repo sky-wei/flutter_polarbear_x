@@ -21,6 +21,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
+import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -69,7 +70,7 @@ class _HomeListState extends State<HomeList> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: XColor.listColor,
+      color: Theme.of(context).listColor,
       constraints: const BoxConstraints.expand(width: 340),
       padding: EdgeInsets.only(top: appWindow.titleBarHeight),
       child: Column(
@@ -104,7 +105,7 @@ class _HomeListState extends State<HomeList> {
             onPressed: _newAccount,
             icon: SvgPicture.asset(
               'assets/svg/ic_add.svg',
-              color: XColor.black,
+              color: Theme.of(context).iconColor,
               width: 20,
               height: 20,
             ),
@@ -142,9 +143,9 @@ class _HomeListState extends State<HomeList> {
       },
       itemCount: _accountItems.length,
       separatorBuilder: (context, index) {
-        return const Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
-          child: Divider(color: XColor.listChooseColor),
+        return Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: Divider(color: Theme.of(context).listChooseColor),
         );
       },
     );
@@ -328,12 +329,12 @@ class ListItemWidgetState extends State<ListItemWidget> {
             onPointerDown: widget.onPointerDown,
             child: Ink(
               decoration: BoxDecoration(
-                color: choose ? XColor.listChooseColor : XColor.transparent,
+                color: choose ? Theme.of(context).listChooseColor : XColor.transparent,
                 borderRadius: BorderRadius.circular(6),
               ),
               child: InkWell(
-                splashColor: XColor.listChooseColor,
-                highlightColor: XColor.listChooseColor,
+                splashColor: Theme.of(context).listChooseColor,
+                highlightColor: Theme.of(context).listChooseColor,
                 enableFeedback: false,
                 borderRadius: BorderRadius.circular(6),
                 onTap: () { widget.onPressed(widget.item); },
@@ -360,8 +361,8 @@ class ListItemWidgetState extends State<ListItemWidget> {
                             widget.item.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                color: XColor.grayColor,
+                            style: TextStyle(
+                                color: Theme.of(context).hintColor,
                                 fontWeight: FontWeight.normal,
                                 fontSize: 14
                             ),
@@ -371,8 +372,8 @@ class ListItemWidgetState extends State<ListItemWidget> {
                             _dateFormat.format(widget.item.updateDateTime),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                color: XColor.grayColor,
+                            style: TextStyle(
+                                color: Theme.of(context).hintColor,
                                 fontWeight: FontWeight.normal,
                                 fontSize: 14
                             ),
@@ -382,13 +383,13 @@ class ListItemWidgetState extends State<ListItemWidget> {
                       if (favorite)
                         _buildFavorite(
                           icon: 'assets/svg/ic_favorite.svg',
-                          color: XColor.favoriteColor,
+                          color: Theme.of(context).favoriteColor,
                           onPressed: _handlerFavorite
                         ),
                       if (unFavorite)
                         _buildFavorite(
                           icon: 'assets/svg/ic_un_favorite.svg',
-                          color: XColor.gray2Color,
+                          color: Theme.of(context).hintColor,
                           onPressed: _handlerFavorite
                         ),
                     ],
@@ -473,7 +474,7 @@ class ListSearchWidget extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: SvgPicture.asset(
               'assets/svg/$iconName',
-              color: XColor.black,
+              color: Theme.of(context).iconColor,
               width: 12,
               height: 12,
             ),
@@ -514,7 +515,7 @@ class ListEmptyWidget extends StatelessWidget {
         child: Material(
           child: Ink(
             decoration: BoxDecoration(
-              color: XColor.listColor,
+              color: Theme.of(context).listColor,
               borderRadius: BorderRadius.circular(6),
             ),
             child: InkWell(

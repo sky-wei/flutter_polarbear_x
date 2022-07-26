@@ -20,7 +20,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
+import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/sub_title_widget.dart';
 import 'package:flutter_svg/svg.dart';
@@ -39,11 +39,16 @@ class HomeInfo extends StatefulWidget {
 
   static final GlobalKey _globalKey = GlobalKey();
 
+  final ThemeData themeData;
+
   static HomeInfoState of(BuildContext context) {
     return _globalKey.currentState! as HomeInfoState;
   }
 
-  HomeInfo({Key? key}) : super(key: _globalKey);
+  HomeInfo({
+    Key? key,
+    required this.themeData
+  }) : super(key: _globalKey);
 
   @override
   State<StatefulWidget> createState() => HomeInfoState();
@@ -51,14 +56,7 @@ class HomeInfo extends StatefulWidget {
 
 class HomeInfoState extends State<HomeInfo> {
 
-  final Map<MenuType, MenuItem> _menus = {
-    MenuType.edit: MenuItem(icon: 'assets/svg/ic_edit.svg', name: S.current.edit, type: MenuType.edit),
-    MenuType.copy: MenuItem(icon: 'assets/svg/ic_copy.svg', name: S.current.copy, type: MenuType.copy),
-    MenuType.delete: MenuItem(icon: 'assets/svg/ic_delete.svg', name: S.current.delete, type: MenuType.delete, color: XColor.deleteColor),
-    MenuType.recall: MenuItem(icon: 'assets/svg/ic_recall.svg', name: S.current.recall, type: MenuType.recall),
-    MenuType.save: MenuItem(icon: 'assets/svg/ic_save.svg', name: S.current.save, type: MenuType.save, color: XColor.themeColor),
-    MenuType.restore: MenuItem(icon: 'assets/svg/ic_restore.svg', name: S.current.restore, type: MenuType.restore),
-  };
+  late Map<MenuType, MenuItem> _menus;
 
   final ActionItem _copyAction = ActionItem(icon: 'assets/svg/ic_copy.svg', name: S.current.copyValue);
   final ActionItem _visibilityAction = ActionItem(icon: 'assets/svg/ic_visibility.svg', name: S.current.toggleVisibility);
@@ -91,6 +89,18 @@ class HomeInfoState extends State<HomeInfo> {
   @override
   void initState() {
     super.initState();
+
+    final iconColor = widget.themeData.iconColor;
+
+    _menus = {
+      MenuType.edit: MenuItem(icon: 'assets/svg/ic_edit.svg', name: S.current.edit, type: MenuType.edit, color: iconColor),
+      MenuType.copy: MenuItem(icon: 'assets/svg/ic_copy.svg', name: S.current.copy, type: MenuType.copy, color: iconColor),
+      MenuType.delete: MenuItem(icon: 'assets/svg/ic_delete.svg', name: S.current.delete, type: MenuType.delete, color: widget.themeData.deleteColor),
+      MenuType.recall: MenuItem(icon: 'assets/svg/ic_recall.svg', name: S.current.recall, type: MenuType.recall, color: iconColor),
+      MenuType.save: MenuItem(icon: 'assets/svg/ic_save.svg', name: S.current.save, type: MenuType.save, color: widget.themeData.themeColor),
+      MenuType.restore: MenuItem(icon: 'assets/svg/ic_restore.svg', name: S.current.restore, type: MenuType.restore, color: iconColor),
+    };
+
     _appModel = context.read<AppModel>();
     _appModel.infoNotifier.addListener(_infoChange);
     _appModel.funStateNotifier.addListener(_funStateChange);
@@ -115,7 +125,6 @@ class HomeInfoState extends State<HomeInfo> {
 
   @override
   Widget build(BuildContext context) {
-    
     switch(funState) {
       case FunState.view:
       case FunState.edit:
@@ -243,7 +252,7 @@ class HomeInfoState extends State<HomeInfo> {
     return Padding(
       padding: const EdgeInsets.only(top: 26),
       child: Material(
-        color: XColor.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(6),
         child: Padding(
           padding: const EdgeInsets.only(left: 5, right: 5),
@@ -280,16 +289,16 @@ class HomeInfoState extends State<HomeInfo> {
           Image.asset(
             'assets/image/ic_head_logo.png',
             width: 65,
-            color: XColor.gray2Color,
+            color: Theme.of(context).highlightColor,
           ),
           XBox.horizontal10,
-          const DefaultTextStyle(
+          DefaultTextStyle(
             style: TextStyle(
-              color: XColor.gray2Color,
+              color: Theme.of(context).highlightColor,
               fontSize: 28,
               // fontWeight: FontWeight.w400
             ),
-            child: Text.rich(
+            child: const Text.rich(
               TextSpan(
                 children: [
                   TextSpan(text: 'Password'),
@@ -702,8 +711,8 @@ class SubTextWidget extends StatelessWidget {
         if (title != null)
           Text(
             title!,
-            style: const TextStyle(
-                color: XColor.grayColor
+            style: TextStyle(
+                color: Theme.of(context).hintColor
             ),
           ),
         XBox.vertical5,
@@ -740,7 +749,7 @@ class SubTextWidget extends StatelessWidget {
                   tooltip: action.name,
                   icon: SvgPicture.asset(
                     action.icon,
-                    color: XColor.black,
+                    color: Theme.of(context).iconColor,
                     width: 20
                   )
                 ),
@@ -759,9 +768,10 @@ class SubItemLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Divider(
+    return Divider(
       height: 24,
       thickness: 1,
+      color: Theme.of(context).listChooseColor
     );
   }
 }

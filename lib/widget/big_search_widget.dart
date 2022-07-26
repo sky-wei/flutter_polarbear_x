@@ -15,6 +15,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../theme/color.dart';
@@ -52,7 +53,7 @@ class BigSearchWidget extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: SvgPicture.asset(
               'assets/svg/$iconName',
-              color: XColor.black,
+              color: Theme.of(context).iconColor,
               width: 30,
               height: 30,
             ),
