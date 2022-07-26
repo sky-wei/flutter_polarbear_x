@@ -4,6 +4,7 @@ PasswordX
 
 ### 截图
 ![](screenshot/screenshot1.jpg)
+![](screenshot/screenshot2.jpg)
 
 
 ## License
