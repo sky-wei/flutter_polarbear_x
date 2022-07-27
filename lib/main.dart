@@ -29,9 +29,8 @@ void main() {
   });
   doWhenWindowReady(() {
     final win = appWindow;
-    const initialSize = Size(1500, 1000);
-    win.minSize = initialSize;
-    win.size = initialSize;
+    win.minSize = const Size(1300, 800);
+    win.size = const Size(1500, 1000);
     win.alignment = Alignment.center;
     win.title = 'PasswordX';
     win.show();
