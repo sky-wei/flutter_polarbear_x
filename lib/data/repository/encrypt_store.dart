@@ -47,7 +47,9 @@ class EncryptStore {
     final key = buildKey(password);
     final iv = IV(Uint8List.fromList(_ivBytes));
 
-    final encrypt = Encrypter(AES(key, mode: AESMode.cbc));
+    final encrypt = Encrypter(
+        AES(key, mode: AESMode.cbc)
+    );
 
     return encrypt.encrypt(data, iv: iv).base64;
   }

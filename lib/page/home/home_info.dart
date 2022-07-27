@@ -69,6 +69,14 @@ class HomeInfoState extends State<HomeInfo> {
   late TextEditingController _websiteController;
   late TextEditingController _notesController;
 
+  late FocusNode _nameFocus;
+  late FocusNode _userNameFocus;
+  late FocusNode _passwordFocus;
+  late FocusNode _folderFocus;
+  late FocusNode _favoriteFocus;
+  late FocusNode _websiteFocus;
+  late FocusNode _notesFocus;
+
   bool _visibilityPassword = false;
 
   late AppModel _appModel;
@@ -104,11 +112,34 @@ class HomeInfoState extends State<HomeInfo> {
     _appModel = context.read<AppModel>();
     _appModel.infoNotifier.addListener(_infoChange);
     _appModel.funStateNotifier.addListener(_funStateChange);
+
     _nameController = TextEditingController();
     _userNameController = TextEditingController();
     _passwordController = TextEditingController();
     _websiteController = TextEditingController();
     _notesController = TextEditingController();
+
+    _nameFocus = FocusNode(onKey: (node, event) {
+      return _handlerKeyEventFocus(event, _userNameFocus, _notesFocus);
+    });
+    _userNameFocus = FocusNode(onKey: (node, event) {
+      return _handlerKeyEventFocus(event, _passwordFocus, _nameFocus);
+    });
+    _passwordFocus = FocusNode(onKey: (node, event) {
+      return _handlerKeyEventFocus(event, _folderFocus, _userNameFocus);
+    });
+    _folderFocus = FocusNode(onKey: (node, event) {
+      return _handlerKeyEventFocus(event, _favoriteFocus, _passwordFocus);
+    });
+    _favoriteFocus = FocusNode(onKey: (node, event) {
+      return _handlerKeyEventFocus(event, _websiteFocus, _folderFocus);
+    });
+    _websiteFocus = FocusNode(onKey: (node, event) {
+      return _handlerKeyEventFocus(event, _notesFocus, _favoriteFocus);
+    });
+    _notesFocus = FocusNode(onKey: (node, event) {
+      return _handlerKeyEventFocus(event, _nameFocus, _websiteFocus);
+    });
   }
 
   @override
@@ -145,6 +176,7 @@ class HomeInfoState extends State<HomeInfo> {
           children: [
             SubTextWidget(
               controller: _nameController,
+              focusNode: _nameFocus,
               title: S.of(context).name,
               autofocus: true,
               readOnly: !_isEdit,
@@ -153,6 +185,7 @@ class HomeInfoState extends State<HomeInfo> {
             const SubItemLine(),
             SubTextWidget(
               controller: _userNameController,
+              focusNode: _userNameFocus,
               title: S.of(context).userName,
               readOnly: !_isEdit,
               onChanged: (value) => _editAccount.name = value,
@@ -165,6 +198,7 @@ class HomeInfoState extends State<HomeInfo> {
             const SubItemLine(),
             SubTextWidget(
               controller: _passwordController,
+              focusNode: _passwordFocus,
               title: S.of(context).password,
               readOnly: !_isEdit,
               obscureText: !_visibilityPassword,
@@ -186,6 +220,7 @@ class HomeInfoState extends State<HomeInfo> {
                 title: S.of(context).folder,
                 value: _appModel.findFolderBy(_editAccount),
                 items: _appModel.folders,
+                focusNode: _folderFocus,
                 onChanged: (value) {
                   setState(() {
                     _editAccount.folderId = value.id;
@@ -196,6 +231,7 @@ class HomeInfoState extends State<HomeInfo> {
               SubCheckBoxWidget(
                 title: S.of(context).favorite,
                 value: _editAccount.favorite,
+                focusNode: _favoriteFocus,
                 onChanged: (value) {
                   setState(() {
                     _editAccount.favorite = value;
@@ -211,6 +247,7 @@ class HomeInfoState extends State<HomeInfo> {
             children: [
               SubTextWidget(
                 controller: _websiteController,
+                focusNode: _websiteFocus,
                 hintText: S.of(context).urlEx,
                 readOnly: !_isEdit,
                 onChanged: (value) => _editAccount.url = value,
@@ -229,6 +266,7 @@ class HomeInfoState extends State<HomeInfo> {
             children: [
               SubTextWidget(
                 controller: _notesController,
+                focusNode: _notesFocus,
                 hintText: S.of(context).sayWhat,
                 readOnly: !_isEdit,
                 onChanged: (value) => _editAccount.node = value,
@@ -245,6 +283,19 @@ class HomeInfoState extends State<HomeInfo> {
       ],
       menu: _buildMenuList(_buildMenuItems()),
     );
+  }
+
+  /// 处理焦点事件
+  KeyEventResult _handlerKeyEventFocus(RawKeyEvent event, FocusNode nexFocus, FocusNode upFocus) {
+    if (event is RawKeyDownEvent && LogicalKeyboardKey.tab == event.logicalKey) {
+      if (!event.isShiftPressed) {
+        FocusScope.of(context).requestFocus(nexFocus);
+      } else {
+        FocusScope.of(context).requestFocus(upFocus);
+      }
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
   }
 
   /// 生成菜单列表
@@ -587,12 +638,14 @@ class SubCheckBoxWidget extends StatelessWidget {
 
   final String title;
   final bool value;
+  final FocusNode? focusNode;
   final ValueChanged<bool>? onChanged;
 
   const SubCheckBoxWidget({
     Key? key,
     required this.title,
     this.value = false,
+    this.focusNode,
     this.onChanged
   }) : super(key: key);
 
@@ -610,6 +663,7 @@ class SubCheckBoxWidget extends StatelessWidget {
           ),
           Checkbox(
             value: value,
+            focusNode: focusNode,
             onChanged: (value) {
               if (onChanged != null) onChanged!(value?? false);
             },
@@ -625,6 +679,7 @@ class SubDropdownWidget extends StatelessWidget {
   final String title;
   final FolderItem value;
   final List<FolderItem> items;
+  final FocusNode? focusNode;
   final ValueChanged<FolderItem>? onChanged;
 
   const SubDropdownWidget({
@@ -632,6 +687,7 @@ class SubDropdownWidget extends StatelessWidget {
     required this.title,
     required this.value,
     required this.items,
+    this.focusNode,
     this.onChanged
   }) : super(key: key);
 
@@ -648,6 +704,7 @@ class SubDropdownWidget extends StatelessWidget {
             ),
           ),
           DropdownButton<FolderItem>(
+            focusNode: focusNode,
             value: value,
             underline: const SizedBox(),
             items: _buildMenuItem(items),
@@ -674,6 +731,7 @@ class SubTextWidget extends StatelessWidget {
 
   final String? title;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
   final bool autofocus;
   final int maxLines;
   final String? hintText;
@@ -689,6 +747,7 @@ class SubTextWidget extends StatelessWidget {
     Key? key,
     this.title,
     this.controller,
+    this.focusNode,
     this.autofocus = false,
     this.maxLines = 1,
     this.hintText,
@@ -725,6 +784,7 @@ class SubTextWidget extends StatelessWidget {
                 ),
                 child: TextField(
                   controller: controller,
+                  focusNode: focusNode,
                   autofocus: autofocus,
                   decoration: InputDecoration(
                     border: InputBorder.none,

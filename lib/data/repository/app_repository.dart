@@ -18,7 +18,6 @@ import 'package:flutter_polarbear_x/data/entity/folder_entity.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/data/mapper/account_mapper.dart';
 import 'package:flutter_polarbear_x/data/mapper/folder_mapper.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
 
 import '../data_exception.dart';
 import '../entity/account_entity.dart';
@@ -224,13 +223,11 @@ class AppRepository {
 
   /// 加密账号信息
   AccountItem encryptAccount(AdminItem admin, AccountItem account) {
-    XLog.d('>>>>>>>>>>>>>>>>>>>>> encryptAccount $account');
     return account.copy(password: encryptStore.encrypt(admin.password, account.password));
   }
 
   /// 解密账号信息
   AccountItem decryptAccount(AdminItem admin, AccountItem account) {
-    XLog.d('>>>>>>>>>>>>>>>>>>>>> decryptAccount $account');
     return account.copy(password: encryptStore.decrypt(admin.password, account.password));
   }
 }
