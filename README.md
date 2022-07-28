@@ -7,6 +7,9 @@ PasswordX
 ![](screenshot/screenshot2.jpg)
 
 
+### 一起来讨论
+![](screenshot/card.jpg)
+
 ## License
 
     Copyright 2022 The sky Authors
