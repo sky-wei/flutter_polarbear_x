@@ -510,6 +510,13 @@ class HomeInfoState extends State<HomeInfo> {
   /// 删除账号
   Future<void> _deleteAccount(AccountItem item) async {
 
+    if (!item.trash) {
+      _appModel.deleteAccount(item).catchError((error, stackTrace) {
+        MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+      });
+      return;
+    }
+
     final result = await showDialog<int>(
         context: context,
         builder: (context) {
