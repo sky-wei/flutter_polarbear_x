@@ -671,6 +671,7 @@ class SubCheckBoxWidget extends StatelessWidget {
           Checkbox(
             value: value,
             focusNode: focusNode,
+            activeColor: Theme.of(context).themeColor,
             onChanged: (value) {
               if (onChanged != null) onChanged!(value?? false);
             },
