@@ -40,7 +40,8 @@ class ObjectBox {
     String? directory
   }) async {
     final store = await openStore(
-      directory: directory
+      directory: directory,
+      macosApplicationGroup: 'flutter.password.x'
     );
     return ObjectBox._create(store);
   }

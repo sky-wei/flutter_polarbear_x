@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
@@ -75,10 +76,13 @@ class _HomeSideState extends State<HomeSide> {
       constraints: const BoxConstraints.expand(width: 260),
       child: Column(
         children: [
-          HeadLogoWidget(
-            logo: 'assets/image/ic_head_logo.png',
-            title: S.of(context).appName,
-          ),
+          if (Platform.isLinux || Platform.isWindows)
+            HeadLogoWidget(
+              logo: 'assets/image/ic_head_logo.png',
+              title: S.of(context).appName,
+            ),
+          if (Platform.isMacOS)
+            XBox.vertical36,
           const HomeUserInfoWidget(),
           XBox.vertical5,
           for (var item in _appModel.fixedSide)

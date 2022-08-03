@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import 'dart:io';
+
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/page/launcher/register_widget.dart';
@@ -69,15 +71,16 @@ class _LauncherPageState extends State<LauncherPage> {
             alignment: Alignment.topRight,
             child: _buildWindowTitleBar(),
           ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: HeadLogoWidget(
-              logo: 'assets/image/ic_head_logo.png',
-              title: S.of(context).appName,
-              logoColor: Theme.of(context).themeColor,
-              titleColor: Theme.of(context).colorScheme.onSurface,
+          if (Platform.isLinux || Platform.isWindows)
+            Align(
+              alignment: Alignment.topLeft,
+              child: HeadLogoWidget(
+                logo: 'assets/image/ic_head_logo.png',
+                title: S.of(context).appName,
+                logoColor: Theme.of(context).themeColor,
+                titleColor: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
-          ),
           _buildLauncherWidget(),
         ],
       )
