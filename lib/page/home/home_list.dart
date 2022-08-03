@@ -190,7 +190,14 @@ class _HomeListState extends State<HomeList> {
   }
 
   /// 删除账号
-  Future<void> _deleteAccount({required AccountItem item}) async {
+  Future<void> _deleteAccount({required AccountItem item, }) async {
+
+    if (!item.trash) {
+      _appModel.deleteAccount(item).catchError((error, stackTrace) {
+        MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+      });
+      return;
+    }
 
     final result = await showDialog<int>(
       context: context,

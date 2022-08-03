@@ -26,7 +26,7 @@ class XColor {
 
   static const Color black = Color(0xFF000000);
 
-  static const Color hintColor = Color(0xFFA4A4A4);
+  static const Color hintColor = Color(0xFF959595);
 
   static const Color backgroundColor = Color(0xFFF7F7F7);
 
