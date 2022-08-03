@@ -1,6 +1,6 @@
-# flutter_polarbear_x
+# PasswordX
 
-PasswordX
+项目是基于 `Flutter` 编写的一个本地 __密码管理__ 工具软件，目前仅支持Window，Mac，Linux三个平台。
 
 ### 截图
 ![](screenshot/screenshot1.jpg)
