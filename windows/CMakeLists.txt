@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(flutter_polarbear_x LANGUAGES CXX)
 
-set(BINARY_NAME "flutter_polarbear_x")
+set(BINARY_NAME "PasswordX")
 
 cmake_policy(SET CMP0063 NEW)
 
