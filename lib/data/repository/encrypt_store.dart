@@ -44,6 +44,8 @@ class EncryptStore {
   /// 加密数据
   String encrypt(String password, String data) {
 
+    if (data.isEmpty) return "";
+
     final key = buildKey(password);
     final iv = IV(Uint8List.fromList(_ivBytes));
 
@@ -56,6 +58,8 @@ class EncryptStore {
 
   /// 解密数据
   String decrypt(String password, String data) {
+
+    if (data.isEmpty) return "";
 
     final key = buildKey(password);
     final iv = IV(Uint8List.fromList(_ivBytes));

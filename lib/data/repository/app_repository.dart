@@ -51,10 +51,10 @@ class AppRepository {
   /// 创建管理员账号
   Future<AdminItem> createAdmin(AdminItem admin) async {
 
-    final item = _encryptAdmin(admin);
+    final enAdmin = _encryptAdmin(admin);
 
-    var entity = adminBox
-        .query(AdminEntity_.name.equals(item.name))
+    final entity = adminBox
+        .query(AdminEntity_.name.equals(enAdmin.name))
         .build()
         .findFirst();
 
@@ -62,18 +62,18 @@ class AppRepository {
       throw DataException.type(type: ErrorType.adminExist);
     }
 
-    var id = adminBox.put(AdminMapper.transformItem(item));
+    final id = adminBox.put(AdminMapper.transformItem(enAdmin));
 
-    return item.copy(id: id, password: admin.password);
+    return enAdmin.copy(id: id, password: admin.password);
   }
 
   /// 更新管理员账号
   Future<AdminItem> updateAdmin(AdminItem admin) async {
 
-    final item = _encryptAdmin(admin);
+    final enAdmin = _encryptAdmin(admin);
 
-    var entity = adminBox
-        .query(AdminEntity_.id.equals(item.id))
+    final entity = adminBox
+        .query(AdminEntity_.id.equals(enAdmin.id))
         .build()
         .findFirst();
 
@@ -81,18 +81,18 @@ class AppRepository {
       throw DataException.type(type: ErrorType.updateError);
     }
 
-    adminBox.put(AdminMapper.transformItem(item), mode: PutMode.update);
+    adminBox.put(AdminMapper.transformItem(enAdmin), mode: PutMode.update);
 
-    return item.copy(password: admin.password);
+    return enAdmin.copy(password: admin.password);
   }
 
   /// 登录账号
   Future<AdminItem> loginByAdmin(AdminItem admin) async {
 
-    var item = _encryptAdmin(admin);
+    final enAdmin = _encryptAdmin(admin);
 
-    var entity = adminBox
-        .query(AdminEntity_.name.equals(item.name))
+    final entity = adminBox
+        .query(AdminEntity_.name.equals(enAdmin.name))
         .build()
         .findFirst();
 
@@ -100,7 +100,7 @@ class AppRepository {
       throw DataException.type(type: ErrorType.nameOrPasswordError);
     }
 
-    if (entity.password != item.password) {
+    if (entity.password != enAdmin.password) {
       throw DataException.type(type: ErrorType.nameOrPasswordError);
     }
 
@@ -109,10 +109,10 @@ class AppRepository {
 
 
   /// 创建文件夹
-  Future<FolderItem> createFolder(FolderItem item) async {
+  Future<FolderItem> createFolder(FolderItem folder) async {
 
-    var entity = folderBox
-        .query(FolderEntity_.name.equals(item.name))
+    final entity = folderBox
+        .query(FolderEntity_.name.equals(folder.name))
         .build()
         .findFirst();
 
@@ -120,24 +120,24 @@ class AppRepository {
       throw DataException.type(type: ErrorType.folderExist);
     }
 
-    var id = folderBox.put(FolderMapper.transformItem(item));
+    final id = folderBox.put(FolderMapper.transformItem(folder));
 
-    return item.copy(id: id);
+    return folder.copy(id: id);
   }
 
   /// 删除文件夹
-  Future<FolderItem> deleteFolder(FolderItem item) async {
-    if (!folderBox.remove(item.id)) {
+  Future<FolderItem> deleteFolder(FolderItem folder) async {
+    if (!folderBox.remove(folder.id)) {
       throw DataException.type(type: ErrorType.deleteError);
     }
-    return item;
+    return folder;
   }
 
   /// 更新文件夹
-  Future<FolderItem> updateFolder(FolderItem item) async {
+  Future<FolderItem> updateFolder(FolderItem folder) async {
 
-    var entity = folderBox
-        .query(FolderEntity_.name.equals(item.name))
+    final entity = folderBox
+        .query(FolderEntity_.name.equals(folder.name))
         .build()
         .findFirst();
 
@@ -145,21 +145,22 @@ class AppRepository {
       throw DataException.type(type: ErrorType.updateError);
     }
 
-    var updateEntity = FolderMapper.transformItem(item);
-    var result = folderBox.put(updateEntity, mode: PutMode.update);
+    final result = folderBox.put(
+        FolderMapper.transformItem(folder),
+        mode: PutMode.update
+    );
 
     if (result <= 0) {
       throw DataException.type(type: ErrorType.updateError);
     }
-
-    return item;
+    return folder;
   }
 
   /// 加载文件夹
-  Future<List<FolderItem>> loadFoldersBy(AdminItem item) async {
+  Future<List<FolderItem>> loadFoldersBy(AdminItem admin) async {
 
-    var entities = folderBox
-        .query(FolderEntity_.adminId.equals(item.id))
+    final entities = folderBox
+        .query(FolderEntity_.adminId.equals(admin.id))
         .build()
         .find();
 
@@ -167,20 +168,28 @@ class AppRepository {
   }
 
   /// 加载所有账号(包括删除的账号)
-  Future<List<AccountItem>> loadAllAccountBy(AdminItem item) async {
+  Future<List<AccountItem>> loadAllAccountBy(AdminItem admin) async {
 
-    var entities = accountBox
-        .query(AccountEntity_.adminId.equals(item.id))
+    final entities = accountBox
+        .query(AccountEntity_.adminId.equals(admin.id))
         .build()
         .find();
 
-    return AccountMapper.transformEntities(entities);
+    final accounts = AccountMapper.transformEntities(entities);
+
+    return accounts.map((account) {
+      return _decryptAccount(admin, account);
+    }).toList();
   }
 
   /// 创建账号
-  Future<AccountItem> createAccount(AccountItem item) async {
-    var id = accountBox.put(AccountMapper.transformItem(item));
-    return item.copy(id: id);
+  Future<AccountItem> createAccount(AdminItem admin, AccountItem account) async {
+
+    final enAccount = _encryptAccount(admin, account);
+
+    final id = accountBox.put(AccountMapper.transformItem(enAccount));
+
+    return account.copy(id: id);
   }
 
   // /// 创建账号
@@ -189,37 +198,43 @@ class AppRepository {
   // }
 
   /// 更新账号信息
-  Future<AccountItem> updateAccount(AccountItem item) async {
+  Future<AccountItem> updateAccount(AdminItem admin, AccountItem account) async {
 
-    var result = accountBox.put(
-        AccountMapper.transformItem(item), mode: PutMode.update
+    final enAccount = _encryptAccount(admin, account);
+
+    final result = accountBox.put(
+        AccountMapper.transformItem(enAccount), mode: PutMode.update
     );
 
     if (result <= 0) {
       throw DataException.type(type: ErrorType.updateError);
     }
-    return item;
+    return account;
   }
 
   /// 更新账号信息
-  Future<List<AccountItem>> updateAccounts(List<AccountItem> items) async {
+  Future<List<AccountItem>> updateAccounts(AdminItem admin, List<AccountItem> accounts) async {
 
-    var result = accountBox.putMany(
-        AccountMapper.transformItems(items), mode: PutMode.update
+    final enAccounts = accounts.map((account) {
+      return _encryptAccount(admin, account);
+    }).toList();
+
+    final result = accountBox.putMany(
+        AccountMapper.transformItems(enAccounts), mode: PutMode.update
     );
 
     if (result.isEmpty) {
       throw DataException.type(type: ErrorType.updateError);
     }
-    return items;
+    return accounts;
   }
 
   /// 删除账号
-  Future<AccountItem> deleteAccount(AccountItem item) async {
-    if (!accountBox.remove(item.id)) {
+  Future<AccountItem> deleteAccount(AdminItem admin, AccountItem account) async {
+    if (!accountBox.remove(account.id)) {
       throw DataException.type(type: ErrorType.deleteError);
     }
-    return item;
+    return account;
   }
 
   /// 加密管理员的密码
@@ -228,12 +243,22 @@ class AppRepository {
   }
 
   /// 加密账号信息
-  AccountItem encryptAccount(AdminItem admin, AccountItem account) {
-    return account.copy(password: encryptStore.encrypt(admin.password, account.password));
+  AccountItem _encryptAccount(AdminItem admin, AccountItem account) {
+    return account.copy(
+      name: encryptStore.encrypt(admin.password, account.name),
+      password: encryptStore.encrypt(admin.password, account.password),
+      url: encryptStore.encrypt(admin.password, account.url),
+      node: encryptStore.encrypt(admin.password, account.node),
+    );
   }
 
   /// 解密账号信息
-  AccountItem decryptAccount(AdminItem admin, AccountItem account) {
-    return account.copy(password: encryptStore.decrypt(admin.password, account.password));
+  AccountItem _decryptAccount(AdminItem admin, AccountItem account) {
+    return account.copy(
+      name: encryptStore.decrypt(admin.password, account.name),
+      password: encryptStore.decrypt(admin.password, account.password),
+      url: encryptStore.decrypt(admin.password, account.url),
+      node: encryptStore.decrypt(admin.password, account.node),
+    );
   }
 }

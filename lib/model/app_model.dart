@@ -138,12 +138,7 @@ class AppModel extends AbstractModel {
     admin.setUpdateTime();
 
     await _appRepository.updateAdmin(admin);
-
-    await _appRepository.updateAccounts(
-      _allAccountItems.map((account) {
-        return _appRepository.encryptAccount(admin, account);
-      }).toList()
-    );
+    await _appRepository.updateAccounts(admin, _allAccountItems);
 
     return _updateAdmin(admin);
   }
@@ -164,22 +159,22 @@ class AppModel extends AbstractModel {
   /// 创建文件夹
   Future<FolderItem> createFolder(String name) async {
 
-    var item = await _appRepository.createFolder(
+    var folder = await _appRepository.createFolder(
       FolderItem(adminId: admin.id, name: name)
     );
 
     folderNotifier.notify(() {
-      folders.insert(folders.length - 1, item);
+      folders.insert(folders.length - 1, folder);
     });
     infoNotifier.notifyListeners();
 
-    return item;
+    return folder;
   }
 
   /// 修改文件夹
-  Future<FolderItem> updateFolder(FolderItem item) async {
+  Future<FolderItem> updateFolder(FolderItem folder) async {
 
-    final result = await _appRepository.updateFolder(item);
+    final result = await _appRepository.updateFolder(folder);
 
     folderNotifier.notify(() {
       final index = folders.indexOf(result);
@@ -192,25 +187,21 @@ class AppModel extends AbstractModel {
   }
 
   /// 删除文件夹
-  Future<FolderItem> deleteFolder(FolderItem item) async {
+  Future<FolderItem> deleteFolder(FolderItem folder) async {
 
-    final result = await _appRepository.deleteFolder(item);
+    final result = await _appRepository.deleteFolder(folder);
 
-    final items = _filterAccount(
+    final accounts = _filterAccount(
       accounts: _allAccountItems,
-      filter: (account) => item.id == account.folderId
+      filter: (account) => folder.id == account.folderId
     );
-    for (var item in items) {
+    for (var item in accounts) {
       item.folderId = FolderItem.noFolder;
     }
 
-    if (items.isNotEmpty) {
+    if (accounts.isNotEmpty) {
       // 更新账号信息
-      await _appRepository.updateAccounts(
-        items.map((account) {
-          return _appRepository.encryptAccount(admin, account);
-        }).toList()
-      );
+      await _appRepository.updateAccounts(admin, accounts);
     }
 
     folderNotifier.notify(() {
@@ -224,9 +215,9 @@ class AppModel extends AbstractModel {
   /// 查找文件夹
   FolderItem findFolderBy(AccountItem account) {
 
-    for (var item in folders) {
-      if (item.id == account.folderId) {
-        return item;
+    for (var folder in folders) {
+      if (folder.id == account.folderId) {
+        return folder;
       }
     }
     return folders[folders.length - 1];
@@ -236,28 +227,24 @@ class AppModel extends AbstractModel {
   Future<List<FolderItem>> loadFolders() async {
 
     // 加载所有文件夹
-    final items = await _appRepository.loadFoldersBy(admin);
+    final result = await _appRepository.loadFoldersBy(admin);
 
-    items.add(
+    result.add(
       FolderItem(adminId: admin.id, name: S.current.noFolder)
     );
     
     folderNotifier.notify(() {
       folders.clear();
-      folders.addAll(items);
+      folders.addAll(result);
     });
 
-    return folders;
+    return result;
   }
 
   /// 加载所有账号
   Future<List<AccountItem>> loadAllAccount() async {
 
-    final items = await _appRepository.loadAllAccountBy(admin);
-
-    _allAccountItems = items.map((account) {
-      return _appRepository.decryptAccount(admin, account);
-    }).toList();
+    _allAccountItems = await _appRepository.loadAllAccountBy(admin);
 
     return await switchSide(side: allItems);
   }
@@ -334,90 +321,31 @@ class AppModel extends AbstractModel {
   }
 
   /// 创建账号
-  Future<AccountItem> createAccount(AccountItem item) async {
+  Future<AccountItem> createAccount(AccountItem account) async {
 
-    final result = await _appRepository.createAccount(
-      _appRepository.encryptAccount(admin, item)
-    );
-    final account = result.copy(password: item.password);
+    final result = await _appRepository.createAccount(admin, account);
 
-    _allAccountItems.add(account);
+    _allAccountItems.add(result);
 
     refreshAccounts();
-    viewAccountBy(account);
+    viewAccountBy(result);
 
-    return account;
+    return result;
   }
 
   /// 删除账号
-  Future<AccountItem> deleteAccount(AccountItem item) async {
+  Future<AccountItem> deleteAccount(AccountItem account) async {
 
     if (SortType.trash == chooseSide.type) {
       // 需要清除数据
-      _allAccountItems.remove(item);
-      await _appRepository.deleteAccount(item);
+      _allAccountItems.remove(account);
+      await _appRepository.deleteAccount(admin, account);
     } else {
       // 移动到垃圾箱
-      item.trash = true;
-      _updateListAccount(item);
-      await _appRepository.updateAccount(
-        _appRepository.encryptAccount(admin, item)
-      );
+      account.trash = true;
+      _updateListAccount(account);
+      await _appRepository.updateAccount(admin, account);
     }
-
-    // 刷新账号
-    await refreshAccounts();
-
-    if (chooseAccount == item) {
-      clearChooseAccount();
-      clearAccount();
-    }
-
-    return item;
-  }
-
-  Future<AccountItem> updateAccount(AccountItem item) async {
-
-    item.setUpdateTime();
-    final result = await _appRepository.updateAccount(
-        _appRepository.encryptAccount(admin, item)
-    );
-    final account = result.copy(password: item.password);
-
-    _updateListAccount(account);
-
-    refreshAccounts();
-    viewAccountBy(account);
-
-    return account;
-  }
-
-  /// 收藏账号与取消
-  Future<AccountItem> favoriteAccount(AccountItem item) async {
-
-    item.favorite = !item.favorite;
-    item.setUpdateTime();
-    final result = await _appRepository.updateAccount(
-      _appRepository.encryptAccount(admin, item)
-    );
-    final account = result.copy(password: item.password);
-
-    _updateListAccount(account);
-    refreshAccounts();
-
-    return account;
-  }
-
-  /// 恢复账号
-  Future<AccountItem> restoreAccount(AccountItem item) async {
-
-    // 移出垃圾箱
-    item.trash = false;
-
-    final result = await _appRepository.updateAccount(
-        _appRepository.encryptAccount(admin, item)
-    );
-    final account = result.copy(password: item.password);
 
     // 刷新账号
     await refreshAccounts();
@@ -430,6 +358,52 @@ class AppModel extends AbstractModel {
     return account;
   }
 
+  /// 更新账号信息
+  Future<AccountItem> updateAccount(AccountItem account) async {
+
+    account.setUpdateTime();
+    final result = await _appRepository.updateAccount(admin, account);
+
+    _updateListAccount(result);
+
+    refreshAccounts();
+    viewAccountBy(result);
+
+    return result;
+  }
+
+  /// 收藏账号与取消
+  Future<AccountItem> favoriteAccount(AccountItem account) async {
+
+    account.favorite = !account.favorite;
+    account.setUpdateTime();
+    final result = await _appRepository.updateAccount(admin, account);
+
+    _updateListAccount(result);
+    refreshAccounts();
+
+    return result;
+  }
+
+  /// 恢复账号
+  Future<AccountItem> restoreAccount(AccountItem account) async {
+
+    // 移出垃圾箱
+    account.trash = false;
+    final result = await _appRepository.updateAccount(admin, account);
+
+    // 刷新账号
+    await refreshAccounts();
+
+    if (chooseAccount == result) {
+      clearChooseAccount();
+      clearAccount();
+    }
+
+    return result;
+  }
+
+  /// 显示账号
   void viewAccountBy(AccountItem item) {
     listNotifier.notify();
     funStateNotifier.notify(() {
@@ -439,6 +413,7 @@ class AppModel extends AbstractModel {
     });
   }
 
+  /// 编辑账号
   void editAccountBy(AccountItem item) {
     listNotifier.notify();
     funStateNotifier.notify(() {
@@ -448,6 +423,7 @@ class AppModel extends AbstractModel {
     });
   }
 
+  /// 创建账号
   void newAccount() {
     listNotifier.notify();
     funStateNotifier.notify(() {
