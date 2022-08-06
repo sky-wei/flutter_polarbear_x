@@ -63,6 +63,10 @@ class AdminItem {
     );
   }
 
+  void setUpdateTime() {
+    updateTime = DateTime.now().millisecondsSinceEpoch;
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

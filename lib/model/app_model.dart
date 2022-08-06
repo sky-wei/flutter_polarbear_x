@@ -113,26 +113,19 @@ class AppModel extends AbstractModel {
     required String password
   }) async {
 
-    final item = _appRepository.encryptAdmin(
-      AdminItem(
-        name: name,
-        password: password
-      )
+    final admin = await _appRepository.createAdmin(
+        AdminItem(name: name, password: password)
     );
 
-    final admin = await _appRepository.createAdmin(item);
-
-    return _updateAdmin(admin.copy(password: password));
+    return _updateAdmin(admin);
   }
 
   /// 更新账号信息
   Future<AdminItem> updateAdmin(AdminItem admin) async {
 
-    admin.updateTime = DateTime.now().millisecondsSinceEpoch;
+    admin.setUpdateTime();
 
-    await _appRepository.updateAdmin(
-        _appRepository.encryptAdmin(admin)
-    );
+    await _appRepository.updateAdmin(admin);
 
     return _updateAdmin(admin);
   }
@@ -142,11 +135,9 @@ class AppModel extends AbstractModel {
 
     final admin = this.admin.copy(password: newPassword);
 
-    admin.updateTime = DateTime.now().millisecondsSinceEpoch;
+    admin.setUpdateTime();
 
-    await _appRepository.updateAdmin(
-        _appRepository.encryptAdmin(admin)
-    );
+    await _appRepository.updateAdmin(admin);
 
     await _appRepository.updateAccounts(
       _allAccountItems.map((account) {
@@ -163,13 +154,11 @@ class AppModel extends AbstractModel {
     required String password
   }) async {
 
-    var item = _appRepository.encryptAdmin(
-      AdminItem(name: name, password: password)
+    final admin = await _appRepository.loginByAdmin(
+        AdminItem(name: name, password: password)
     );
 
-    var admin = await _appRepository.loginByAdmin(item);
-
-    return _updateAdmin(admin.copy(password: password));
+    return _updateAdmin(admin);
   }
 
   /// 创建文件夹
@@ -389,7 +378,7 @@ class AppModel extends AbstractModel {
 
   Future<AccountItem> updateAccount(AccountItem item) async {
 
-    item.updateTime = DateTime.now().millisecondsSinceEpoch;
+    item.setUpdateTime();
     final result = await _appRepository.updateAccount(
         _appRepository.encryptAccount(admin, item)
     );
@@ -407,7 +396,7 @@ class AppModel extends AbstractModel {
   Future<AccountItem> favoriteAccount(AccountItem item) async {
 
     item.favorite = !item.favorite;
-    item.updateTime = DateTime.now().millisecondsSinceEpoch;
+    item.setUpdateTime();
     final result = await _appRepository.updateAccount(
       _appRepository.encryptAccount(admin, item)
     );

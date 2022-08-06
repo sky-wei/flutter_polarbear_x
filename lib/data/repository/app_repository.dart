@@ -49,7 +49,9 @@ class AppRepository {
   }
 
   /// 创建管理员账号
-  Future<AdminItem> createAdmin(AdminItem item) async {
+  Future<AdminItem> createAdmin(AdminItem admin) async {
+
+    final item = _encryptAdmin(admin);
 
     var entity = adminBox
         .query(AdminEntity_.name.equals(item.name))
@@ -62,11 +64,13 @@ class AppRepository {
 
     var id = adminBox.put(AdminMapper.transformItem(item));
 
-    return item.copy(id: id);
+    return item.copy(id: id, password: admin.password);
   }
 
   /// 更新管理员账号
-  Future<AdminItem> updateAdmin(AdminItem item) async {
+  Future<AdminItem> updateAdmin(AdminItem admin) async {
+
+    final item = _encryptAdmin(admin);
 
     var entity = adminBox
         .query(AdminEntity_.id.equals(item.id))
@@ -79,11 +83,13 @@ class AppRepository {
 
     adminBox.put(AdminMapper.transformItem(item), mode: PutMode.update);
 
-    return item;
+    return item.copy(password: admin.password);
   }
 
   /// 登录账号
-  Future<AdminItem> loginByAdmin(AdminItem item) async {
+  Future<AdminItem> loginByAdmin(AdminItem admin) async {
+
+    var item = _encryptAdmin(admin);
 
     var entity = adminBox
         .query(AdminEntity_.name.equals(item.name))
@@ -98,7 +104,7 @@ class AppRepository {
       throw DataException.type(type: ErrorType.nameOrPasswordError);
     }
 
-    return AdminMapper.transformEntity(entity);
+    return AdminMapper.transformEntity(entity).copy(password: admin.password);
   }
 
 
@@ -217,7 +223,7 @@ class AppRepository {
   }
 
   /// 加密管理员的密码
-  AdminItem encryptAdmin(AdminItem item) {
+  AdminItem _encryptAdmin(AdminItem item) {
     return item.copy(password: encryptStore.md5sum(item.password));
   }
 

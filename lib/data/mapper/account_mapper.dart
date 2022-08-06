@@ -40,6 +40,7 @@ class AccountMapper {
       trash: entity.trash,
       createTime: entity.createTime,
       updateTime: entity.updateTime,
+      version: entity.version
     );
   }
 
@@ -61,6 +62,7 @@ class AccountMapper {
       trash: item.trash,
       createTime: item.createTime,
       updateTime: item.updateTime,
+      version: item.version
     );
   }
 }

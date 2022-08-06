@@ -32,6 +32,7 @@ class AccountItem {
   bool trash;
   final int createTime;
   int updateTime;
+  int version;
 
   DateTime get createDateTime => DateTime.fromMillisecondsSinceEpoch(createTime);
 
@@ -50,6 +51,7 @@ class AccountItem {
     this.trash = false,
     int? createTime,
     int? updateTime,
+    this.version = 0
   }): createTime = createTime ?? DateTime.now().millisecondsSinceEpoch,
     updateTime = updateTime ?? DateTime.now().millisecondsSinceEpoch;
 
@@ -66,6 +68,7 @@ class AccountItem {
     bool? trash,
     int? createTime,
     int? updateTime,
+    int? version,
   }) {
     return AccountItem(
         id: id ?? this.id,
@@ -79,12 +82,13 @@ class AccountItem {
         favorite: favorite ?? this.favorite,
         trash: trash ?? this.trash,
         createTime: createTime ?? this.createTime,
-        updateTime: updateTime ?? this.updateTime
+        updateTime: updateTime ?? this.updateTime,
+        version: version ?? this.version
     );
   }
 
   factory AccountItem.formAdmin(int id) {
-    return AccountItem(adminId: id, alias: '', name: '', password: '');
+    return AccountItem(adminId: id, alias: '', name: '', password: '', version: 1);
   }
 
   factory AccountItem.fromJson(Map<String, dynamic> json) => AccountItem(
@@ -100,6 +104,7 @@ class AccountItem {
     trash: json['trash'],
     createTime: json['createTime'],
     updateTime: json['updateTime'],
+    version: json['version'],
   );
 
   Map<String, dynamic> toJson() => {
@@ -115,6 +120,7 @@ class AccountItem {
     'trash': trash,
     'createTime': createTime,
     'updateTime': updateTime,
+    'version': version,
   };
 
   bool contains(String keyword) {
@@ -143,6 +149,10 @@ class AccountItem {
         favorite == original.favorite;
   }
 
+  void setUpdateTime() {
+    updateTime = DateTime.now().millisecondsSinceEpoch;
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -156,6 +166,6 @@ class AccountItem {
 
   @override
   String toString() {
-    return 'AccountItem{id: $id, adminId: $adminId, alias: $alias, name: $name, password: $password, url: $url, node: $node, folderId: $folderId, favorite: $favorite, trash: $trash, createTime: $createTime, updateTime: $updateTime}';
+    return 'AccountItem{id: $id, adminId: $adminId, alias: $alias, name: $name, password: $password, url: $url, node: $node, folderId: $folderId, favorite: $favorite, trash: $trash, createTime: $createTime, updateTime: $updateTime, version: $version}';
   }
 }

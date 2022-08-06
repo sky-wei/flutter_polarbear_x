@@ -44,6 +44,8 @@ class AccountEntity {
 
   int updateTime;
 
+  int version;
+
   AccountEntity({
     this.id = 0,
     required this.adminId,
@@ -57,5 +59,6 @@ class AccountEntity {
     this.trash = false,
     this.createTime = 0,
     this.updateTime = 0,
+    this.version = 0
   });
 }
