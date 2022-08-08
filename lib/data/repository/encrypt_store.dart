@@ -19,6 +19,7 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart';
+import 'package:flutter_polarbear_x/util/log_util.dart';
 
 class EncryptStore {
 
@@ -68,7 +69,12 @@ class EncryptStore {
         AES(key, mode: AESMode.cbc)
     );
 
-    return encrypt.decrypt64(data, iv: iv).toString();
+    try {
+      return encrypt.decrypt64(data, iv: iv).toString();
+    } catch(e) {
+      XLog.d('Decrypt Error!\n$e');
+    }
+    return data;
   }
 
   /// 生成Key

@@ -899,6 +899,126 @@ class S {
       args: [],
     );
   }
+
+  /// `Clear Data`
+  String get clearData {
+    return Intl.message(
+      'Clear Data',
+      name: 'clearData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to clear all accounts under this account!`
+  String get clearDataMessage {
+    return Intl.message(
+      'Are you sure you want to clear all accounts under this account!',
+      name: 'clearDataMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear Completed!`
+  String get clearCompleted {
+    return Intl.message(
+      'Clear Completed!',
+      name: 'clearCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import Completed!`
+  String get importCompleted {
+    return Intl.message(
+      'Import Completed!',
+      name: 'importCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Export Completed!`
+  String get exportCompleted {
+    return Intl.message(
+      'Export Completed!',
+      name: 'exportCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Security`
+  String get security {
+    return Intl.message(
+      'Security',
+      name: 'security',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import`
+  String get import {
+    return Intl.message(
+      'Import',
+      name: 'import',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Export`
+  String get export {
+    return Intl.message(
+      'Export',
+      name: 'export',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Data`
+  String get data {
+    return Intl.message(
+      'Data',
+      name: 'data',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import Account`
+  String get importAccount {
+    return Intl.message(
+      'Import Account',
+      name: 'importAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Export Account`
+  String get exportAccount {
+    return Intl.message(
+      'Export Account',
+      name: 'exportAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Storage`
+  String get storage {
+    return Intl.message(
+      'Storage',
+      name: 'storage',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

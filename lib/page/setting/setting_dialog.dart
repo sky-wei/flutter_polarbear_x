@@ -19,6 +19,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/page/setting/about_widget.dart';
 import 'package:flutter_polarbear_x/page/setting/account_widget.dart';
 import 'package:flutter_polarbear_x/page/setting/preference_widget.dart';
+import 'package:flutter_polarbear_x/page/setting/security_widget.dart';
+import 'package:flutter_polarbear_x/page/setting/storge_widget.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_svg/svg.dart';
@@ -71,7 +73,9 @@ class SettingWidgetState extends State<SettingWidget> {
   final List<SideItem> _items = [
     SideItem(id: 0, name: S.current.account, icon: 'assets/svg/ic_user.svg'),
     SideItem(id: 1, name: S.current.preference, icon: 'assets/svg/ic_all_items.svg'),
-    SideItem(id: 2, name: S.current.about, icon: 'assets/svg/ic_about.svg'),
+    SideItem(id: 2, name: S.current.security, icon: 'assets/svg/ic_security.svg'),
+    SideItem(id: 3, name: S.current.storage, icon: 'assets/svg/ic_storage.svg'),
+    SideItem(id: 4, name: S.current.about, icon: 'assets/svg/ic_about.svg'),
   ];
 
   SideItem? _curSideItem;
@@ -125,6 +129,10 @@ class SettingWidgetState extends State<SettingWidget> {
       case 1:
         return const PreferenceWidget();
       case 2:
+        return const SecurityWidget();
+      case 3:
+        return const StorageWidget();
+      case 4:
         return const AboutWidget();
       default:
         return const Center(

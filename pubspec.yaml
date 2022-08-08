@@ -40,9 +40,9 @@ dependencies:
   objectbox: ^1.4.1
   objectbox_flutter_libs: any
   url_launcher: ^6.0.20
-  file_selector: ^0.8.4+1
-  #  file_selector_windows: ^0.8.2
-  #  file_selector_macos: ^0.8.2
+  file_selector: ^0.9.0
+  file_selector_windows: ^0.9.1
+  file_selector_macos: ^0.9.0
   file_selector_linux: ^0.0.2+1
   encrypt: ^5.0.1
   path_provider: ^2.0.9

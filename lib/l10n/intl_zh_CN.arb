@@ -72,7 +72,7 @@
   "license": "Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.",
   "unsavedChanges": "未保存修改",
   "updateCompleted": "更新完成!",
-  "unsavedChangesMessage": "你确定要离开吗？ 如果您现在离开，您当前的信息将不会被保存。",
+  "unsavedChangesMessage": "您确定要离开吗？ 如果您现在离开，您当前的信息将不会被保存。",
   "end": "结束",
   "followSystem": "跟随系统",
   "brightColorMode": "亮色模式",
@@ -83,6 +83,18 @@
   "account": "账号",
   "about": "关于",
   "english": "English",
-  "simplifiedChinese": "简体中文"
+  "simplifiedChinese": "简体中文",
+  "clearData": "清除数据",
+  "clearDataMessage": "您确定要清除此账号下的所有账号吗!",
+  "clearCompleted": "清除完成!",
+  "importCompleted": "导入完成!",
+  "exportCompleted": "导出完成!",
+  "security": "安全",
+  "import": "导入",
+  "export": "导出",
+  "data": "数据",
+  "importAccount": "导入账号",
+  "exportAccount": "导出账号",
+  "storage": "存储"
 }
 

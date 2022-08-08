@@ -18,6 +18,7 @@ import 'package:flutter_polarbear_x/data/entity/folder_entity.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/data/mapper/account_mapper.dart';
 import 'package:flutter_polarbear_x/data/mapper/folder_mapper.dart';
+import 'package:flutter_polarbear_x/util/log_util.dart';
 
 import '../data_exception.dart';
 import '../entity/account_entity.dart';
@@ -192,10 +193,17 @@ class AppRepository {
     return account.copy(id: id);
   }
 
-  // /// 创建账号
-  // Future<List<int>> createAccountList(List<AccountItem> items) async {
-  //   return accountBox.putMany(AccountMapper.transformItems(items));
-  // }
+  /// 创建账号
+  Future<List<AccountItem>> createAccountList(AdminItem admin, List<AccountItem> accounts) async {
+
+    final List<AccountItem> result = [];
+
+    for (var account in accounts) {
+      result.add(await createAccount(admin, account));
+    }
+
+    return result;
+  }
 
   /// 更新账号信息
   Future<AccountItem> updateAccount(AdminItem admin, AccountItem account) async {
@@ -214,6 +222,8 @@ class AppRepository {
 
   /// 更新账号信息
   Future<List<AccountItem>> updateAccounts(AdminItem admin, List<AccountItem> accounts) async {
+
+    if (accounts.isEmpty) return accounts;
 
     final enAccounts = accounts.map((account) {
       return _encryptAccount(admin, account);
@@ -235,6 +245,20 @@ class AppRepository {
       throw DataException.type(type: ErrorType.deleteError);
     }
     return account;
+  }
+
+  /// 清除数据
+  Future<bool> clearData(AdminItem admin) async {
+
+    final result = accountBox
+        .query(AccountEntity_.adminId.equals(admin.id))
+        .build()
+        .remove();
+
+    if (result < 0) {
+      throw DataException.type(type: ErrorType.deleteError);
+    }
+    return true;
   }
 
   /// 加密管理员的密码

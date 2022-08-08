@@ -181,7 +181,12 @@ class _AccountWidgetState extends State<AccountWidget> {
       value: admin.name,
       callback: (value) {
         // 更新管理员信息
-        _appModel.updateAdmin(admin.copy(name: value)).catchError((error, stackTrace) {
+        _appModel.updateAdmin(
+          admin.copy(name: value)
+        ).then((value) {
+          Navigator.pop(context);
+          MessageUtil.showMessage(context, S.of(context).updateCompleted);
+        }).catchError((error, stackTrace) {
           MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
         });
       }
@@ -215,8 +220,9 @@ class _AccountWidgetState extends State<AccountWidget> {
         newPassword
     ).catchError((error, stackTrace) {
       MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
-    }).then((value) => {
-      MessageUtil.showMessage(context, S.of(context).updateCompleted)
+    }).then((value) {
+      Navigator.pop(context);
+      MessageUtil.showMessage(context, S.of(context).updateCompleted);
     });
   }
 
@@ -229,7 +235,12 @@ class _AccountWidgetState extends State<AccountWidget> {
         maxLines: 6,
         callback: (value) {
           // 更新管理员信息
-          _appModel.updateAdmin(admin.copy(desc: value)).catchError((error, stackTrace) {
+          _appModel.updateAdmin(
+            admin.copy(desc: value)
+          ).then((value) {
+            Navigator.pop(context);
+            MessageUtil.showMessage(context, S.of(context).updateCompleted);
+          }).catchError((error, stackTrace) {
             MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
           });
         }

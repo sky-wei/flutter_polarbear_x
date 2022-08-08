@@ -50,6 +50,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "changeNotes": MessageLookupByLibrary.simpleMessage("Change Notes"),
         "changePassword":
             MessageLookupByLibrary.simpleMessage("Change Password"),
+        "clearCompleted":
+            MessageLookupByLibrary.simpleMessage("Clear Completed!"),
+        "clearData": MessageLookupByLibrary.simpleMessage("Clear Data"),
+        "clearDataMessage": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to clear all accounts under this account!"),
         "clone": MessageLookupByLibrary.simpleMessage("Clone"),
         "close": MessageLookupByLibrary.simpleMessage("Close"),
         "confirmPassword":
@@ -59,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "The current information has been copied!"),
         "copyValue": MessageLookupByLibrary.simpleMessage("Copy Value"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
+        "data": MessageLookupByLibrary.simpleMessage("Data"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleteAccount": MessageLookupByLibrary.simpleMessage("Delete Account"),
         "deleteAccountMessage": MessageLookupByLibrary.simpleMessage(
@@ -75,6 +81,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("There are no items to list."),
         "end": MessageLookupByLibrary.simpleMessage("End"),
         "english": MessageLookupByLibrary.simpleMessage("English"),
+        "export": MessageLookupByLibrary.simpleMessage("Export"),
+        "exportAccount": MessageLookupByLibrary.simpleMessage("Export Account"),
+        "exportCompleted":
+            MessageLookupByLibrary.simpleMessage("Export Completed!"),
         "favorite": MessageLookupByLibrary.simpleMessage("Favorite"),
         "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
         "folder": MessageLookupByLibrary.simpleMessage("Folder"),
@@ -86,6 +96,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Forget Password?"),
         "handlerError":
             MessageLookupByLibrary.simpleMessage("Handling exceptions!"),
+        "import": MessageLookupByLibrary.simpleMessage("Import"),
+        "importAccount": MessageLookupByLibrary.simpleMessage("Import Account"),
+        "importCompleted":
+            MessageLookupByLibrary.simpleMessage("Import Completed!"),
         "itemInformation":
             MessageLookupByLibrary.simpleMessage("Item Information"),
         "language": MessageLookupByLibrary.simpleMessage("Language"),
@@ -116,9 +130,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "sayWhat": MessageLookupByLibrary.simpleMessage("say what!"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "security": MessageLookupByLibrary.simpleMessage("Security"),
         "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "simplifiedChinese": MessageLookupByLibrary.simpleMessage("简体中文"),
         "sourceX": m1,
+        "storage": MessageLookupByLibrary.simpleMessage("Storage"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "toggleInvisible":
             MessageLookupByLibrary.simpleMessage("Toggle Invisible"),

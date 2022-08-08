@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/data/repository/encrypt_store.dart';
@@ -48,7 +52,7 @@ class AppModel extends AbstractModel {
   late AppRepository _appRepository;
   final AppSetting _appSetting;
 
-  AdminItem _admin = AdminItem(id: 1, name: 'Sky', password: '123456');
+  AdminItem _admin = AdminItem(id: 1, name: 'sky', password: '123456');
 
   final List<SideItem> fixedSide = [
     SideItem(name: S.current.favorites, icon: 'assets/svg/ic_favorites.svg', type: SortType.favorite, color: XColor.favoriteColor),
@@ -398,6 +402,77 @@ class AppModel extends AbstractModel {
     if (chooseAccount == result) {
       clearChooseAccount();
       clearAccount();
+    }
+
+    return result;
+  }
+
+  /// 导入账号
+  Future<bool> importAccount() async {
+
+    var file = await openFile(
+        acceptedTypeGroups: [XTypeGroup(label: 'json', extensions: ['json'])],
+        confirmButtonText: S.current.import
+    );
+
+    if (file == null) return false;
+
+    var text = await file.readAsString();
+    var values = json.decode(text) as List;
+
+    var accounts = values.map((e) => AccountItem.fromJson(e)).toList();
+    accounts.sort((a, b) => a.id.compareTo(b.id));
+
+    var count = 0;
+
+    accounts = accounts.map((account) {
+      final time = DateTime.now().millisecondsSinceEpoch + (count++);
+      return account.copy(
+        id: 0,
+        adminId: _admin.id,
+        createTime: time,
+        updateTime: time
+      );
+    }).toList();
+
+    if (accounts.isEmpty) return false;
+
+    // 批量导入
+    final result = await _appRepository.createAccountList(admin, accounts);
+
+    _allAccountItems.addAll(result);
+    refreshAccounts();
+
+    return true;
+  }
+
+  /// 导出账号
+  Future<bool> exportAccount() async {
+
+    var path = await getSavePath(
+        acceptedTypeGroups: [XTypeGroup(label: 'json', extensions: ['json'])],
+        suggestedName: "account_list.json",
+        confirmButtonText: S.current.export
+    );
+
+    if (path == null) return false;
+
+    var value = json.encode(_allAccountItems);
+    await File(path).writeAsString(value, flush: true);
+
+    return true;
+  }
+
+  /// 清除数据
+  Future<bool> clearData() async {
+
+    final result = await _appRepository.clearData(admin);
+
+    if (result) {
+      _allAccountItems.clear();
+      clearChooseAccount();
+      clearAccount();
+      refreshAccounts();
     }
 
     return result;

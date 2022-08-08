@@ -83,6 +83,18 @@
   "account": "Account",
   "about": "About",
   "english": "English",
-  "simplifiedChinese": "简体中文"
+  "simplifiedChinese": "简体中文",
+  "clearData": "Clear Data",
+  "clearDataMessage": "Are you sure you want to clear all accounts under this account!",
+  "clearCompleted": "Clear Completed!",
+  "importCompleted": "Import Completed!",
+  "exportCompleted": "Export Completed!",
+  "security": "Security",
+  "import": "Import",
+  "export": "Export",
+  "data": "Data",
+  "importAccount": "Import Account",
+  "exportAccount": "Export Account",
+  "storage": "Storage"
 }
 
