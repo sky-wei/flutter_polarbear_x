@@ -196,6 +196,8 @@ class AppRepository {
   /// 创建账号
   Future<List<AccountItem>> createAccountList(AdminItem admin, List<AccountItem> accounts) async {
 
+    if (accounts.isEmpty) return accounts;
+
     final List<AccountItem> result = [];
 
     for (var account in accounts) {

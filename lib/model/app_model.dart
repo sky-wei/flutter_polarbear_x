@@ -18,6 +18,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/data/repository/encrypt_store.dart';
@@ -101,7 +102,7 @@ class AppModel extends AbstractModel {
     if (!_init) {
       _init = true;
       chooseSide = allItems;
-      final dir = await getApplicationSupportDirectory();
+      final dir = kDebugMode ? await getTemporaryDirectory() : await getApplicationSupportDirectory();
       _appRepository = AppRepository(
         objectBox: await ObjectBox.create(directory: dir.path),
         encryptStore: EncryptStore()
@@ -435,13 +436,13 @@ class AppModel extends AbstractModel {
       );
     }).toList();
 
-    if (accounts.isEmpty) return false;
-
     // 批量导入
     final result = await _appRepository.createAccountList(admin, accounts);
 
-    _allAccountItems.addAll(result);
-    refreshAccounts();
+    if (result.isNotEmpty) {
+      _allAccountItems.addAll(result);
+      refreshAccounts();
+    }
 
     return true;
   }
