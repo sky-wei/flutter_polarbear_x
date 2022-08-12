@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -26,6 +27,7 @@ import 'package:flutter_polarbear_x/model/side_item.dart';
 import 'package:flutter_polarbear_x/util/easy_notifier.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../data/data_exception.dart';
 import '../data/item/admin_item.dart';
 import '../data/item/folder_item.dart';
 import '../data/item/sort_item.dart';
@@ -52,6 +54,10 @@ class AppModel extends AbstractModel {
   bool _init = false;
   late AppRepository _appRepository;
   final AppSetting _appSetting;
+
+  late Timer _timer;
+  int _curTick = 0;
+  int _lastMonitorTime = 0;
 
   AdminItem _admin = AdminItem(id: 1, name: 'sky', password: '123456');
 
@@ -89,6 +95,7 @@ class AppModel extends AbstractModel {
 
   @override
   void dispose() {
+    _disposeTimer();
     folderNotifier.dispose();
     listNotifier.dispose();
     infoNotifier.dispose();
@@ -102,14 +109,22 @@ class AppModel extends AbstractModel {
     if (!_init) {
       _init = true;
       chooseSide = allItems;
-      final dir = kDebugMode ? await getTemporaryDirectory() : await getApplicationSupportDirectory();
+      final dir = await getAppDirectory();
       _appRepository = AppRepository(
         objectBox: await ObjectBox.create(directory: dir.path),
         encryptStore: EncryptStore()
       );
+      _timer = Timer.periodic(
+        const Duration(seconds: 1), (timer) => _timeHandler(timer)
+      );
       await Future.delayed(const Duration(milliseconds: 200));
     }
     return this;
+  }
+
+  /// 获取App目录
+  Future<Directory> getAppDirectory() async {
+    return kDebugMode ? await getTemporaryDirectory() : await getApplicationSupportDirectory();
   }
 
   /// 创建账号
@@ -159,6 +174,14 @@ class AppModel extends AbstractModel {
     );
 
     return _updateAdmin(admin);
+  }
+
+  /// 解锁
+  Future<void> unlock(String password) async {
+
+    if (admin.password != password) {
+      throw DataException.type(type: ErrorType.passwordError);
+    }
   }
 
   /// 创建文件夹
@@ -535,6 +558,11 @@ class AppModel extends AbstractModel {
     return _appSetting;
   }
 
+  /// 更新监听时间
+  void updateMonitorTime() {
+    _lastMonitorTime = _curTick;
+  }
+
   /// 过滤账号
   List<AccountItem> _filterAccount({
     required List<AccountItem> accounts,
@@ -576,5 +604,23 @@ class AppModel extends AbstractModel {
       _allAccountItems.removeAt(index);
       _allAccountItems.insert(index, item);
     }
+  }
+
+  /// 时间处理
+  void _timeHandler(Timer timer) {
+    _curTick = timer.tick;
+
+    // XLog.d('>>>>>>>>>>>>>>>>> $_curTick  $_lastMonitorTime');
+    //
+    // if (_curTick - _lastMonitorTime >= 60) {
+    //   XLog.d('>>>>>>>>>>>>>>>>> 超时了!~');
+    // }
+  }
+
+  /// 释放定时器
+  void _disposeTimer() {
+    if (_timer.isActive) _timer.cancel();
+    _curTick = 0;
+    _lastMonitorTime = 0;
   }
 }

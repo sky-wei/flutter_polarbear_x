@@ -1010,6 +1010,36 @@ class S {
     );
   }
 
+  /// `Unlock`
+  String get unlock {
+    return Intl.message(
+      'Unlock',
+      name: 'unlock',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lock`
+  String get lock {
+    return Intl.message(
+      'Lock',
+      name: 'lock',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Toolbox`
+  String get toolbox {
+    return Intl.message(
+      'Toolbox',
+      name: 'toolbox',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Storage`
   String get storage {
     return Intl.message(

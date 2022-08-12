@@ -4,12 +4,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/page/home/home_page.dart';
 import 'package:flutter_polarbear_x/page/launcher/launcher_page.dart';
+import 'package:flutter_polarbear_x/page/lock/lock_page.dart';
 import 'package:flutter_polarbear_x/page/setting/preference_widget.dart';
 import 'package:flutter_polarbear_x/page/splash/splash_page.dart';
 import 'package:flutter_polarbear_x/route.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_polarbear_x/util/logger.dart';
+import 'package:flutter_polarbear_x/widget/monitor_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -60,10 +62,12 @@ class PolarBearX extends StatelessWidget {
         themeMode: _getThemeMode(),
         debugShowCheckedModeBanner: false,
         routes: {
-          XRoute.splash: (BuildContext context) => const SplashPage(),
-          XRoute.launcher: (BuildContext context) => const LauncherPage(),
-          XRoute.home: (BuildContext context) => const HomePage(),
+          XRoute.splash: (context) => const SplashPage(),
+          XRoute.launcher: (context) => const LauncherPage(),
+          XRoute.home: (context) => const HomePage(),
+          XRoute.lock: (context) => const LockPage(),
         },
+        builder: (context, child) => MonitorWidget(child: child),
         initialRoute: XRoute.splash,
         locale: appSetting.getLocale(),
         localizationsDelegates: const [

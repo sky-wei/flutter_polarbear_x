@@ -95,6 +95,9 @@
   "data": "Data",
   "importAccount": "Import Account",
   "exportAccount": "Export Account",
+  "unlock": "Unlock",
+  "lock": "Lock",
+  "toolbox": "Toolbox",
   "storage": "Storage"
 }
 

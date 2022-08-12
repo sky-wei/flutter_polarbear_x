@@ -23,7 +23,6 @@ import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 
 import '../../generated/l10n.dart';
-import '../../theme/color.dart';
 import '../../widget/big_title_widget.dart';
 import '../../widget/head_logo_widget.dart';
 import '../../widget/window_buttons.dart';
@@ -54,19 +53,6 @@ class _LauncherPageState extends State<LauncherPage> {
               fit: BoxFit.cover,
             ),
           ),
-          // const DecoratedBox(
-          //   decoration: BoxDecoration(
-          //     gradient: LinearGradient(
-          //       begin: Alignment.topRight,
-          //       end: Alignment.bottomLeft,
-          //       colors: [Color(0xFFfed6e3), Color(0xFFa8edea)],
-          //     )
-          //   ),
-          //   child: SizedBox(
-          //     width: double.infinity,
-          //     height: double.infinity,
-          //   ),
-          // ),
           Align(
             alignment: Alignment.topRight,
             child: _buildWindowTitleBar(),

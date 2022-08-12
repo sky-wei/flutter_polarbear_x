@@ -23,8 +23,10 @@ import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/data/item/sort_item.dart';
 import 'package:flutter_polarbear_x/dialog/hint_dialog.dart';
 import 'package:flutter_polarbear_x/model/app_model.dart';
+import 'package:flutter_polarbear_x/route.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
+import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -75,6 +77,7 @@ class _HomeSideState extends State<HomeSide> {
       color: Theme.of(context).sideColor,
       constraints: const BoxConstraints.expand(width: 260),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (Platform.isLinux || Platform.isWindows)
             HeadLogoWidget(
@@ -97,10 +100,57 @@ class _HomeSideState extends State<HomeSide> {
             onPressed: _editFolder,
           ),
           Expanded(
-              child: _buildFolderSideList()
-          )
+            child: _buildFolderSideList()
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10, top: 10, bottom: 10),
+            child: IconButton(
+              onPressed: _showToolboxMenu,
+              tooltip: S.of(context).toolbox,
+              icon: SvgPicture.asset(
+                'assets/svg/ic_tools.svg',
+                color: Theme.of(context).sideTextColor,
+                width: 60
+              ),
+            ),
+          ),
         ],
       ),
+    );
+  }
+
+  /// 显示工具箱菜单
+  Future<void> _showToolboxMenu() async {
+
+    final overlay = Overlay.of(context)!.context
+        .findRenderObject() as RenderBox;
+
+    XLog.d('>>>>>>>>>>>>>>>>>>>>> ${overlay.paintBounds}   ${overlay.size}');
+
+    final menuItem = await showMenu<int>(
+        context: context,
+        items: [
+          PopupMenuItem(
+            value: 1,
+            child: TextButton.icon(
+              onPressed: () { },
+              icon: SvgPicture.asset(
+                  'assets/svg/ic_lock.svg',
+                  color: Theme.of(context).iconColor,
+                  width: 18
+              ),
+              label: Text(
+                S.of(context).lock,
+                style: TextStyle(
+                  color: Theme.of(context).iconColor,
+                ),
+              ),
+            )
+          ),
+        ],
+        position: RelativeRect.fromSize(
+            overlay.paintBounds, overlay.size
+        )
     );
   }
 

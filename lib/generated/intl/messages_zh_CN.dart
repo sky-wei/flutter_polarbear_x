@@ -93,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "license": MessageLookupByLibrary.simpleMessage(
             "Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License."),
         "loading": MessageLookupByLibrary.simpleMessage("加载中..."),
+        "lock": MessageLookupByLibrary.simpleMessage("锁定"),
         "login": MessageLookupByLibrary.simpleMessage("登入"),
         "logout": MessageLookupByLibrary.simpleMessage("退出"),
         "mailX": m0,
@@ -121,7 +122,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "theme": MessageLookupByLibrary.simpleMessage("主题"),
         "toggleInvisible": MessageLookupByLibrary.simpleMessage("隐藏"),
         "toggleVisibility": MessageLookupByLibrary.simpleMessage("显示"),
+        "toolbox": MessageLookupByLibrary.simpleMessage("工具箱"),
         "trash": MessageLookupByLibrary.simpleMessage("回收站"),
+        "unlock": MessageLookupByLibrary.simpleMessage("解锁"),
         "unsavedChanges": MessageLookupByLibrary.simpleMessage("未保存修改"),
         "unsavedChangesMessage": MessageLookupByLibrary.simpleMessage(
             "您确定要离开吗？ 如果您现在离开，您当前的信息将不会被保存。"),

@@ -95,6 +95,9 @@
   "data": "数据",
   "importAccount": "导入账号",
   "exportAccount": "导出账号",
+  "unlock": "解锁",
+  "lock": "锁定",
+  "toolbox": "工具箱",
   "storage": "存储"
 }
 

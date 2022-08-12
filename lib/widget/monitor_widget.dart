@@ -15,43 +15,39 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/model/app_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../generated/l10n.dart';
-import '../../model/app_model.dart';
-import '../../route.dart';
+class MonitorWidget extends StatefulWidget {
 
-class SplashPage extends StatefulWidget {
+  final Widget? child;
 
-  const SplashPage({Key? key}) : super(key: key);
-
+  const MonitorWidget({
+    Key? key,
+    required this.child
+  }) : super(key: key);
+  
   @override
-  State<StatefulWidget> createState() => _SplashPageState();
+  State<StatefulWidget> createState() => MonitorWidgetState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class MonitorWidgetState extends State<MonitorWidget> {
+
+  late AppModel _appModel;
 
   @override
   void initState() {
     super.initState();
-
-    context.read<AppModel>().initialize().then((value) {
-      Navigator.pushReplacementNamed(context, XRoute.home);
-    });
+    _appModel = context.read<AppModel>();
   }
-
+  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text(
-          S.of(context).loading,
-          style: const TextStyle(
-            fontSize: 20
-          ),
-        ),
-      ),
+    return MouseRegion(
+      onHover: (event) => _appModel.updateMonitorTime(),
+      child: widget.child,
     );
   }
 }
+
 
