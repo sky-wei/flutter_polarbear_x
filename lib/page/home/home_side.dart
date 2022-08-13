@@ -33,6 +33,7 @@ import 'package:provider/provider.dart';
 
 import '../../dialog/input_dialog.dart';
 import '../../generated/l10n.dart';
+import '../../main.dart';
 import '../../model/side_item.dart';
 import '../../util/error_util.dart';
 import '../../util/size_box_util.dart';
@@ -104,53 +105,46 @@ class _HomeSideState extends State<HomeSide> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10, top: 10, bottom: 10),
-            child: IconButton(
-              onPressed: _showToolboxMenu,
-              tooltip: S.of(context).toolbox,
-              icon: SvgPicture.asset(
-                'assets/svg/ic_tools.svg',
-                color: Theme.of(context).sideTextColor,
-                width: 60
-              ),
-            ),
+            child: _buildToolboxWidget()
           ),
         ],
       ),
     );
   }
 
-  /// 显示工具箱菜单
-  Future<void> _showToolboxMenu() async {
-
-    final overlay = Overlay.of(context)!.context
-        .findRenderObject() as RenderBox;
-
-    XLog.d('>>>>>>>>>>>>>>>>>>>>> ${overlay.paintBounds}   ${overlay.size}');
-
-    final menuItem = await showMenu<int>(
-        context: context,
-        items: [
-          PopupMenuItem(
-            value: 1,
-            child: TextButton.icon(
-              onPressed: () { },
-              icon: SvgPicture.asset(
-                  'assets/svg/ic_lock.svg',
-                  color: Theme.of(context).iconColor,
-                  width: 18
-              ),
-              label: Text(
-                S.of(context).lock,
-                style: TextStyle(
-                  color: Theme.of(context).iconColor,
-                ),
-              ),
-            )
+  /// 创建工具箱控件
+  Widget _buildToolboxWidget() {
+    return PopupMenuButton<int>(
+      tooltip: S.of(context).toolbox,
+      icon: SvgPicture.asset(
+        'assets/svg/ic_tools.svg',
+        color: Theme.of(context).sideTextColor,
+      ),
+      itemBuilder: (context) {
+        return [
+          _buildMenuItem(
+            value: 0,
+            iconName: 'assets/svg/ic_lock.svg',
+            labelText: S.of(context).lock
           ),
-        ],
-        position: RelativeRect.fromSize(
-            overlay.paintBounds, overlay.size
-        )
+          _buildMenuItem(
+            value: 1,
+            iconName: 'assets/svg/ic_exit.svg',
+            iconColor: Theme.of(context).deleteColor,
+            labelText: S.of(context).logout,
+          ),
+        ];
+      },
+      onSelected: (index) {
+        switch(index) {
+          case 0:
+            Navigator.pushNamed(context, XRoute.lock);
+            break;
+          case 1:
+            RestartWidget.restartApp(context);
+            break;
+        }
+      },
     );
   }
 
@@ -168,6 +162,33 @@ class _HomeSideState extends State<HomeSide> {
         );
       },
       itemCount: _sideItems.length,
+    );
+  }
+
+  /// 创建菜单项
+  PopupMenuItem<int> _buildMenuItem({
+    required int value,
+    required String iconName,
+    Color? iconColor,
+    required String labelText,
+    Color? labelColor,
+  }) {
+    return PopupMenuItem(
+      value: value,
+      child: TextButton.icon(
+        onPressed: null,
+        icon: SvgPicture.asset(
+          iconName,
+          color: iconColor ?? Theme.of(context).iconColor,
+          width: 18
+        ),
+        label: Text(
+          labelText,
+          style: TextStyle(
+            color: labelColor ?? Theme.of(context).iconColor,
+          ),
+        ),
+      ),
     );
   }
 
