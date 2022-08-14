@@ -18,7 +18,6 @@ import 'package:flutter_polarbear_x/data/entity/folder_entity.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/data/mapper/account_mapper.dart';
 import 'package:flutter_polarbear_x/data/mapper/folder_mapper.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
 
 import '../data_exception.dart';
 import '../entity/account_entity.dart';
@@ -270,21 +269,31 @@ class AppRepository {
 
   /// 加密账号信息
   AccountItem _encryptAccount(AdminItem admin, AccountItem account) {
-    return account.copy(
-      name: encryptStore.encrypt(admin.password, account.name),
-      password: encryptStore.encrypt(admin.password, account.password),
-      url: encryptStore.encrypt(admin.password, account.url),
-      node: encryptStore.encrypt(admin.password, account.node),
-    );
+    return encryptAccount(admin.password, account);
   }
 
   /// 解密账号信息
   AccountItem _decryptAccount(AdminItem admin, AccountItem account) {
-    return account.copy(
-      name: encryptStore.decrypt(admin.password, account.name),
-      password: encryptStore.decrypt(admin.password, account.password),
-      url: encryptStore.decrypt(admin.password, account.url),
-      node: encryptStore.decrypt(admin.password, account.node),
+    return decryptAccount(admin.password, account);
+  }
+
+  /// 加密账号信息
+  AccountItem encryptAccount(String password, AccountItem account) {
+    return password.isEmpty ? account : account.copy(
+      name: encryptStore.encrypt(password, account.name),
+      password: encryptStore.encrypt(password, account.password),
+      url: encryptStore.encrypt(password, account.url),
+      node: encryptStore.encrypt(password, account.node),
+    );
+  }
+
+  /// 解密账号信息
+  AccountItem decryptAccount(String password, AccountItem account) {
+    return password.isEmpty ? account : account.copy(
+      name: encryptStore.decrypt(password, account.name),
+      password: encryptStore.decrypt(password, account.password),
+      url: encryptStore.decrypt(password, account.url),
+      node: encryptStore.decrypt(password, account.node),
     );
   }
 }

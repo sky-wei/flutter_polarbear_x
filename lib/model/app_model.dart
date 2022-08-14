@@ -39,6 +39,8 @@ import '../theme/color.dart';
 
 typedef AccountFilter = bool Function(AccountItem account);
 
+typedef PasswordCallback = Future<String?> Function();
+
 class AbstractModel extends EasyNotifier {
 
 }
@@ -430,28 +432,34 @@ class AppModel extends AbstractModel {
 
     return result;
   }
-
+  
   /// 导入账号
-  Future<bool> importAccount() async {
+  Future<bool> importAccount(PasswordCallback callback) async {
 
-    var file = await openFile(
+    final file = await openFile(
         acceptedTypeGroups: [XTypeGroup(label: 'json', extensions: ['json'])],
         confirmButtonText: S.current.import
     );
 
     if (file == null) return false;
 
-    var text = await file.readAsString();
-    var values = json.decode(text) as List;
+    final text = await file.readAsString();
+    final values = json.decode(text) as List;
 
     var accounts = values.map((e) => AccountItem.fromJson(e)).toList();
     accounts.sort((a, b) => a.id.compareTo(b.id));
+
+    /// 回调请求用户密码
+    final password = await callback();
+
+    if (password == null) return false;
 
     var count = 0;
 
     accounts = accounts.map((account) {
       final time = DateTime.now().millisecondsSinceEpoch + (count++);
-      return account.copy(
+      final tAccount = _appRepository.decryptAccount(password, account);
+      return tAccount.copy(
         id: 0,
         adminId: _admin.id,
         createTime: time,
@@ -471,7 +479,7 @@ class AppModel extends AbstractModel {
   }
 
   /// 导出账号
-  Future<bool> exportAccount() async {
+  Future<bool> exportAccount(PasswordCallback callback) async {
 
     var path = await getSavePath(
         acceptedTypeGroups: [XTypeGroup(label: 'json', extensions: ['json'])],
@@ -481,7 +489,16 @@ class AppModel extends AbstractModel {
 
     if (path == null) return false;
 
-    var value = json.encode(_allAccountItems);
+    /// 回调请求用户密码
+    final password = await callback();
+
+    if (password == null) return false;
+
+    final accountItems = _allAccountItems.map((account) {
+      return _appRepository.encryptAccount(password, account);
+    }).toList();
+
+    final value = json.encode(accountItems);
     await File(path).writeAsString(value, flush: true);
 
     return true;

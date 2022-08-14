@@ -87,6 +87,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "import": MessageLookupByLibrary.simpleMessage("导入"),
         "importAccount": MessageLookupByLibrary.simpleMessage("导入账号"),
         "importCompleted": MessageLookupByLibrary.simpleMessage("导入完成!"),
+        "importTips": MessageLookupByLibrary.simpleMessage("提示：无密码时不需要输入！"),
         "itemInformation": MessageLookupByLibrary.simpleMessage("项目信息"),
         "language": MessageLookupByLibrary.simpleMessage("语言"),
         "launcher": MessageLookupByLibrary.simpleMessage("启动"),

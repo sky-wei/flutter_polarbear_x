@@ -27,13 +27,17 @@ class InputDialog extends StatelessWidget {
   final String? labelText;
   final String value;
   final int maxLines;
+  final bool obscureText;
+  final String? tips;
 
   const InputDialog({
     Key? key,
     required this.title,
     this.labelText,
     this.value = '',
-    this.maxLines = 1
+    this.maxLines = 1,
+    this.obscureText = false,
+    this.tips
   }) : super(key: key);
 
   @override
@@ -46,6 +50,8 @@ class InputDialog extends StatelessWidget {
           labelText: labelText,
           value: value,
           maxLines: maxLines,
+          obscureText: obscureText,
+          tips: tips,
         ),
       ),
     );
@@ -58,14 +64,17 @@ class InputWidget extends StatefulWidget {
   final String? labelText;
   final String value;
   final int maxLines;
-
+  final bool obscureText;
+  final String? tips;
 
   const InputWidget({
     Key? key,
     required this.title,
     this.labelText,
     this.value = '',
-    this.maxLines = 1
+    this.maxLines = 1,
+    this.obscureText = false,
+    this.tips
   }) : super(key: key);
 
   @override
@@ -103,21 +112,38 @@ class InputWidgetState extends State<InputWidget> {
         ),
         XBox.vertical10,
         Padding(
-          padding: const EdgeInsets.fromLTRB(40, 20, 40, 30),
-          child: TextField(
-            controller: _controller,
-            autofocus: true,
-            decoration: InputDecoration(
-              labelText: widget.labelText,
-              border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(6))
-              )
-            ),
-            maxLines: widget.maxLines,
-            textInputAction: widget.maxLines > 1 ? TextInputAction.newline : TextInputAction.done,
-            textAlignVertical: TextAlignVertical.bottom,
-            keyboardType: widget.maxLines > 1 ? TextInputType.multiline : TextInputType.text,
-            onSubmitted: (value) => _ok(),
+          padding: const EdgeInsets.fromLTRB(40, 20, 40, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: _controller,
+                autofocus: true,
+                decoration: InputDecoration(
+                    labelText: widget.labelText,
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(6))
+                    )
+                ),
+                maxLines: widget.maxLines,
+                obscureText: widget.obscureText,
+                textInputAction: widget.maxLines > 1 ? TextInputAction.newline : TextInputAction.done,
+                textAlignVertical: TextAlignVertical.bottom,
+                keyboardType: widget.maxLines > 1 ? TextInputType.multiline : TextInputType.text,
+                onSubmitted: (value) => _ok(),
+              ),
+              if (widget.tips != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 15, 0, 0),
+                  child: Text(
+                    widget.tips!,
+                    style: TextStyle(
+                      color: Theme.of(context).hintColor,
+                      fontSize: 12
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
         const Divider(thickness: 1),
@@ -138,8 +164,8 @@ class InputWidgetState extends State<InputWidget> {
             XBox.horizontal5,
             Expanded(
               child: _buildTextButton(
-                  text: S.of(context).ok,
-                  onPressed: _ok
+                text: S.of(context).ok,
+                onPressed: _ok
               ),
             )
           ],

@@ -98,6 +98,7 @@
   "unlock": "解锁",
   "lock": "锁定",
   "toolbox": "工具箱",
+  "importTips": "提示：无密码时不需要输入！",
   "storage": "存储"
 }
 

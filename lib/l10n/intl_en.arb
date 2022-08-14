@@ -98,6 +98,7 @@
   "unlock": "Unlock",
   "lock": "Lock",
   "toolbox": "Toolbox",
+  "importTips": "Tip: No need to enter when there is no password！",
   "storage": "Storage"
 }
 

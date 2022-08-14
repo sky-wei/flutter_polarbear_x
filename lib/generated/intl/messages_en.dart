@@ -100,6 +100,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "importAccount": MessageLookupByLibrary.simpleMessage("Import Account"),
         "importCompleted":
             MessageLookupByLibrary.simpleMessage("Import Completed!"),
+        "importTips": MessageLookupByLibrary.simpleMessage(
+            "Tip: No need to enter when there is no password！"),
         "itemInformation":
             MessageLookupByLibrary.simpleMessage("Item Information"),
         "language": MessageLookupByLibrary.simpleMessage("Language"),

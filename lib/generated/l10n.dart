@@ -1040,6 +1040,16 @@ class S {
     );
   }
 
+  /// `Tip: No need to enter when there is no password！`
+  String get importTips {
+    return Intl.message(
+      'Tip: No need to enter when there is no password！',
+      name: 'importTips',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Storage`
   String get storage {
     return Intl.message(

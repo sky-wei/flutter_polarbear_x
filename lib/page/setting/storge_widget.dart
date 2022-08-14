@@ -20,6 +20,7 @@ import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:provider/provider.dart';
 
 import '../../dialog/hint_dialog.dart';
+import '../../dialog/input_dialog.dart';
 import '../../generated/l10n.dart';
 import '../../model/app_model.dart';
 import '../../util/error_util.dart';
@@ -117,7 +118,11 @@ class StorageWidgetState extends State<StorageWidget> {
   /// 导入账号
   Future<void> _importAccount() async {
 
-    _appModel.importAccount().then((value) {
+    _appModel.importAccount(() async {
+      return await _showPasswordDialog(
+        title: S.of(context).importAccount,
+      );
+    }).then((value) {
       if (value) {
         Navigator.pop(context);
         MessageUtil.showMessage(context, S.of(context).importCompleted);
@@ -130,7 +135,11 @@ class StorageWidgetState extends State<StorageWidget> {
   /// 导出账号
   Future<void> _exportAccount() async {
 
-    _appModel.exportAccount().then((value) {
+    _appModel.exportAccount(() async {
+      return await _showPasswordDialog(
+        title: S.of(context).exportAccount,
+      );
+    }).then((value) {
       if (value) {
         Navigator.pop(context);
         MessageUtil.showMessage(context, S.of(context).exportCompleted);
@@ -163,5 +172,22 @@ class StorageWidgetState extends State<StorageWidget> {
         MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
       });
     }
+  }
+
+  /// 显示密码输入框
+  Future<String?> _showPasswordDialog({
+    required String title
+  }) async {
+    return await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return InputDialog(
+          title: title,
+          labelText: S.of(context).password,
+          obscureText: true,
+          tips: S.of(context).importTips,
+        );
+      }
+    );
   }
 }
