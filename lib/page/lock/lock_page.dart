@@ -23,7 +23,6 @@ import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 import '../../generated/l10n.dart';
-import '../../main.dart';
 import '../../util/error_util.dart';
 import '../../util/message_util.dart';
 import '../../util/size_box_util.dart';
@@ -175,7 +174,7 @@ class _LockPageState extends State<LockPage> {
 
   /// 退出
   void _logout() {
-    RestartWidget.restartApp(context);
+    _appModel.restartApp(context);
   }
 
   /// 创建Bar

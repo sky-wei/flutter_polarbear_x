@@ -15,6 +15,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/page/setting/security_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../page/setting/preference_widget.dart';
@@ -25,12 +26,40 @@ class AppSetting {
 
   AppSetting(this._preferences);
 
-  int getDarkMode() {
-    return _preferences.getInt('dark_mode') ?? ThemeItem.system;
+  int getDarkMode(int defaultValue) {
+    return _preferences.getInt('dark_mode') ?? defaultValue;
   }
 
   Future<bool> setDarkMode(int mode) async {
     return await _preferences.setInt('dark_mode', mode);
+  }
+
+  int getLockTime(int defaultValue) {
+    return _preferences.getInt('lock_time') ?? defaultValue;
+  }
+
+  int getLockTimeType(int defaultValue) {
+    return _preferences.getInt('lock_time_type') ?? defaultValue;
+  }
+
+  Future<bool> setLockTime(TimeItem time) async {
+    await _preferences.setInt('lock_time', time.value);
+    await _preferences.setInt('lock_time_type', time.type);
+    return true;
+  }
+
+  int getClipboardTime(int defaultValue) {
+    return _preferences.getInt('clipboard_time') ?? defaultValue;
+  }
+
+  int getClipboardTimeType(int defaultValue) {
+    return _preferences.getInt('clipboard_time_type') ?? defaultValue;
+  }
+
+  Future<bool> setClipboardTime(TimeItem time) async {
+    await _preferences.setInt('clipboard_time', time.value);
+    await _preferences.setInt('clipboard_time_type', time.type);
+    return true;
   }
 
   Locale? getLocale() {

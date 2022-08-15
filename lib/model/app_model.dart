@@ -20,11 +20,13 @@ import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/data/repository/encrypt_store.dart';
 import 'package:flutter_polarbear_x/model/side_item.dart';
 import 'package:flutter_polarbear_x/util/easy_notifier.dart';
+import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../data/data_exception.dart';
@@ -34,6 +36,7 @@ import '../data/item/sort_item.dart';
 import '../data/objectbox.dart';
 import '../data/repository/app_repository.dart';
 import '../generated/l10n.dart';
+import '../main.dart';
 import '../theme/color.dart';
 
 
@@ -61,7 +64,7 @@ class AppModel extends AbstractModel {
   int _curTick = 0;
   int _lastMonitorTime = 0;
 
-  AdminItem _admin = AdminItem(id: 1, name: 'sky', password: '123456');
+  AdminItem _admin = kDebugMode ? AdminItem(id: 1, name: 'sky', password: '123456') : AdminItem(name: '', password: '');
 
   final List<SideItem> fixedSide = [
     SideItem(name: S.current.favorites, icon: 'assets/svg/ic_favorites.svg', type: SortType.favorite, color: XColor.favoriteColor),
@@ -75,6 +78,7 @@ class AppModel extends AbstractModel {
   final EasyNotifier listNotifier = EasyNotifier();
   final EasyNotifier infoNotifier = EasyNotifier();
   final EasyNotifier funStateNotifier = EasyNotifier();
+  final ValueNotifier lockNotifier = ValueNotifier(false);
 
   final List<FolderItem> folders = [];    /// 文件夹
   final List<AccountItem> accounts = [];  /// 账号
@@ -90,6 +94,7 @@ class AppModel extends AbstractModel {
   List<AccountItem> _filterAccountItems = [];   // 当前账号列表
   
   AdminItem get admin => _admin;        // 当前管理员信息
+  bool get isLogin => _admin.id > 0;    // 判断账号是不登录
 
   AppModel({
     required AppSetting appSetting
@@ -102,6 +107,7 @@ class AppModel extends AbstractModel {
     listNotifier.dispose();
     infoNotifier.dispose();
     funStateNotifier.dispose();
+    lockNotifier.dispose();
     _appRepository.dispose();
     super.dispose();
   }
@@ -184,6 +190,8 @@ class AppModel extends AbstractModel {
     if (admin.password != password) {
       throw DataException.type(type: ErrorType.passwordError);
     }
+
+    lockNotifier.value = false;
   }
 
   /// 创建文件夹
@@ -580,6 +588,16 @@ class AppModel extends AbstractModel {
     _lastMonitorTime = _curTick;
   }
 
+  /// 锁屏通知
+  void lockNotice() {
+    lockNotifier.value = true;
+  }
+
+  /// 重启应用
+  void restartApp(BuildContext context) {
+    RestartWidget.restartApp(context);
+  }
+
   /// 过滤账号
   List<AccountItem> _filterAccount({
     required List<AccountItem> accounts,
@@ -626,6 +644,12 @@ class AppModel extends AbstractModel {
   /// 时间处理
   void _timeHandler(Timer timer) {
     _curTick = timer.tick;
+
+    if (!isLogin || lockNotifier.value) {
+      // 没有登录或锁屏不需要处理
+      XLog.d('>>>>>>>>>>>>>>> $isLogin   ${lockNotifier.value}');
+      return;
+    }
 
     // XLog.d('>>>>>>>>>>>>>>>>> $_curTick  $_lastMonitorTime');
     //

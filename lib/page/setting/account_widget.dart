@@ -16,7 +16,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/admin_item.dart';
-import 'package:flutter_polarbear_x/main.dart';
 import 'package:flutter_polarbear_x/page/setting/password_dialog.dart';
 import 'package:flutter_polarbear_x/page/setting/sub_text_widget.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
@@ -101,9 +100,7 @@ class _AccountWidgetState extends State<AccountWidget> {
             ),
             XBox.vertical40,
             ElevatedButton(
-              onPressed: () {
-                RestartWidget.restartApp(context);
-              },
+              onPressed: () => _appModel.restartApp(context),
               style: ButtonStyle(
                 elevation: MaterialStateProperty.all(0),
                 backgroundColor: MaterialStateProperty.all(

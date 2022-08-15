@@ -98,6 +98,14 @@
   "unlock": "解锁",
   "lock": "锁定",
   "toolbox": "工具箱",
+  "second": "秒",
+  "minute": "分钟",
+  "hour": "小时",
+  "never": "从不",
+  "lockApp": "锁定应用",
+  "lockAppTips": "超时自动锁定应用！",
+  "clearClipboard": "清除剪贴板",
+  "clearClipboardTips": "自动清除复制到剪贴板的内容！",
   "importTips": "提示：无密码时不需要输入！",
   "storage": "存储"
 }

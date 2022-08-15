@@ -63,12 +63,14 @@ class _HomeSideState extends State<HomeSide> {
     super.initState();
     _appModel = context.read<AppModel>();
     _appModel.folderNotifier.addListener(_infoChange);
+    _appModel.lockNotifier.addListener(_lockChange);
     _appModel.loadFolders();
   }
 
   @override
   void dispose() {
     _appModel.folderNotifier.removeListener(_infoChange);
+    _appModel.lockNotifier.removeListener(_lockChange);
     super.dispose();
   }
 
@@ -138,10 +140,10 @@ class _HomeSideState extends State<HomeSide> {
       onSelected: (index) {
         switch(index) {
           case 0:
-            Navigator.pushNamed(context, XRoute.lock);
+            _appModel.lockNotice();
             break;
           case 1:
-            RestartWidget.restartApp(context);
+            _appModel.restartApp(context);
             break;
         }
       },
@@ -302,6 +304,13 @@ class _HomeSideState extends State<HomeSide> {
       _sideItems.clear();
       _sideItems.addAll(sideItems);
     });
+  }
+
+  /// 锁屏修改
+  Future<void> _lockChange() async {
+    if (_appModel.lockNotifier.value) {
+      Navigator.pushNamed(context, XRoute.lock);
+    }
   }
 
   /// 创建SideItem

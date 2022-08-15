@@ -50,6 +50,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "changeNotes": MessageLookupByLibrary.simpleMessage("Change Notes"),
         "changePassword":
             MessageLookupByLibrary.simpleMessage("Change Password"),
+        "clearClipboard":
+            MessageLookupByLibrary.simpleMessage("Clear Clipboard"),
+        "clearClipboardTips": MessageLookupByLibrary.simpleMessage(
+            "Automatically clear value copied to clipboard！"),
         "clearCompleted":
             MessageLookupByLibrary.simpleMessage("Clear Completed!"),
         "clearData": MessageLookupByLibrary.simpleMessage("Clear Data"),
@@ -96,6 +100,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Forget Password?"),
         "handlerError":
             MessageLookupByLibrary.simpleMessage("Handling exceptions!"),
+        "hour": MessageLookupByLibrary.simpleMessage("Hour"),
         "import": MessageLookupByLibrary.simpleMessage("Import"),
         "importAccount": MessageLookupByLibrary.simpleMessage("Import Account"),
         "importCompleted":
@@ -110,10 +115,15 @@ class MessageLookup extends MessageLookupByLibrary {
             "Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License."),
         "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "lock": MessageLookupByLibrary.simpleMessage("Lock"),
+        "lockApp": MessageLookupByLibrary.simpleMessage("Lock App"),
+        "lockAppTips": MessageLookupByLibrary.simpleMessage(
+            "Automatically lock apps over time！"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "logout": MessageLookupByLibrary.simpleMessage("Logout"),
         "mailX": m0,
+        "minute": MessageLookupByLibrary.simpleMessage("Minute"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
+        "never": MessageLookupByLibrary.simpleMessage("Never"),
         "newAccount": MessageLookupByLibrary.simpleMessage("New Account"),
         "newPassword": MessageLookupByLibrary.simpleMessage("New Password"),
         "noFolder": MessageLookupByLibrary.simpleMessage("No Folder"),
@@ -133,6 +143,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "sayWhat": MessageLookupByLibrary.simpleMessage("say what!"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "second": MessageLookupByLibrary.simpleMessage("Second"),
         "security": MessageLookupByLibrary.simpleMessage("Security"),
         "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "simplifiedChinese": MessageLookupByLibrary.simpleMessage("简体中文"),

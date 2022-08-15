@@ -1040,6 +1040,86 @@ class S {
     );
   }
 
+  /// `Second`
+  String get second {
+    return Intl.message(
+      'Second',
+      name: 'second',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Minute`
+  String get minute {
+    return Intl.message(
+      'Minute',
+      name: 'minute',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hour`
+  String get hour {
+    return Intl.message(
+      'Hour',
+      name: 'hour',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Never`
+  String get never {
+    return Intl.message(
+      'Never',
+      name: 'never',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lock App`
+  String get lockApp {
+    return Intl.message(
+      'Lock App',
+      name: 'lockApp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Automatically lock apps over time！`
+  String get lockAppTips {
+    return Intl.message(
+      'Automatically lock apps over time！',
+      name: 'lockAppTips',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear Clipboard`
+  String get clearClipboard {
+    return Intl.message(
+      'Clear Clipboard',
+      name: 'clearClipboard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Automatically clear value copied to clipboard！`
+  String get clearClipboardTips {
+    return Intl.message(
+      'Automatically clear value copied to clipboard！',
+      name: 'clearClipboardTips',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Tip: No need to enter when there is no password！`
   String get importTips {
     return Intl.message(

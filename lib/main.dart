@@ -84,7 +84,7 @@ class PolarBearX extends StatelessWidget {
 
   /// 获取主题模式
   ThemeMode _getThemeMode() {
-    final mode = appSetting.getDarkMode();
+    final mode = appSetting.getDarkMode(ThemeItem.system);
     return ThemeItem.light == mode ? ThemeMode.light : ThemeItem.dark == mode ? ThemeMode.dark : ThemeMode.system;
   }
 }

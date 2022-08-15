@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,9 +35,10 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-
     context.read<AppModel>().initialize().then((value) {
-      Navigator.pushReplacementNamed(context, XRoute.home);
+      Navigator.pushReplacementNamed(
+          context, kDebugMode ? XRoute.home : XRoute.launcher
+      );
     });
   }
 

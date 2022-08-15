@@ -98,6 +98,14 @@
   "unlock": "Unlock",
   "lock": "Lock",
   "toolbox": "Toolbox",
+  "second": "Second",
+  "minute": "Minute",
+  "hour": "Hour",
+  "never": "Never",
+  "lockApp": "Lock App",
+  "lockAppTips": "Automatically lock apps over time！",
+  "clearClipboard": "Clear Clipboard",
+  "clearClipboardTips": "Automatically clear value copied to clipboard！",
   "importTips": "Tip: No need to enter when there is no password！",
   "storage": "Storage"
 }

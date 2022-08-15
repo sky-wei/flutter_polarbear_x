@@ -16,11 +16,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
-import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:provider/provider.dart';
 
 import '../../generated/l10n.dart';
-import '../../main.dart';
 import '../../model/app_model.dart';
 import '../../util/size_box_util.dart';
 
@@ -46,12 +44,14 @@ class PreferenceWidgetState extends State<PreferenceWidget> {
     LocaleItem(S.current.simplifiedChinese, const Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN')),
   ];
 
+  late AppModel _appModel;
   late AppSetting _appSetting;
 
   @override
   void initState() {
     super.initState();
-    _appSetting = context.read<AppModel>().getAppSetting();
+    _appModel = context.read<AppModel>();
+    _appSetting = _appModel.getAppSetting();
   }
 
   @override
@@ -86,7 +86,7 @@ class PreferenceWidgetState extends State<PreferenceWidget> {
                 color: Theme.of(context).colorScheme.onSurface
             ),
             items: _buildThemeMenuItem(_modeItems),
-            onChanged: (value) => setTheme(value!),
+            onChanged: (value) => _setTheme(value!),
           ),
         ),
         XBox.vertical30,
@@ -109,7 +109,7 @@ class PreferenceWidgetState extends State<PreferenceWidget> {
                 color: Theme.of(context).colorScheme.onSurface
             ),
             items: _buildLocalMenuItem(_localItems),
-            onChanged: (value) => setLocale(value!),
+            onChanged: (value) => _setLocale(value!),
           )
         )
       ],
@@ -117,36 +117,35 @@ class PreferenceWidgetState extends State<PreferenceWidget> {
   }
 
   ThemeItem _getCurTheme() {
-    final mode = _appSetting.getDarkMode();
-    return _modeItems.firstWhere((element) => element.value == mode);
+    final mode = _appSetting.getDarkMode(ThemeItem.system);
+    return _modeItems.firstWhere((theme) {
+      return theme.value == mode;
+    }, orElse: () => _modeItems[0]);
   }
   
-  void setTheme(ThemeItem theme) {
-
-    if (theme == _getCurTheme()) {
-      return;
+  void _setTheme(ThemeItem theme) {
+    if (theme != _getCurTheme()) {
+      _appSetting.setDarkMode(theme.value).then((value) {
+        _appModel.restartApp(context);
+      });
     }
-
-    _appSetting.setDarkMode(theme.value).then((value) {
-      RestartWidget.restartApp(context);
-    });
   }
 
   LocaleItem _getCurLocale() {
-    final locale = _appSetting.getLocale();
-    return _localItems.firstWhere((element) => element.locale == locale, orElse: () {
-      return _localItems[0];
-    });
+    final curLocale = _appSetting.getLocale();
+    return _localItems.firstWhere((locale) {
+      return locale.value == curLocale;
+    }, orElse: () => _localItems[0]);
   }
 
-  void setLocale(LocaleItem locale) {
+  void _setLocale(LocaleItem locale) {
 
     if (locale == _getCurLocale()) {
       return;
     }
 
-    _appSetting.setLocale(locale.locale).then((value) {
-      RestartWidget.restartApp(context);
+    _appSetting.setLocale(locale.value).then((value) {
+      _appModel.restartApp(context);
     });
   }
 
@@ -196,9 +195,9 @@ class ThemeItem {
 class LocaleItem {
 
   final String name;
-  final Locale? locale;
+  final Locale? value;
 
-  LocaleItem(this.name, this.locale);
+  LocaleItem(this.name, this.value);
 
   @override
   bool operator ==(Object other) =>
@@ -206,9 +205,9 @@ class LocaleItem {
       other is LocaleItem &&
           runtimeType == other.runtimeType &&
           name == other.name &&
-          locale == other.locale;
+          value == other.value;
 
   @override
-  int get hashCode => name.hashCode ^ locale.hashCode;
+  int get hashCode => name.hashCode ^ value.hashCode;
 }
 
