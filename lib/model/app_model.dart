@@ -21,12 +21,13 @@ import 'dart:io';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/data/repository/encrypt_store.dart';
 import 'package:flutter_polarbear_x/model/side_item.dart';
+import 'package:flutter_polarbear_x/page/setting/security_widget.dart';
 import 'package:flutter_polarbear_x/util/easy_notifier.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../data/data_exception.dart';
@@ -63,6 +64,8 @@ class AppModel extends AbstractModel {
   late Timer _timer;
   int _curTick = 0;
   int _lastMonitorTime = 0;
+  int _lastCopyTime = 0;
+  String _lastCopyValue = "";
 
   AdminItem _admin = kDebugMode ? AdminItem(id: 1, name: 'sky', password: '123456') : AdminItem(name: '', password: '');
 
@@ -598,6 +601,27 @@ class AppModel extends AbstractModel {
     RestartWidget.restartApp(context);
   }
 
+  /// 复制内容到剪贴板
+  Future<void> copyToClipboard(String value) async {
+    _lastCopyTime = _curTick;
+    _lastCopyValue = value;
+    return await Clipboard.setData(
+        ClipboardData(text:value)
+    );
+  }
+
+  /// 清除上一次剪贴板的内容
+  Future<void> clearClipboard() async {
+    final data = await Clipboard.getData('text/plain');
+    if (data != null && data.text == _lastCopyValue) {
+      _lastCopyTime = 0;
+      _lastCopyValue = '';
+      await Clipboard.setData(
+        const ClipboardData(text: '')
+      );
+    }
+  }
+
   /// 过滤账号
   List<AccountItem> _filterAccount({
     required List<AccountItem> accounts,
@@ -644,18 +668,42 @@ class AppModel extends AbstractModel {
   /// 时间处理
   void _timeHandler(Timer timer) {
     _curTick = timer.tick;
+    _handlerLockApp();
+    _handlerClipboard();
+  }
+
+  /// 处理锁定App
+  void _handlerLockApp() {
 
     if (!isLogin || lockNotifier.value) {
       // 没有登录或锁屏不需要处理
-      XLog.d('>>>>>>>>>>>>>>> $isLogin   ${lockNotifier.value}');
       return;
     }
 
-    // XLog.d('>>>>>>>>>>>>>>>>> $_curTick  $_lastMonitorTime');
-    //
-    // if (_curTick - _lastMonitorTime >= 60) {
-    //   XLog.d('>>>>>>>>>>>>>>>>> 超时了!~');
-    // }
+    final timeout = _appSetting.getLockTimeBySecond(
+        TimeItem.defaultLock
+    );
+
+    if (timeout > 0 && _curTick - _lastMonitorTime >= timeout) {
+      lockNotice();
+    }
+  }
+
+  /// 处理剪贴板
+  void _handlerClipboard() {
+
+    if (_lastCopyTime <= 0) {
+      // 没有使用不需要处理
+      return;
+    }
+
+    final timeout = _appSetting.getClipboardTimeBySecond(
+        TimeItem.defaultLock
+    );
+
+    if (timeout > 0 && _curTick - _lastCopyTime >= timeout) {
+      clearClipboard();
+    }
   }
 
   /// 释放定时器
@@ -663,5 +711,7 @@ class AppModel extends AbstractModel {
     if (_timer.isActive) _timer.cancel();
     _curTick = 0;
     _lastMonitorTime = 0;
+    _lastCopyTime = 0;
+    _lastCopyValue = '';
   }
 }

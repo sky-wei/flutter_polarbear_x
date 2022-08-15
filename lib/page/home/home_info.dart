@@ -567,9 +567,7 @@ class HomeInfoState extends State<HomeInfo> {
 
   /// 复制到粘贴板
   void _copyToClipboard(String value) {
-    Clipboard.setData(
-      ClipboardData(text:value)
-    ).then((value) {
+    _appModel.copyToClipboard(value).then((value) {
       MessageUtil.showMessage(context, S.of(context).copyToClipboard);
     });
   }

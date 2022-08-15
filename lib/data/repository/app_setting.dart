@@ -18,50 +18,63 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/page/setting/security_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../page/setting/preference_widget.dart';
-
 class AppSetting {
 
   final SharedPreferences _preferences;
 
   AppSetting(this._preferences);
 
+  /// 获取主题模式
   int getDarkMode(int defaultValue) {
     return _preferences.getInt('dark_mode') ?? defaultValue;
   }
 
+  /// 设置主题模式
   Future<bool> setDarkMode(int mode) async {
     return await _preferences.setInt('dark_mode', mode);
   }
 
-  int getLockTime(int defaultValue) {
-    return _preferences.getInt('lock_time') ?? defaultValue;
+  /// 获取锁定时间信息
+  TimeItem getLockTime(TimeItem defaultValue) {
+    final value = _preferences.getInt('lock_time') ?? defaultValue.value;
+    final type = _preferences.getInt('lock_time_type') ?? defaultValue.type;
+    return TimeItem(value: value, type: type);
   }
 
-  int getLockTimeType(int defaultValue) {
-    return _preferences.getInt('lock_time_type') ?? defaultValue;
+  /// 获取锁定时间信息
+  int getLockTimeBySecond(TimeItem defaultValue) {
+    return _preferences.getInt('lock_time_second') ?? defaultValue.secondValue;
   }
 
+  /// 设置锁定时间信息
   Future<bool> setLockTime(TimeItem time) async {
     await _preferences.setInt('lock_time', time.value);
+    await _preferences.setInt('lock_time_second', time.secondValue);
     await _preferences.setInt('lock_time_type', time.type);
     return true;
   }
 
-  int getClipboardTime(int defaultValue) {
-    return _preferences.getInt('clipboard_time') ?? defaultValue;
+  /// 获取剪贴板时间信息
+  TimeItem getClipboardTime(TimeItem defaultValue) {
+    final value = _preferences.getInt('clipboard_time') ?? defaultValue.value;
+    final type = _preferences.getInt('clipboard_time_type') ?? defaultValue.type;
+    return TimeItem(value: value, type: type);
   }
 
-  int getClipboardTimeType(int defaultValue) {
-    return _preferences.getInt('clipboard_time_type') ?? defaultValue;
+  /// 获取剪贴板时间信息
+  int getClipboardTimeBySecond(TimeItem defaultValue) {
+    return _preferences.getInt('clipboard_time_second') ?? defaultValue.secondValue;
   }
 
+  /// 设置剪贴板时间信息
   Future<bool> setClipboardTime(TimeItem time) async {
     await _preferences.setInt('clipboard_time', time.value);
+    await _preferences.setInt('clipboard_time_second', time.secondValue);
     await _preferences.setInt('clipboard_time_type', time.type);
     return true;
   }
 
+  /// 获取Locale
   Locale? getLocale() {
     final language = _preferences.getString('language');
     if (language != null && language.isNotEmpty) {
@@ -77,6 +90,7 @@ class AppSetting {
     return null;
   }
 
+  /// 设置Locale
   Future<bool> setLocale(Locale? locale) async {
     if (locale == null) {
       return _preferences.setString('language', '');

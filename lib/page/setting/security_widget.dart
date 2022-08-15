@@ -36,23 +36,23 @@ class SecurityWidgetState extends State<SecurityWidget> {
     TimeItem(value: 5),
     TimeItem(value: 10),
     TimeItem(value: 15),
-    TimeItem(value: 30),
+    TimeItem.defaultLock,
     TimeItem(value: 1, type: TimeItem.hour),
-    TimeItem(value: -1),
+    TimeItem(value: 0),
   ];
 
   final List<TimeItem> _clipboardTimes = [
     TimeItem(value: 10, type: TimeItem.second),
     TimeItem(value: 20, type: TimeItem.second),
-    TimeItem(value: 30, type: TimeItem.second),
+    TimeItem.defaultClipboard,
     TimeItem(value: 1),
     TimeItem(value: 2),
     TimeItem(value: 5),
-    TimeItem(value: -1),
+    TimeItem(value: 0),
   ];
 
-  TimeItem get defaultLock => _lockTimes[3];
-  TimeItem get defaultClipboard => _clipboardTimes[2];
+  TimeItem get defaultLock => TimeItem.defaultLock;
+  TimeItem get defaultClipboard => TimeItem.defaultClipboard;
 
   late AppModel _appModel;
   late AppSetting _appSetting;
@@ -143,10 +143,9 @@ class SecurityWidgetState extends State<SecurityWidget> {
   }
 
   TimeItem _getLockTime() {
-    final value = _appSetting.getLockTime(defaultLock.value);
-    final type = _appSetting.getLockTimeType(defaultLock.type);
+    final timeItem = _appSetting.getLockTime(defaultLock);
     return _lockTimes.firstWhere((time) {
-      return time.value == value && time.type == type;
+      return time == timeItem;
     }, orElse: () => defaultLock);
   }
 
@@ -159,10 +158,9 @@ class SecurityWidgetState extends State<SecurityWidget> {
   }
 
   TimeItem _getClipboardTime() {
-    final value = _appSetting.getClipboardTime(defaultClipboard.value);
-    final type = _appSetting.getClipboardTimeType(defaultClipboard.type);
-    return _lockTimes.firstWhere((time) {
-      return time.value == value && time.type == type;
+    final timeItem = _appSetting.getClipboardTime(defaultClipboard);
+    return _clipboardTimes.firstWhere((time) {
+      return time == timeItem;
     }, orElse: () => defaultClipboard);
   }
 
@@ -195,17 +193,21 @@ class SecurityWidgetState extends State<SecurityWidget> {
 
 class TimeItem {
 
+  static TimeItem defaultLock = TimeItem(value: 30);
+  static TimeItem defaultClipboard = TimeItem(value: 30, type: second);
+
   static const int second = 0;
   static const int minute = 1;
   static const int hour = 2;
 
   final int value;
   final int type;
+  final int secondValue;
 
   TimeItem({
     required this.value,
     this.type = minute
-  });
+  }): secondValue = type == hour ? value * 60 * 60 : type == minute ? value * 60 : value;
 
   @override
   bool operator ==(Object other) =>
@@ -213,13 +215,14 @@ class TimeItem {
       other is TimeItem &&
           runtimeType == other.runtimeType &&
           value == other.value &&
-          type == other.type;
+          type == other.type &&
+          secondValue == other.secondValue;
 
   @override
-  int get hashCode => value.hashCode ^ type.hashCode;
+  int get hashCode => value.hashCode ^ type.hashCode ^ secondValue.hashCode;
 
   @override
   String toString() {
-    return 'TimeItem{value: $value, type: $type}';
+    return 'TimeItem{value: $value, type: $type, secondValue: $secondValue}';
   }
 }
