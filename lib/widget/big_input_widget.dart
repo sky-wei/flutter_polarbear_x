@@ -33,6 +33,7 @@ class BigInputWidget extends StatelessWidget {
   final int maxLines;
   final Size? size;
   final Radius? radius;
+  final FocusNode? focusNode;
 
   const BigInputWidget({
     Key? key,
@@ -47,7 +48,8 @@ class BigInputWidget extends StatelessWidget {
     this.onFieldSubmitted,
     this.maxLines = 1,
     this.size,
-    this.radius
+    this.radius,
+    this.focusNode
   }) : super(key: key);
 
   @override
@@ -63,6 +65,7 @@ class BigInputWidget extends StatelessWidget {
         controller: controller,
         autofocus: autofocus,
         obscureText: obscureText,
+        focusNode: focusNode,
         decoration: InputDecoration(
           prefixIcon: Padding(
             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),

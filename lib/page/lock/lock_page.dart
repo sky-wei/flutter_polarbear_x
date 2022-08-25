@@ -46,6 +46,8 @@ class _LockPageState extends State<LockPage> {
   bool _enableView = false;
   final TextEditingController _passwordController = TextEditingController();
 
+  final FocusNode _passwordFocusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -127,6 +129,8 @@ class _LockPageState extends State<LockPage> {
                 onFieldSubmitted: (value) {
                   if (_enableView) _unlock();
                 },
+                autofocus: true,
+                focusNode: _passwordFocusNode,
               ),
               XBox.vertical40,
               BigButtonWidget(
@@ -168,6 +172,7 @@ class _LockPageState extends State<LockPage> {
     ).then((value) {
       Navigator.pop(context);
     }).onError((error, stackTrace) {
+      _passwordFocusNode.requestFocus();
       MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
     });
   }

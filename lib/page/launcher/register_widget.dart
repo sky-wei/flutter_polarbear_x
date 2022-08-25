@@ -44,6 +44,11 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _confirmPasswordFocusNode = FocusNode();
+  FocusNode? _lastFocusNode;
+
   @override
   void initState() {
     super.initState();
@@ -52,10 +57,12 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
         vsync: this
     );
     _animationController.forward();
-
     _nameController.addListener(_refreshViewState);
     _passwordController.addListener(_refreshViewState);
     _confirmPasswordController.addListener(_refreshViewState);
+    _nameFocusNode.addListener(_focusEvent);
+    _passwordFocusNode.addListener(_focusEvent);
+    _confirmPasswordFocusNode.addListener(_focusEvent);
   }
 
   @override
@@ -63,6 +70,9 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
     _confirmPasswordController.removeListener(_refreshViewState);
     _passwordController.removeListener(_refreshViewState);
     _nameController.removeListener(_refreshViewState);
+    _nameFocusNode.removeListener(_focusEvent);
+    _passwordFocusNode.removeListener(_focusEvent);
+    _confirmPasswordFocusNode.removeListener(_focusEvent);
     _animationController.dispose();
     super.dispose();
   }
@@ -78,6 +88,8 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
             iconName: 'ic_user.svg',
             labelText: S.of(context).name,
             textInputAction: TextInputAction.next,
+            focusNode: _nameFocusNode,
+            autofocus: true,
           ),
           XBox.vertical15,
           BigInputWidget(
@@ -86,6 +98,7 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
             labelText: S.of(context).password,
             obscureText: true,
             textInputAction: TextInputAction.next,
+            focusNode: _passwordFocusNode,
           ),
           XBox.vertical15,
           BigInputWidget(
@@ -97,6 +110,7 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
             onFieldSubmitted: (value) {
               if (_enableView) _register();
             },
+            focusNode: _confirmPasswordFocusNode,
           ),
           XBox.vertical40,
           BigButtonWidget(
@@ -117,6 +131,17 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
     _setViewState(name.isNotEmpty && password.isNotEmpty && confirmPassword.isNotEmpty);
   }
 
+  /// 焦点事件
+  void _focusEvent() {
+    if (_nameFocusNode.hasFocus) {
+      _lastFocusNode = _nameFocusNode;
+    } else if (_passwordFocusNode.hasFocus) {
+      _lastFocusNode = _passwordFocusNode;
+    } else if (_confirmPasswordFocusNode.hasFocus) {
+      _lastFocusNode = _confirmPasswordFocusNode;
+    }
+  }
+
   /// 设置状态
   void _setViewState(bool enable) {
     if (_enableView != enable) {
@@ -132,6 +157,7 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
     var confirmPassword = _confirmPasswordController.text;
 
     if (password != confirmPassword) {
+      _lastFocusNode?.requestFocus();
       MessageUtil.showMessage(context, S.of(context).passwordNotMatch);
       return;
     }
@@ -143,6 +169,7 @@ class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProvid
     ).then((value) {
       Navigator.pushReplacementNamed(context, XRoute.home);
     }).onError((error, stackTrace) {
+      _lastFocusNode?.requestFocus();
       MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
     });
   }

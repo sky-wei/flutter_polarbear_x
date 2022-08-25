@@ -43,6 +43,10 @@ class _LoginWidgetState extends State<LoginWidget> with SingleTickerProviderStat
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  FocusNode? _lastFocusNode;
+
   @override
   void initState() {
     super.initState();
@@ -53,12 +57,16 @@ class _LoginWidgetState extends State<LoginWidget> with SingleTickerProviderStat
     _animationController.forward();
     _nameController.addListener(_refreshViewState);
     _passwordController.addListener(_refreshViewState);
+    _nameFocusNode.addListener(_focusEvent);
+    _passwordFocusNode.addListener(_focusEvent);
   }
 
   @override
   void dispose() {
     _passwordController.removeListener(_refreshViewState);
     _nameController.removeListener(_refreshViewState);
+    _nameFocusNode.removeListener(_focusEvent);
+    _passwordFocusNode.removeListener(_focusEvent);
     _animationController.dispose();
     super.dispose();
   }
@@ -74,6 +82,8 @@ class _LoginWidgetState extends State<LoginWidget> with SingleTickerProviderStat
             iconName: 'ic_user.svg',
             labelText: S.of(context).name,
             textInputAction: TextInputAction.next,
+            focusNode: _nameFocusNode,
+            autofocus: true,
           ),
           XBox.vertical15,
           BigInputWidget(
@@ -85,6 +95,7 @@ class _LoginWidgetState extends State<LoginWidget> with SingleTickerProviderStat
             onFieldSubmitted: (value) {
               if (_enableView) _login();
             },
+            focusNode: _passwordFocusNode,
           ),
           XBox.vertical40,
           BigButtonWidget(
@@ -108,6 +119,15 @@ class _LoginWidgetState extends State<LoginWidget> with SingleTickerProviderStat
     final name = _nameController.text;
     final password = _passwordController.text;
     _setViewState(name.isNotEmpty && password.isNotEmpty);
+  }
+
+  /// 焦点事件
+  void _focusEvent() {
+    if (_nameFocusNode.hasFocus) {
+      _lastFocusNode = _nameFocusNode;
+    } else if (_passwordFocusNode.hasFocus) {
+      _lastFocusNode = _passwordFocusNode;
+    }
   }
 
   /// 设置状态
@@ -148,6 +168,7 @@ class _LoginWidgetState extends State<LoginWidget> with SingleTickerProviderStat
     ).then((value) {
       Navigator.pushReplacementNamed(context, XRoute.home);
     }).onError((error, stackTrace) {
+      _lastFocusNode?.requestFocus();
       MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
     });
   }
