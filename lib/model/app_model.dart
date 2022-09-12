@@ -37,8 +37,8 @@ import '../data/item/sort_item.dart';
 import '../data/objectbox.dart';
 import '../data/repository/app_repository.dart';
 import '../generated/l10n.dart';
-import '../main.dart';
 import '../theme/color.dart';
+import '../widget/restart_widget.dart';
 
 
 typedef AccountFilter = bool Function(AccountItem account);

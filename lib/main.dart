@@ -2,6 +2,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
+import 'package:flutter_polarbear_x/mobile/polarbear_mobile.dart';
 import 'package:flutter_polarbear_x/page/home/home_page.dart';
 import 'package:flutter_polarbear_x/page/launcher/launcher_page.dart';
 import 'package:flutter_polarbear_x/page/lock/lock_page.dart';
@@ -9,9 +10,11 @@ import 'package:flutter_polarbear_x/page/setting/preference_widget.dart';
 import 'package:flutter_polarbear_x/page/splash/splash_page.dart';
 import 'package:flutter_polarbear_x/route.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
+import 'package:flutter_polarbear_x/util/app_navigator_observer.dart';
 import 'package:flutter_polarbear_x/util/logger.dart';
+import 'package:flutter_polarbear_x/util/platform_util.dart';
 import 'package:flutter_polarbear_x/widget/monitor_widget.dart';
+import 'package:flutter_polarbear_x/widget/restart_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,18 +28,22 @@ void main() {
     );
     runApp(
       RestartWidget(
-        child: PolarBearX(appSetting: appSetting)
+        child: PlatformUtil.isPC() ?
+        PolarBearX(appSetting: appSetting) :
+        PolarBearMobileX(appSetting: appSetting)
       )
     );
   });
-  doWhenWindowReady(() {
-    final win = appWindow;
-    win.minSize = const Size(1300, 800);
-    win.size = const Size(1500, 1000);
-    win.alignment = Alignment.center;
-    win.title = 'PasswordX';
-    win.show();
-  });
+  if (PlatformUtil.isPC()) {
+    doWhenWindowReady(() {
+      final win = appWindow;
+      win.minSize = const Size(1300, 800);
+      win.size = const Size(1500, 1000);
+      win.alignment = Alignment.center;
+      win.title = 'PasswordX';
+      win.show();
+    });
+  }
 }
 
 class PolarBearX extends StatelessWidget {
@@ -77,7 +84,7 @@ class PolarBearX extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate
         ],
         supportedLocales: S.delegate.supportedLocales,
-        navigatorObservers: [_MyNavigatorObserver()],
+        navigatorObservers: [AppNavigatorObserver()],
       ),
     );
   }
@@ -86,64 +93,6 @@ class PolarBearX extends StatelessWidget {
   ThemeMode _getThemeMode() {
     final mode = appSetting.getDarkMode(ThemeItem.system);
     return ThemeItem.light == mode ? ThemeMode.light : ThemeItem.dark == mode ? ThemeMode.dark : ThemeMode.system;
-  }
-}
-
-
-class RestartWidget extends StatefulWidget {
-
-  final Widget child;
-
-  const RestartWidget({
-    Key? key,
-    required this.child
-  }) : super(key: key);
-
-  static void restartApp(BuildContext context) {
-    //查找顶层_RestartWidgetState并重启
-    context.findAncestorStateOfType<_RestartState>()?.restartApp();
-  }
-
-  @override
-  State<StatefulWidget> createState() => _RestartState();
-}
-
-
-class _RestartState extends State<RestartWidget> {
-
-  Key key = UniqueKey();
-
-  void restartApp() {
-    setState(() {
-      key = UniqueKey();//重新生成key导致控件重新build
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return KeyedSubtree(
-      key: key,
-      child: widget.child,
-    );
-  }
-}
-
-
-class _MyNavigatorObserver extends NavigatorObserver {
-
-  @override
-  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    XLog.d('>>>>>>>>>>>> didPush $route');
-  }
-
-  @override
-  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    XLog.d('>>>>>>>>>>>> didPop $route');
-  }
-
-  @override
-  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    XLog.d('>>>>>>>>>>>> didRemove $route');
   }
 }
 
