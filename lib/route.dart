@@ -25,5 +25,9 @@ class XRoute {
   static const String home = "/home";
 
   static const String lock = "/lock";
+
+  static const String login = "/login";
+
+  static const String register = "/register";
 }
 

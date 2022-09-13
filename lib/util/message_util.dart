@@ -15,6 +15,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/util/platform_util.dart';
 import 'package:flutter_toastr/flutter_toastr.dart';
 
 import '../generated/l10n.dart';
@@ -24,12 +25,14 @@ class MessageUtil {
   MessageUtil._();
 
   static showMessage(BuildContext context, String msg) {
+    final margin = PlatformUtil.isMobile() ? null : const EdgeInsets.fromLTRB(300, 10, 300, 10);
+    final padding = PlatformUtil.isMobile() ? const EdgeInsets.only(left: 15, top: 5, bottom: 5) : const EdgeInsets.all(20);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
         behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.fromLTRB(300, 10, 300, 10),
-        padding: const EdgeInsets.all(20),
+        margin: margin,
+        padding: padding,
         action: SnackBarAction(
           label: S.of(context).close,
           onPressed: () { },

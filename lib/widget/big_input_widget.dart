@@ -81,6 +81,7 @@ class BigInputWidget extends StatelessWidget {
               fontSize: 15
           ),
           hintText: labelText,
+          contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(radius)
           ),

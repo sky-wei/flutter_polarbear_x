@@ -1,5 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/mobile/polarbear_mobile.dart';
@@ -43,6 +44,13 @@ void main() {
       win.title = 'PasswordX';
       win.show();
     });
+  }
+  if (PlatformUtil.isMobile()) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle.light.copyWith(
+        statusBarColor: Colors.transparent,
+      ),
+    );
   }
 }
 

@@ -16,6 +16,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 import '../../../generated/l10n.dart';
@@ -37,7 +38,7 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     context.read<AppModel>().initialize().then((value) {
       Navigator.pushReplacementNamed(
-          context, XRoute.launcher // kDebugMode ? XRoute.home : XRoute.launcher
+          context, kDebugMode ? XRoute.login : XRoute.login
       );
     });
   }
@@ -45,6 +46,10 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).settingsColor,
+        elevation: 0,
+      ),
       body: Center(
         child: Text(
           S.of(context).loading,
@@ -53,6 +58,7 @@ class _SplashPageState extends State<SplashPage> {
           ),
         ),
       ),
+      backgroundColor: Theme.of(context).settingsColor,
     );
   }
 }

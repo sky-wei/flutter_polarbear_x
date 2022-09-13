@@ -26,7 +26,8 @@ import '../route.dart';
 import '../theme/theme.dart';
 import '../util/app_navigator_observer.dart';
 import '../widget/monitor_widget.dart';
-import 'page/launcher/launcher_page.dart';
+import 'page/login/login_page.dart';
+import 'page/register/register_page.dart';
 import 'page/splash/splash_page.dart';
 
 class PolarBearMobileX extends StatelessWidget {
@@ -53,7 +54,8 @@ class PolarBearMobileX extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routes: {
           XRoute.splash: (context) => const SplashPage(),
-          XRoute.launcher: (context) => const LauncherPage(),
+          XRoute.login: (context) => const LoginPage(),
+          XRoute.register: (context) => const RegisterPage(),
           // XRoute.home: (context) => const HomePage(),
           // XRoute.lock: (context) => const LockPage(),
         },
