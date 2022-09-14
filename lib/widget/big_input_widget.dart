@@ -15,6 +15,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/util/platform_util.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../theme/color.dart';
@@ -23,6 +24,7 @@ class BigInputWidget extends StatelessWidget {
 
   final TextEditingController? controller;
   final String iconName;
+  final EdgeInsetsGeometry? iconPadding;
   final String? labelText;
   final bool autofocus;
   final bool obscureText;
@@ -34,11 +36,14 @@ class BigInputWidget extends StatelessWidget {
   final Size? size;
   final Radius? radius;
   final FocusNode? focusNode;
+  final String? actionIconName;
+  final VoidCallback? actionPressed;
 
   const BigInputWidget({
     Key? key,
     this.controller,
     required this.iconName,
+    this.iconPadding,
     this.labelText,
     this.autofocus = false,
     this.obscureText = false,
@@ -49,7 +54,9 @@ class BigInputWidget extends StatelessWidget {
     this.maxLines = 1,
     this.size,
     this.radius,
-    this.focusNode
+    this.focusNode,
+    this.actionIconName,
+    this.actionPressed
   }) : super(key: key);
 
   @override
@@ -57,6 +64,12 @@ class BigInputWidget extends StatelessWidget {
 
     final size = this.size ?? const Size(double.infinity, 46);
     final radius = this.radius ?? const Radius.circular(6);
+
+    final iconPadding = this.iconPadding ?? (
+        PlatformUtil.isMobile() ?
+        const EdgeInsets.fromLTRB(14, 0, 14, 0) :
+        const EdgeInsets.fromLTRB(10, 0, 10, 0)
+    );
 
     return SizedBox(
       width: size.width,
@@ -68,7 +81,7 @@ class BigInputWidget extends StatelessWidget {
         focusNode: focusNode,
         decoration: InputDecoration(
           prefixIcon: Padding(
-            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+            padding: iconPadding,
             child: SvgPicture.asset(
               'assets/svg/$iconName',
               color: Theme.of(context).hintColor,
@@ -76,6 +89,15 @@ class BigInputWidget extends StatelessWidget {
               height: 22,
             ),
           ),
+          suffixIcon: actionIconName != null ? IconButton(
+            onPressed: actionPressed,
+            icon: SvgPicture.asset(
+              'assets/svg/$actionIconName',
+              color: Theme.of(context).hintColor,
+              width: 22,
+              height: 22,
+            )
+          ) : null,
           // labelText: labelText,
           hintStyle: const TextStyle(
               fontSize: 15
