@@ -16,7 +16,6 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 import '../../../generated/l10n.dart';
@@ -47,7 +46,7 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).settingsColor,
+        backgroundColor: Theme.of(context).dialogBackgroundColor,
         elevation: 0,
       ),
       body: Center(
@@ -58,7 +57,7 @@ class _SplashPageState extends State<SplashPage> {
           ),
         ),
       ),
-      backgroundColor: Theme.of(context).settingsColor,
+      backgroundColor: Theme.of(context).dialogBackgroundColor,
     );
   }
 }

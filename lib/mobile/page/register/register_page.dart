@@ -16,7 +16,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../generated/l10n.dart';
@@ -25,6 +24,7 @@ import '../../../route.dart';
 import '../../../util/error_util.dart';
 import '../../../util/message_util.dart';
 import '../../../util/size_box_util.dart';
+import '../../../widget/action_menu_widget.dart';
 import '../../../widget/big_button_widget.dart';
 import '../../../widget/big_input_widget.dart';
 
@@ -86,18 +86,12 @@ class RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: SvgPicture.asset(
-            'assets/svg/ic_m_close.svg',
-            width: 22,
-            height: 22,
-          )
+        leading: ActionMenuWidget(
+          iconName: 'ic_m_close.svg',
+          onPressed: () => Navigator.pop(context),
         ),
         elevation: 0,
-        backgroundColor: Theme.of(context).settingsColor,
+        backgroundColor: Theme.of(context).dialogBackgroundColor,
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(40, 60, 40, 50),
@@ -158,7 +152,7 @@ class RegisterPageState extends State<RegisterPage> {
           ),
         ],
       ),
-      backgroundColor: Theme.of(context).settingsColor,
+      backgroundColor: Theme.of(context).dialogBackgroundColor,
     );
   }
 

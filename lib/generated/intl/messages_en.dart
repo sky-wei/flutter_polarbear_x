@@ -100,6 +100,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Forget Password?"),
         "handlerError":
             MessageLookupByLibrary.simpleMessage("Handling exceptions!"),
+        "home": MessageLookupByLibrary.simpleMessage("Home"),
         "hour": MessageLookupByLibrary.simpleMessage("Hour"),
         "import": MessageLookupByLibrary.simpleMessage("Import"),
         "importAccount": MessageLookupByLibrary.simpleMessage("Import Account"),
@@ -145,6 +146,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "second": MessageLookupByLibrary.simpleMessage("Second"),
         "security": MessageLookupByLibrary.simpleMessage("Security"),
+        "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "simplifiedChinese": MessageLookupByLibrary.simpleMessage("简体中文"),
         "sourceX": m1,

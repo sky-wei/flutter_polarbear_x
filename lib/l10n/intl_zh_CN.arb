@@ -18,6 +18,7 @@
   "passwordError": "密码错误!",
   "notSupport": "当前暂不支持!",
   "passwordNotMatch": "密码不匹配!",
+  "home": "主页",
   "folders": "文件夹",
   "favorites": "收藏",
   "allItems": "所有项目",
@@ -107,6 +108,7 @@
   "clearClipboard": "清除剪贴板",
   "clearClipboardTips": "自动清除复制到剪贴板的内容！",
   "importTips": "提示：无密码时不需要输入！",
-  "storage": "存储"
+  "storage": "存储",
+  "settings": "设置"
 }
 

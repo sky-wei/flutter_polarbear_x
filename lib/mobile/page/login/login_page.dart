@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../generated/l10n.dart';
@@ -75,18 +75,12 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            SystemNavigator.pop();
-          },
-          icon: SvgPicture.asset(
-            'assets/svg/ic_m_close.svg',
-            width: 22,
-            height: 22,
-          )
+        leading: ActionMenuWidget(
+          iconName: 'ic_m_close.svg',
+          onPressed: () => SystemNavigator.pop(),
         ),
         elevation: 0,
-        backgroundColor: Theme.of(context).settingsColor,
+        backgroundColor: Theme.of(context).dialogBackgroundColor,
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(40, 60, 40, 50),
@@ -146,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ],
       ),
-      backgroundColor: Theme.of(context).settingsColor,
+      backgroundColor: Theme.of(context).dialogBackgroundColor,
     );
   }
 
@@ -242,7 +236,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   /// 注册
-  void _signUp() async {
+  Future<void> _signUp() async {
     final value = await Navigator.push<String>(
       context,
       MobilePageRoute<String>(

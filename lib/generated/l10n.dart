@@ -240,6 +240,16 @@ class S {
     );
   }
 
+  /// `Home`
+  String get home {
+    return Intl.message(
+      'Home',
+      name: 'home',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Folders`
   String get folders {
     return Intl.message(
@@ -1135,6 +1145,16 @@ class S {
     return Intl.message(
       'Storage',
       name: 'storage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Settings`
+  String get settings {
+    return Intl.message(
+      'Settings',
+      name: 'settings',
       desc: '',
       args: [],
     );

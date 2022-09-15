@@ -18,6 +18,7 @@
   "passwordError": "Wrong password!",
   "notSupport": "Not currently supported!",
   "passwordNotMatch": "Password does not match!",
+  "home": "Home",
   "folders": "Folders",
   "favorites": "Favorites",
   "allItems": "All Items",
@@ -107,6 +108,7 @@
   "clearClipboard": "Clear Clipboard",
   "clearClipboardTips": "Automatically clear value copied to clipboard！",
   "importTips": "Tip: No need to enter when there is no password！",
-  "storage": "Storage"
+  "storage": "Storage",
+  "settings": "Settings"
 }
 
