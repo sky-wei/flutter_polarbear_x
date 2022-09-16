@@ -53,7 +53,7 @@ class _SplashPageState extends State<SplashPage> {
         child: Text(
           S.of(context).loading,
           style: const TextStyle(
-            fontSize: 20
+            fontSize: 18
           ),
         ),
       ),

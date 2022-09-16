@@ -15,23 +15,27 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_polarbear_x/data/item/account_item.dart';
+import 'package:flutter_polarbear_x/mobile/page/home/account/edit_account_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/account_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/favorite_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/folder_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/search_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/setting/setting_page.dart';
-import 'package:flutter_polarbear_x/theme/color.dart';
+import 'package:flutter_polarbear_x/route.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
+import '../../../dialog/input_dialog.dart';
 import '../../../generated/l10n.dart';
 import '../../../model/app_model.dart';
 import '../../../route/mobile_page_route.dart';
+import '../../../util/error_util.dart';
+import '../../../util/message_util.dart';
 import '../../../widget/action_menu_widget.dart';
+import '../trash/trash_page.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -126,10 +130,14 @@ class HomePageState extends State<HomePage> {
   List<Widget>? _buildActionMenu(int index) {
     if (index == 0 || index == 1) {
       return [
-        ActionMenuWidget(
-          iconName: 'ic_add.svg',
-          onPressed: () { },
-        )
+        Builder(builder: (context) {
+          return ActionMenuWidget(
+            iconName: 'ic_add.svg',
+            onPressed: () {
+              index == 0 ? _newAccount() : _newFolder(context);
+            },
+          );
+        })
       ];
     } else if (index == 3) {
       return [
@@ -147,38 +155,62 @@ class HomePageState extends State<HomePage> {
   /// 创建 Drawer
   Drawer _buildDrawer() {
     return Drawer(
-      child: ListView(
-        children: [
-          _buildDrawerHeader(),
-          Builder(builder: (context) {
-            return _buildListTile(
-              iconName: 'ic_home.svg',
-              title: S.of(context).home,
-              onTap: () => Scaffold.of(context).closeDrawer(),
-              selected: true
-            );
-          }),
-          Builder(builder: (context) {
-            return _buildListTile(
-              iconName: 'ic_settings.svg',
-              title: S.of(context).settings,
-              onTap: () => _openSetting(context)
-            );
-          }),
-        ],
+      child: Builder(
+        builder: (context) {
+          return SingleChildScrollView(
+            child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildDrawerHeader(),
+                      )
+                    ],
+                  ),
+                  _buildListTile(
+                      iconName: 'ic_home.svg',
+                      title: S.of(context).home,
+                      onTap: () => Scaffold.of(context).closeDrawer(),
+                      selected: true
+                  ),
+                  _buildListTile(
+                      iconName: 'ic_settings.svg',
+                      title: S.of(context).settings,
+                      onTap: () => _openSetting(context)
+                  ),
+                  _buildListTile(
+                      iconName: 'ic_trash.svg',
+                      title: S.of(context).trash,
+                      onTap: () => _openTrash(context)
+                  ),
+                  const Divider(),
+                  _buildListTile(
+                      iconName: 'ic_lock.svg',
+                      title: S.of(context).lock,
+                      onTap: () => _lockApp(context)
+                  ),
+                  _buildListTile(
+                      iconName: 'ic_exit.svg',
+                      title: S.of(context).logout,
+                      onTap: () => _logoutApp(context)
+                  ),
+                ]
+            ),
+          );
+        },
       ),
     );
-  }
-
-  /// 打开设置
-  void _openSetting(BuildContext context) {
-    Scaffold.of(context).closeDrawer();
-    Navigator.push(context, MobilePageRoute(child: const SettingPage()));
   }
 
   /// 创建 DrawerHeader
   DrawerHeader _buildDrawerHeader() {
     return DrawerHeader(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/image/ic_head_background.jpeg'),
+          fit: BoxFit.cover
+        )
+      ),
       child: Column(
         children: [
           XBox.vertical20,
@@ -195,7 +227,7 @@ class HomePageState extends State<HomePage> {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 18,
-              color: Theme.of(context).mainTextColor
+              color: Theme.of(context).settingsColor
             ),
           )
         ],
@@ -206,7 +238,9 @@ class HomePageState extends State<HomePage> {
   /// 创建 ListTile
   ListTile _buildListTile({
     required String iconName,
+    Color? iconColor,
     required String title,
+    Color? titleColor,
     GestureTapCallback? onTap,
     bool selected = false
   }) {
@@ -214,12 +248,12 @@ class HomePageState extends State<HomePage> {
       leading: SvgPicture.asset(
         'assets/svg/$iconName',
         width: 22,
-        color: selected ? Theme.of(context).themeColor : Theme.of(context).iconColor,
+        color: iconColor ?? (selected ? Theme.of(context).themeColor : Theme.of(context).iconColor),
       ),
       title: Text(
         title,
         style: TextStyle(
-          color: selected ? Theme.of(context).themeColor : Theme.of(context).mainTextColor
+          color: titleColor ?? (selected ? Theme.of(context).themeColor : Theme.of(context).mainTextColor)
         ),
       ),
       onTap: onTap,
@@ -281,12 +315,88 @@ class HomePageState extends State<HomePage> {
     return BottomNavigationBarItem(
       icon: SvgPicture.asset(
         'assets/svg/$iconName',
-        width: 22,
-        height: 22,
+        width: 21,
         color: select ? Theme.of(context).themeColor : Theme.of(context).iconColor,
       ),
-      label: label,
+      label: label
     );
+  }
+
+  /// 打开设置
+  void _openSetting(BuildContext context) {
+    Scaffold.of(context).closeDrawer();
+    Navigator.push(context, MobilePageRoute(child: const SettingPage()));
+  }
+
+  /// 打开回收箱
+  void _openTrash(BuildContext context) {
+    Scaffold.of(context).closeDrawer();
+    Navigator.push(context, MobilePageRoute(child: const TrashPage()));
+  }
+
+  /// 锁定应用
+  void _lockApp(BuildContext context) {
+    Scaffold.of(context).closeDrawer();
+  }
+
+  /// 退出应用(回到登录界面)
+  void _logoutApp(BuildContext context) {
+    Scaffold.of(context).closeDrawer();
+    Navigator.pushReplacementNamed(context, XRoute.login);
+  }
+
+  /// 创建账号
+  Future<void> _newAccount() async {
+    
+    final account = AccountItem.formAdmin(
+      _appModel.admin.id
+    );
+
+    Navigator.push<AccountItem>(
+        context, 
+        MobilePageRoute(child: EditAccountPage(account: account))
+    );
+  }
+
+  /// 创建文件夹
+  Future<void> _newFolder(BuildContext context) async {
+
+    // final result = showBottomSheet<String?>(
+    //     context: context,
+    //     backgroundColor: Theme.of(context).dialogBackgroundColor,
+    //     builder: (context) {
+    //       return InputDialog(
+    //         title: S.of(context).editFolder,
+    //         labelText: S.of(context).name,
+    //         value: '',
+    //       );
+    //     }
+    // );
+
+    final result = await showDialog<String>(
+        context: context,
+        builder: (context) {
+          return InputDialog(
+            title: S.of(context).editFolder,
+            labelText: S.of(context).name,
+            value: '',
+          );
+        }
+    );
+
+    if (result == null) {
+      return;
+    }
+
+    if (result.isEmpty) {
+      MessageUtil.showMessage(context, S.of(context).canNotEmpty);
+      return;
+    }
+
+    // 创建文件夹
+    _appModel.createFolder(result).catchError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+    });
   }
 }
 

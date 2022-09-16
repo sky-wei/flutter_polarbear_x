@@ -20,15 +20,15 @@ import 'package:flutter_polarbear_x/theme/theme.dart';
 import '../../../generated/l10n.dart';
 import '../../../widget/action_menu_widget.dart';
 
-class SettingPage extends StatefulWidget {
+class TrashPage extends StatefulWidget {
 
-  const SettingPage({Key? key}) : super(key: key);
+  const TrashPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SettingPageState();
+  State<StatefulWidget> createState() => _TrashPageState();
 }
 
-class _SettingPageState extends State<SettingPage> {
+class _TrashPageState extends State<TrashPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class _SettingPageState extends State<SettingPage> {
           iconName: 'ic_back.svg',
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(S.of(context).settings),
+        title: Text(S.of(context).trash),
         titleTextStyle: TextStyle(
           color: Theme.of(context).mainTextColor,
           fontSize: 18,
@@ -52,3 +52,5 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 }
+
+

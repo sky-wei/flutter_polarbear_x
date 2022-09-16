@@ -15,20 +15,26 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 
-import '../../../generated/l10n.dart';
-import '../../../widget/action_menu_widget.dart';
+import '../../../../generated/l10n.dart';
+import '../../../../widget/action_menu_widget.dart';
 
-class SettingPage extends StatefulWidget {
+class EditAccountPage extends StatefulWidget {
 
-  const SettingPage({Key? key}) : super(key: key);
+  final AccountItem account;
+
+  const EditAccountPage({
+    Key? key,
+    required this.account
+  }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SettingPageState();
+  State<StatefulWidget> createState() => _EditAccountPageState();
 }
 
-class _SettingPageState extends State<SettingPage> {
+class _EditAccountPageState extends State<EditAccountPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +44,7 @@ class _SettingPageState extends State<SettingPage> {
           iconName: 'ic_back.svg',
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(S.of(context).settings),
+        title: Text(S.of(context).editItem),
         titleTextStyle: TextStyle(
           color: Theme.of(context).mainTextColor,
           fontSize: 18,
@@ -52,3 +58,4 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 }
+

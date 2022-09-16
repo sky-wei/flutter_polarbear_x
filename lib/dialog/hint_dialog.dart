@@ -17,6 +17,7 @@
 import 'package:flutter/material.dart';
 
 import '../generated/l10n.dart';
+import '../util/platform_util.dart';
 import '../util/size_box_util.dart';
 
 
@@ -97,11 +98,12 @@ class HintDialog extends StatelessWidget {
     required String text,
     required VoidCallback? onPressed
   }) {
+    final double height = PlatformUtil.isMobile() ? 18 : 26;
     return TextButton(
       onPressed: onPressed,
       child: Text(text),
       style: ButtonStyle(
-          padding: MaterialStateProperty.all(const EdgeInsets.fromLTRB(20, 26, 20, 26))
+          padding: MaterialStateProperty.all(EdgeInsets.fromLTRB(20, height, 20, height))
       ),
     );
   }
