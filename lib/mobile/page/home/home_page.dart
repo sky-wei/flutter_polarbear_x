@@ -16,6 +16,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
+import 'package:flutter_polarbear_x/dialog/mobile_hint_dialog.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/account/edit_account_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/account_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/favorite_page.dart';
@@ -23,12 +24,13 @@ import 'package:flutter_polarbear_x/mobile/page/home/folder_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/search_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/setting/setting_page.dart';
 import 'package:flutter_polarbear_x/route.dart';
+import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../../dialog/input_dialog.dart';
+import '../../../dialog/mobile_input_dialog.dart';
 import '../../../generated/l10n.dart';
 import '../../../model/app_model.dart';
 import '../../../route/mobile_page_route.dart';
@@ -130,14 +132,12 @@ class HomePageState extends State<HomePage> {
   List<Widget>? _buildActionMenu(int index) {
     if (index == 0 || index == 1) {
       return [
-        Builder(builder: (context) {
-          return ActionMenuWidget(
-            iconName: 'ic_add.svg',
-            onPressed: () {
-              index == 0 ? _newAccount() : _newFolder(context);
-            },
-          );
-        })
+        ActionMenuWidget(
+          iconName: 'ic_add.svg',
+          onPressed: () {
+            index == 0 ? _newAccount() : _newFolder();
+          },
+        )
       ];
     } else if (index == 3) {
       return [
@@ -359,24 +359,14 @@ class HomePageState extends State<HomePage> {
   }
 
   /// 创建文件夹
-  Future<void> _newFolder(BuildContext context) async {
+  Future<void> _newFolder() async {
 
-    // final result = showBottomSheet<String?>(
-    //     context: context,
-    //     backgroundColor: Theme.of(context).dialogBackgroundColor,
-    //     builder: (context) {
-    //       return InputDialog(
-    //         title: S.of(context).editFolder,
-    //         labelText: S.of(context).name,
-    //         value: '',
-    //       );
-    //     }
-    // );
-
-    final result = await showDialog<String>(
+    final result = await showModalBottomSheet<String>(
         context: context,
+        isScrollControlled: true,
+        backgroundColor: XColor.transparent,
         builder: (context) {
-          return InputDialog(
+          return MobileInputDialog(
             title: S.of(context).editFolder,
             labelText: S.of(context).name,
             value: '',

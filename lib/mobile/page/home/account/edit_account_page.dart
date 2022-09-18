@@ -52,10 +52,21 @@ class _EditAccountPageState extends State<EditAccountPage> {
         ),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          TextButton(
+            onPressed: () => _saveAccount(),
+            child: Text(S.of(context).save)
+          )
+        ],
         backgroundColor: Theme.of(context).dialogBackgroundColor,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
     );
+  }
+
+  /// 保存
+  void _saveAccount() {
+
   }
 }
 
