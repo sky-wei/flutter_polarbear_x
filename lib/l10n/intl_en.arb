@@ -109,6 +109,7 @@
   "clearClipboardTips": "Automatically clear value copied to clipboard！",
   "importTips": "Tip: No need to enter when there is no password！",
   "storage": "Storage",
-  "settings": "Settings"
+  "settings": "Settings",
+  "exitTips": "Press again to return to desktop！"
 }
 

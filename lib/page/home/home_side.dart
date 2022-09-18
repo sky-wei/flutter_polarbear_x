@@ -31,6 +31,7 @@ import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
+import '../../constant.dart';
 import '../../dialog/input_dialog.dart';
 import '../../generated/l10n.dart';
 import '../../main.dart';
@@ -39,9 +40,6 @@ import '../../util/error_util.dart';
 import '../../util/size_box_util.dart';
 import '../../widget/head_logo_widget.dart';
 import 'home_user_info.dart';
-
-
-typedef ChooseItem<T> = bool Function(T value);
 
 
 class HomeSide extends StatefulWidget {

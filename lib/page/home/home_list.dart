@@ -27,13 +27,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../constant.dart';
 import '../../data/item/sort_item.dart';
 import '../../dialog/hint_dialog.dart';
 import '../../generated/l10n.dart';
 import '../../model/app_model.dart';
 import '../../util/error_util.dart';
 import '../../util/message_util.dart';
-import 'home_side.dart';
+import '../../widget/list_empty_widget.dart';
 
 class HomeList extends StatefulWidget {
 
@@ -498,57 +499,6 @@ class ListSearchWidget extends StatelessWidget {
         textAlignVertical: TextAlignVertical.bottom,
         keyboardType: keyboardType,
         onChanged: onChanged,
-      ),
-    );
-  }
-}
-
-class ListEmptyWidget extends StatelessWidget {
-
-  final String tips;
-  final VoidCallback? onPressed;
-
-  const ListEmptyWidget({
-    Key? key,
-    required this.tips,
-    this.onPressed
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 130),
-        child: Material(
-          child: Ink(
-            decoration: BoxDecoration(
-              color: Theme.of(context).listColor,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(6),
-              onTap: onPressed,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 28, top: 24, right: 28, bottom: 24
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/svg/ic_empty.svg',
-                      color: XColor.themeColor,
-                      width: 46,
-                      height: 46
-                    ),
-                    const SizedBox(height: 20),
-                    Text(tips),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }

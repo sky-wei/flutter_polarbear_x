@@ -76,6 +76,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("没有可列出的项目."),
         "end": MessageLookupByLibrary.simpleMessage("结束"),
         "english": MessageLookupByLibrary.simpleMessage("English"),
+        "exitTips": MessageLookupByLibrary.simpleMessage("再按一次返回桌面！"),
         "export": MessageLookupByLibrary.simpleMessage("导出"),
         "exportAccount": MessageLookupByLibrary.simpleMessage("导出账号"),
         "exportCompleted": MessageLookupByLibrary.simpleMessage("导出完成!"),

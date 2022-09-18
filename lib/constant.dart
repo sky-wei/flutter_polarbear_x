@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+typedef ChooseItem<T> = bool Function(T value);
+
 class XConstant {
 
   static const String versionName = "1.0.2";

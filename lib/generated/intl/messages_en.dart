@@ -85,6 +85,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("There are no items to list."),
         "end": MessageLookupByLibrary.simpleMessage("End"),
         "english": MessageLookupByLibrary.simpleMessage("English"),
+        "exitTips": MessageLookupByLibrary.simpleMessage(
+            "Press again to return to desktop！"),
         "export": MessageLookupByLibrary.simpleMessage("Export"),
         "exportAccount": MessageLookupByLibrary.simpleMessage("Export Account"),
         "exportCompleted":

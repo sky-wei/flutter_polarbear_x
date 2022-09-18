@@ -25,12 +25,11 @@ import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../constant.dart';
 import '../../generated/l10n.dart';
 import '../../model/side_item.dart';
 import '../../util/size_box_util.dart';
 
-
-typedef ChooseItem<T> = bool Function(T value);
 
 class SettingDialog extends StatelessWidget {
 

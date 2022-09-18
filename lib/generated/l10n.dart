@@ -1159,6 +1159,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Press again to return to desktop！`
+  String get exitTips {
+    return Intl.message(
+      'Press again to return to desktop！',
+      name: 'exitTips',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

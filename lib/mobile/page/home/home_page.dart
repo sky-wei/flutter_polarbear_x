@@ -50,6 +50,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
 
   int _currentIndex = 0;
+  DateTime? _lastPressTime;
   final PageController _pageController = PageController();
 
   late AppModel _appModel;
@@ -58,33 +59,45 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _appModel = context.read<AppModel>();
-    // _appModel.addListener(_infoChange);
+    _appModel.lockNotifier.addListener(_lockChange);
   }
 
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
-    // _appModel.removeListener(_infoChange);
+    _appModel.lockNotifier.removeListener(_lockChange);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(_currentIndex),
-      drawer: _buildDrawer(),
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: const [
-          AccountPage(),
-          FolderPage(),
-          FavoritePage(),
-          SearchPage(),
-        ],
+    return WillPopScope(
+      child: Scaffold(
+        appBar: _buildAppBar(_currentIndex),
+        drawer: _buildDrawer(),
+        body: PageView(
+          controller: _pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: const [
+            AccountPage(),
+            FolderPage(),
+            FavoritePage(),
+            SearchPage(),
+          ],
+        ),
+        bottomNavigationBar: _buildBottomNavigationBar(),
+        backgroundColor: Theme.of(context).backgroundColor,
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
-      backgroundColor: Theme.of(context).backgroundColor,
+      onWillPop: () {
+        if (_lastPressTime == null ||
+            DateTime.now().difference(_lastPressTime!) > const Duration(seconds: 3)
+        ) {
+          _lastPressTime = DateTime.now();
+          MessageUtil.showMessage(context, S.of(context).exitTips);
+          return Future.value(false);
+        }
+        return Future.value(true);
+      },
     );
   }
 
@@ -322,6 +335,13 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  /// 锁屏修改
+  Future<void> _lockChange() async {
+    if (_appModel.lockNotifier.value) {
+      Navigator.pushNamed(context, XRoute.lock);
+    }
+  }
+
   /// 打开设置
   void _openSetting(BuildContext context) {
     Scaffold.of(context).closeDrawer();
@@ -337,11 +357,13 @@ class HomePageState extends State<HomePage> {
   /// 锁定应用
   void _lockApp(BuildContext context) {
     Scaffold.of(context).closeDrawer();
+    _appModel.lockNotice();
   }
 
   /// 退出应用(回到登录界面)
   void _logoutApp(BuildContext context) {
     Scaffold.of(context).closeDrawer();
+    // _appModel.restartApp(context);
     Navigator.pushReplacementNamed(context, XRoute.login);
   }
 
