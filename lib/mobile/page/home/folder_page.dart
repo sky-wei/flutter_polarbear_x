@@ -19,12 +19,10 @@ import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../../constant.dart';
 import '../../../data/item/folder_item.dart';
 import '../../../data/item/sort_item.dart';
 import '../../../model/app_model.dart';
-import '../../../model/side_item.dart';
-import '../../../theme/color.dart';
+import '../../../data/item/side_item.dart';
 import '../../../util/size_box_util.dart';
 
 class FolderPage extends StatefulWidget {
@@ -57,16 +55,19 @@ class FolderPageState extends State<FolderPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return ListView.separated(
+      padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
       itemBuilder: (context, index) {
         final item = _sideItems[index];
-        return SideItemWidget(
+        return _SideItemWidget(
           item: item,
-          onChoose: _isChooseItem,
+          moreIcon: 'assets/svg/ic_arrow_right.svg',
           onPressed: _chooseHandler,
-          onPointerDown: (event) {}
-          // item.id > 0 ? _onPointerDown(item, event) : null,
+          onLongPress: () {}
         );
+      },
+      separatorBuilder: (context, index) {
+        return const SizedBox(height: 10);
       },
       itemCount: _sideItems.length,
     );
@@ -108,71 +109,63 @@ class FolderPageState extends State<FolderPage> {
   }
 }
 
-class SideItemWidget extends StatelessWidget {
+class _SideItemWidget extends StatelessWidget {
 
   final SideItem item;
-  final ChooseItem<SideItem> onChoose;
+  final String? moreIcon;
   final ValueChanged<SideItem>? onPressed;
-  final EdgeInsetsGeometry? padding;
-  final PointerDownEventListener? onPointerDown;
+  final GestureLongPressCallback? onLongPress;
 
-  const SideItemWidget({
+  const _SideItemWidget({
     Key? key,
     required this.item,
-    required this.onChoose,
+    this.moreIcon,
     this.onPressed,
-    this.padding,
-    this.onPointerDown
+    this.onLongPress
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
-    final choose = onChoose(item);
-
-    return Padding(
-      padding: padding?? const EdgeInsets.only(left: 10, top: 5, right: 10),
-      child: Material(
-        color: XColor.transparent,
-        child: Listener(
-          onPointerDown: onPointerDown,
-          child: Ink(
-            decoration: BoxDecoration(
-              color: choose ? Theme.of(context).sideChooseColor : XColor.transparent,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: InkWell(
-              splashColor: Theme.of(context).sideChooseColor,
-              highlightColor: Theme.of(context).sideChooseColor,
-              enableFeedback: false,
-              borderRadius: BorderRadius.circular(6),
-              onTap: () { if (onPressed != null) onPressed!(item); },
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                child: Row(
-                  children: [
-                    if (item.icon != null)
-                      SvgPicture.asset(
-                        item.icon!,
-                        color: choose ? item.color : Theme.of(context).sideTextColor,
-                        width: 18,
-                      ),
-                    if (item.icon != null)
-                      XBox.horizontal15,
-                    Expanded(
-                      child: Text(
-                        item.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Theme.of(context).sideTextColor,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    )
-                  ],
+    return Material(
+      color: Theme.of(context).dialogBackgroundColor,
+      borderRadius: const BorderRadiusDirectional.all(Radius.circular(6)),
+      child: Ink(
+        height: 60,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(6),
+          onTap: () { if (onPressed != null) onPressed!(item); },
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            child: Row(
+              children: [
+                if (item.icon != null)
+                  SvgPicture.asset(
+                    item.icon!,
+                    color: Theme.of(context).mainTextColor,
+                    width: 18,
+                  ),
+                if (item.icon != null)
+                  XBox.horizontal20,
+                Expanded(
+                  child: Text(
+                    item.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Theme.of(context).mainTextColor,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
                 ),
-              ),
+                if (moreIcon != null)
+                  XBox.horizontal20,
+                if (moreIcon != null)
+                  SvgPicture.asset(
+                    moreIcon!,
+                    color: Theme.of(context).mainTextColor,
+                    width: 18,
+                  ),
+              ],
             ),
           ),
         ),

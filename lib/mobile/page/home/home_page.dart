@@ -16,7 +16,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
-import 'package:flutter_polarbear_x/dialog/mobile_hint_dialog.dart';
+import 'package:flutter_polarbear_x/mobile/dialog/hint_dialog.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/account/edit_account_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/account_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/favorite_page.dart';
@@ -30,7 +30,7 @@ import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../../dialog/mobile_input_dialog.dart';
+import '../../dialog/input_dialog.dart';
 import '../../../generated/l10n.dart';
 import '../../../model/app_model.dart';
 import '../../../route/mobile_page_route.dart';
@@ -388,7 +388,7 @@ class HomePageState extends State<HomePage> {
         isScrollControlled: true,
         backgroundColor: XColor.transparent,
         builder: (context) {
-          return MobileInputDialog(
+          return InputDialog(
             title: S.of(context).editFolder,
             labelText: S.of(context).name,
             value: '',

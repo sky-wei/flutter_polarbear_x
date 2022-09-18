@@ -16,18 +16,18 @@
 
 import 'package:flutter/material.dart';
 
-import '../generated/l10n.dart';
-import '../util/platform_util.dart';
-import '../util/size_box_util.dart';
+import '../../generated/l10n.dart';
+import '../../util/platform_util.dart';
+import '../../util/size_box_util.dart';
 
 
 
-class MobileHintDialog extends StatelessWidget {
+class HintDialog extends StatelessWidget {
 
   final String title;
   final String message;
 
-  const MobileHintDialog({
+  const HintDialog({
     Key? key,
     required this.title,
     required this.message,

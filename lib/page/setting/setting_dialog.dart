@@ -27,7 +27,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../constant.dart';
 import '../../generated/l10n.dart';
-import '../../model/side_item.dart';
+import '../../data/item/side_item.dart';
 import '../../util/size_box_util.dart';
 
 

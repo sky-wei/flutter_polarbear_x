@@ -25,7 +25,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/data/repository/encrypt_store.dart';
-import 'package:flutter_polarbear_x/model/side_item.dart';
+import 'package:flutter_polarbear_x/data/item/side_item.dart';
 import 'package:flutter_polarbear_x/page/setting/security_widget.dart';
 import 'package:flutter_polarbear_x/util/easy_notifier.dart';
 import 'package:path_provider/path_provider.dart';

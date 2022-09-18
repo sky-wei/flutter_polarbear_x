@@ -17,10 +17,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/util/platform_util.dart';
 
-import '../generated/l10n.dart';
-import '../util/size_box_util.dart';
+import '../../generated/l10n.dart';
+import '../../util/size_box_util.dart';
 
-class MobileInputDialog extends StatelessWidget {
+class InputDialog extends StatelessWidget {
 
   final String title;
   final String? labelText;
@@ -29,7 +29,7 @@ class MobileInputDialog extends StatelessWidget {
   final bool obscureText;
   final String? tips;
 
-  const MobileInputDialog({
+  const InputDialog({
     Key? key,
     required this.title,
     this.labelText,
@@ -52,7 +52,7 @@ class MobileInputDialog extends StatelessWidget {
             topRight: Radius.circular(10),
           )
         ),
-        child: MobileInputWidget(
+        child: _InputWidget(
           title: title,
           labelText: labelText,
           value: value,
@@ -65,7 +65,7 @@ class MobileInputDialog extends StatelessWidget {
   }
 }
 
-class MobileInputWidget extends StatefulWidget {
+class _InputWidget extends StatefulWidget {
 
   final String title;
   final String? labelText;
@@ -74,7 +74,7 @@ class MobileInputWidget extends StatefulWidget {
   final bool obscureText;
   final String? tips;
 
-  const MobileInputWidget({
+  const _InputWidget({
     Key? key,
     required this.title,
     this.labelText,
@@ -85,10 +85,10 @@ class MobileInputWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _MobileInputWidgetState();
+  State<StatefulWidget> createState() => _InputWidgetState();
 }
 
-class _MobileInputWidgetState extends State<MobileInputWidget> {
+class _InputWidgetState extends State<_InputWidget> {
 
   late TextEditingController _controller;
 

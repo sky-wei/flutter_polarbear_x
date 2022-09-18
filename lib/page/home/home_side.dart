@@ -35,7 +35,7 @@ import '../../constant.dart';
 import '../../dialog/input_dialog.dart';
 import '../../generated/l10n.dart';
 import '../../main.dart';
-import '../../model/side_item.dart';
+import '../../data/item/side_item.dart';
 import '../../util/error_util.dart';
 import '../../util/size_box_util.dart';
 import '../../widget/head_logo_widget.dart';
