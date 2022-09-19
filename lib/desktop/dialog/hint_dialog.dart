@@ -33,19 +33,11 @@ class HintDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedPadding(
-        padding: MediaQuery.of(context).viewInsets,
-        duration: const Duration(milliseconds: 150),
-        child: Container(
-            decoration: BoxDecoration(
-                color: Theme.of(context).dialogBackgroundColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                )
-            ),
-            child: _buildContent(context)
-        )
+    return Dialog(
+      child: SizedBox(
+        width: 400,
+        child: _buildContent(context),
+      ),
     );
   }
 
@@ -72,24 +64,30 @@ class HintDialog extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
-          width: double.infinity,
-          child: _buildTextButton(
-              text: S.of(context).ok,
-              onPressed: () => Navigator.pop(context, 1)
-          ),
-        ),
-        const Divider(
-          thickness: 5,
-        ),
-        SizedBox(
-          width: double.infinity,
-          child: _buildTextButton(
-              text: S.of(context).cancel,
-              onPressed: () => Navigator.pop(context)
-          ),
-        ),
-        XBox.vertical20
+        const Divider(thickness: 1),
+        Row(
+          children: [
+            Expanded(
+                child: _buildTextButton(
+                    text: S.of(context).cancel,
+                    onPressed: () => Navigator.pop(context)
+                )
+            ),
+            XBox.horizontal5,
+            const SizedBox(
+              width: 1,
+              height: 40,
+              child: VerticalDivider(thickness: 1),
+            ),
+            XBox.horizontal5,
+            Expanded(
+              child: _buildTextButton(
+                  text: S.of(context).ok,
+                  onPressed: () => Navigator.pop(context, 1)
+              ),
+            )
+          ],
+        )
       ],
     );
   }

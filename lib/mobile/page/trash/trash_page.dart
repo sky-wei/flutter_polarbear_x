@@ -15,10 +15,10 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
+import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
 
-import '../../../generated/l10n.dart';
-import '../../../widget/action_menu_widget.dart';
 
 class TrashPage extends StatefulWidget {
 

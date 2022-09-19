@@ -15,20 +15,20 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/constant.dart';
+import 'package:flutter_polarbear_x/data/item/account_item.dart';
+import 'package:flutter_polarbear_x/data/item/sort_item.dart';
+import 'package:flutter_polarbear_x/generated/l10n.dart';
+import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
+import 'package:flutter_polarbear_x/route/mobile_page_route.dart';
+import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
+import 'package:flutter_polarbear_x/util/size_box_util.dart';
+import 'package:flutter_polarbear_x/widget/list_empty_widget.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../../constant.dart';
-import '../../../data/item/account_item.dart';
-import '../../../data/item/sort_item.dart';
-import '../../../generated/l10n.dart';
-import '../../../model/app_model.dart';
-import '../../../route/mobile_page_route.dart';
-import '../../../theme/color.dart';
-import '../../../util/size_box_util.dart';
-import '../../../widget/list_empty_widget.dart';
 import 'account/edit_account_page.dart';
 
 class AccountPage extends StatefulWidget {
@@ -43,7 +43,7 @@ class AccountPageState extends State<AccountPage> {
 
   final List<AccountItem> _accountItems = [];
 
-  late AppModel _appModel;
+  late AppMobileModel _appModel;
 
   late ScrollController _scrollController;
 
@@ -51,15 +51,15 @@ class AccountPageState extends State<AccountPage> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    _appModel = context.read<AppModel>();
-    _appModel.listNotifier.addListener(_infoChange);
-    _appModel.loadAllAccount();
+    _appModel = context.read<AppMobileModel>();
+    // _appModel.listNotifier.addListener(_infoChange);
+    // _appModel.loadAllAccount();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _appModel.listNotifier.removeListener(_infoChange);
+    // _appModel.listNotifier.removeListener(_infoChange);
     _scrollController.dispose();
   }
 
@@ -73,14 +73,14 @@ class AccountPageState extends State<AccountPage> {
       );
     }
 
-    final SortType type = _appModel.chooseSide.type;
+    // final SortType type = _appModel.chooseSide.type;
 
     return ListView.separated(
       controller: _scrollController,
       itemBuilder: (context, index) {
         final item = _accountItems[index];
         return ListItemWidget(
-          type: type,
+          type: SortType.allItems,
           item: item,
           onChoose: (account) { return false; },
           onPressed: (account) {},

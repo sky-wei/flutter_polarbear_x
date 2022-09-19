@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
-import 'package:flutter_polarbear_x/main.dart';
+import 'package:flutter_polarbear_x/desktop/polarbear_desktop.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,7 +18,7 @@ void main() {
         await SharedPreferences.getInstance()
     );
     await tester.pumpWidget(
-        PolarBearX(appSetting: appSetting)
+        PolarBearDesktopX(appSetting: appSetting)
     );
 
     // Verify that our counter starts at 0.

@@ -15,17 +15,16 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_polarbear_x/generated/l10n.dart';
+import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
+import 'package:flutter_polarbear_x/util/error_util.dart';
+import 'package:flutter_polarbear_x/util/message_util.dart';
+import 'package:flutter_polarbear_x/util/size_box_util.dart';
+import 'package:flutter_polarbear_x/widget/big_button_widget.dart';
+import 'package:flutter_polarbear_x/widget/big_input_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../../../generated/l10n.dart';
-import '../../../model/app_model.dart';
-import '../../../util/error_util.dart';
-import '../../../util/message_util.dart';
-import '../../../util/size_box_util.dart';
-import '../../../widget/big_button_widget.dart';
-import '../../../widget/big_input_widget.dart';
 
 class LockPage extends StatefulWidget {
 
@@ -37,7 +36,7 @@ class LockPage extends StatefulWidget {
 
 class _LockPageState extends State<LockPage> {
 
-  late AppModel _appModel;
+  late AppMobileModel _appModel;
 
   bool _enableView = false;
   bool _enablePasswordAction = false;
@@ -49,7 +48,7 @@ class _LockPageState extends State<LockPage> {
   @override
   void initState() {
     super.initState();
-    _appModel = context.read<AppModel>();
+    _appModel = context.read<AppMobileModel>();
     _passwordController.addListener(_refreshViewState);
   }
 
@@ -147,7 +146,7 @@ class _LockPageState extends State<LockPage> {
   /// 登录
   void _unlock() {
 
-    var appModel = context.read<AppModel>();
+    var appModel = context.read<AppMobileModel>();
 
     appModel.unlock(
         _passwordController.text

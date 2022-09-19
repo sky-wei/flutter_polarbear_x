@@ -15,15 +15,15 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/data/item/folder_item.dart';
+import 'package:flutter_polarbear_x/data/item/side_item.dart';
+import 'package:flutter_polarbear_x/data/item/sort_item.dart';
+import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
+import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/item/folder_item.dart';
-import '../../../data/item/sort_item.dart';
-import '../../../model/app_model.dart';
-import '../../../data/item/side_item.dart';
-import '../../../util/size_box_util.dart';
 
 class FolderPage extends StatefulWidget {
 
@@ -35,14 +35,14 @@ class FolderPage extends StatefulWidget {
 
 class FolderPageState extends State<FolderPage> {
 
-  late AppModel _appModel;
+  late AppMobileModel _appModel;
 
   final List<SideItem> _sideItems = [];
 
   @override
   void initState() {
     super.initState();
-    _appModel = context.read<AppModel>();
+    _appModel = context.read<AppMobileModel>();
     _appModel.folderNotifier.addListener(_infoChange);
     _appModel.loadFolders();
   }
@@ -96,16 +96,9 @@ class FolderPageState extends State<FolderPage> {
     );
   }
 
-  /// 是否选择
-  bool _isChooseItem(SideItem item) => _appModel.chooseSide == item;
-
   /// 选择处理
   void _chooseHandler(SideItem item) {
-    if (!_isChooseItem(item)) {
-      setState(() {
-        _appModel.switchSide(side: item);
-      });
-    }
+
   }
 }
 

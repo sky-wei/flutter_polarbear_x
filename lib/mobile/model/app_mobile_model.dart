@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import 'data/item/account_item.dart';
+import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
+import 'package:flutter_polarbear_x/model/app_abstract_model.dart';
 
-typedef ChooseItem<T> = bool Function(T value);
+class AppMobileModel extends AppAbstractModel {
 
-typedef AccountFilter = bool Function(AccountItem account);
+  AppMobileModel({
+    required AppSetting appSetting
+  }) : super(appSetting: appSetting);
 
-typedef PasswordCallback = Future<String?> Function();
 
-
-class XConstant {
-
-  static const String versionName = "1.0.2";
+  @override
+  void onInitialize() {
+  }
 }
-

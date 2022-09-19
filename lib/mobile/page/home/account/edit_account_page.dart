@@ -16,10 +16,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
+import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
+import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
 
-import '../../../../generated/l10n.dart';
-import '../../../../widget/action_menu_widget.dart';
 
 class EditAccountPage extends StatefulWidget {
 
@@ -63,8 +63,6 @@ class _EditAccountPageState extends State<EditAccountPage> {
       backgroundColor: Theme.of(context).backgroundColor,
     );
   }
-
-
 
   /// 保存
   void _saveAccount() {

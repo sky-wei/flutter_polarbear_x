@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-import 'data/item/account_item.dart';
 
-typedef ChooseItem<T> = bool Function(T value);
+import 'dart:ui';
 
-typedef AccountFilter = bool Function(AccountItem account);
+class LocaleItem {
 
-typedef PasswordCallback = Future<String?> Function();
+  final String name;
+  final Locale? value;
 
+  LocaleItem(this.name, this.value);
 
-class XConstant {
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is LocaleItem &&
+              runtimeType == other.runtimeType &&
+              name == other.name &&
+              value == other.value;
 
-  static const String versionName = "1.0.2";
+  @override
+  int get hashCode => name.hashCode ^ value.hashCode;
 }
 

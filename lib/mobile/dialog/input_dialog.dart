@@ -15,10 +15,10 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/util/platform_util.dart';
+import 'package:flutter_polarbear_x/util/size_box_util.dart';
 
-import '../../generated/l10n.dart';
-import '../../util/size_box_util.dart';
 
 class InputDialog extends StatelessWidget {
 

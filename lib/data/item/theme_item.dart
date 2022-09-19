@@ -14,17 +14,26 @@
  * limitations under the License.
  */
 
-import 'data/item/account_item.dart';
+class ThemeItem {
 
-typedef ChooseItem<T> = bool Function(T value);
+  static const int system = 0;
+  static const int light = 1;
+  static const int dark = 2;
 
-typedef AccountFilter = bool Function(AccountItem account);
+  final String name;
+  final int value;
 
-typedef PasswordCallback = Future<String?> Function();
+  ThemeItem(this.name, this.value);
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is ThemeItem &&
+              runtimeType == other.runtimeType &&
+              name == other.name &&
+              value == other.value;
 
-class XConstant {
-
-  static const String versionName = "1.0.2";
+  @override
+  int get hashCode => name.hashCode ^ value.hashCode;
 }
 

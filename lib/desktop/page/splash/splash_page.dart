@@ -16,8 +16,8 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/desktop/model/app_desktop_model.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
-import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
 import 'package:flutter_polarbear_x/route.dart';
 import 'package:provider/provider.dart';
 
@@ -35,9 +35,9 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    context.read<AppMobileModel>().initialize().then((value) {
+    context.read<AppDesktopModel>().initialize().then((value) {
       Navigator.pushReplacementNamed(
-          context, kDebugMode ? XRoute.home : XRoute.login
+          context, kDebugMode ? XRoute.launcher : XRoute.launcher
       );
     });
   }
@@ -45,19 +45,14 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).dialogBackgroundColor,
-        elevation: 0,
-      ),
       body: Center(
         child: Text(
           S.of(context).loading,
           style: const TextStyle(
-            fontSize: 18
+            fontSize: 20
           ),
         ),
       ),
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
     );
   }
 }

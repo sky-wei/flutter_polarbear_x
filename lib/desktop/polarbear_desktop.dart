@@ -24,17 +24,18 @@ import '../generated/l10n.dart';
 import '../route.dart';
 import '../theme/theme.dart';
 import '../util/app_navigator_observer.dart';
-import 'model/app_mobile_model.dart';
+import 'model/app_desktop_model.dart';
 import 'page/home/home_page.dart';
+import 'page/launcher/launcher_page.dart';
 import 'page/lock/lock_page.dart';
-import 'page/login/login_page.dart';
 import 'page/splash/splash_page.dart';
+import 'widget/monitor_widget.dart';
 
-class PolarBearMobileX extends StatelessWidget {
+class PolarBearDesktopX extends StatelessWidget {
 
   final AppSetting appSetting;
 
-  const PolarBearMobileX({
+  const PolarBearDesktopX({
     Key? key,
     required this.appSetting
   }) : super(key: key);
@@ -44,7 +45,7 @@ class PolarBearMobileX extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AppMobileModel(appSetting: appSetting)),
+        ChangeNotifierProvider(create: (context) => AppDesktopModel(appSetting: appSetting)),
       ],
       child: MaterialApp(
         title: 'PasswordX',
@@ -54,11 +55,11 @@ class PolarBearMobileX extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routes: {
           XRoute.splash: (context) => const SplashPage(),
-          XRoute.login: (context) => const LoginPage(),
+          XRoute.launcher: (context) => const LauncherPage(),
           XRoute.home: (context) => const HomePage(),
           XRoute.lock: (context) => const LockPage(),
         },
-        // builder: (context, child) => MonitorWidget(child: child),
+        builder: (context, child) => MonitorWidget(child: child),
         initialRoute: XRoute.splash,
         locale: appSetting.getLocale(),
         localizationsDelegates: const [

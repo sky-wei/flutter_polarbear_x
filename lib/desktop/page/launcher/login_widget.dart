@@ -15,37 +15,29 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_polarbear_x/desktop/model/app_desktop_model.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
-import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
 import 'package:flutter_polarbear_x/route.dart';
-import 'package:flutter_polarbear_x/route/mobile_page_route.dart';
-import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/error_util.dart';
 import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
-import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
 import 'package:flutter_polarbear_x/widget/big_button_widget.dart';
 import 'package:flutter_polarbear_x/widget/big_input_widget.dart';
+import 'package:flutter_polarbear_x/widget/fade_animate_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../register/register_page.dart';
+class LoginWidget extends StatefulWidget {
 
-
-class LoginPage extends StatefulWidget {
-
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginWidget({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _LoginPageState();
+  State<StatefulWidget> createState() => _LoginWidgetState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginWidgetState extends State<LoginWidget> with SingleTickerProviderStateMixin {
 
+  late AnimationController _animationController;
   bool _enableView = false;
-  bool _enableNameAction = false;
-  bool _enablePasswordAction = false;
-  bool _obscurePassword = true;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -57,6 +49,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+        duration: const Duration(milliseconds: 800),
+        vsync: this
+    );
+    _animationController.forward();
     _nameController.addListener(_refreshViewState);
     _passwordController.addListener(_refreshViewState);
     _nameFocusNode.addListener(_focusEvent);
@@ -69,32 +66,16 @@ class _LoginPageState extends State<LoginPage> {
     _nameController.removeListener(_refreshViewState);
     _nameFocusNode.removeListener(_focusEvent);
     _passwordFocusNode.removeListener(_focusEvent);
+    _animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: ActionMenuWidget(
-          iconName: 'ic_m_close.svg',
-          onPressed: () => SystemNavigator.pop(),
-        ),
-        elevation: 0,
-        backgroundColor: Theme.of(context).dialogBackgroundColor,
-      ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(40, 60, 40, 50),
+    return FadeAnimateWidget(
+      animation: _animationController,
+      child: Column(
         children: [
-          Text(
-            S.of(context).appName,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).mainTextColor
-            ),
-          ),
-          XBox.vertical60,
           BigInputWidget(
             controller: _nameController,
             iconName: 'ic_user.svg',
@@ -102,46 +83,33 @@ class _LoginPageState extends State<LoginPage> {
             textInputAction: TextInputAction.next,
             focusNode: _nameFocusNode,
             autofocus: true,
-            actionIconName: _enableNameAction ? 'ic_close.svg' : null,
-            actionPressed: () => _nameController.clear()
           ),
-          XBox.vertical20,
+          XBox.vertical15,
           BigInputWidget(
             controller: _passwordController,
             iconName: 'ic_password.svg',
             labelText: S.of(context).password,
-            obscureText: _obscurePassword,
+            obscureText: true,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (value) {
               if (_enableView) _login();
             },
             focusNode: _passwordFocusNode,
-            actionIconName: _enablePasswordAction ? (_obscurePassword ? 'ic_visibility.svg' : 'ic_invisible.svg') : null,
-            actionPressed: () {
-              setState(() => _obscurePassword = !_obscurePassword);
-            },
           ),
-          XBox.vertical5,
-          _buildForgetPassword(
+          XBox.vertical40,
+          BigButtonWidget(
+            onPressed: _enableView ? _login : null,
+            text: S.of(context).login,
+          ),
+          XBox.vertical20,
+          _buildTextButton(
+            text: S.of(context).forgetPassword,
             onPressed: () {
               MessageUtil.showMessage(context, S.of(context).notSupport);
             }
           ),
-          XBox.vertical30,
-          BigButtonWidget(
-            onPressed: _enableView ? _login : null,
-            text: S.of(context).login,
-            size: const Size(double.infinity, 50),
-          ),
-          XBox.vertical20,
-          _buildTextButton(
-            text: S.of(context).signUp,
-            textColor: Theme.of(context).themeColor,
-            onPressed: _signUp
-          ),
         ],
       ),
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
     );
   }
 
@@ -149,8 +117,6 @@ class _LoginPageState extends State<LoginPage> {
   void _refreshViewState() {
     final name = _nameController.text;
     final password = _passwordController.text;
-    _setNameViewState(name.isNotEmpty);
-    _setPasswordViewState(password.isNotEmpty);
     _setViewState(name.isNotEmpty && password.isNotEmpty);
   }
 
@@ -170,39 +136,9 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  /// 设置状态
-  void _setNameViewState(bool enable) {
-    if (_enableNameAction != enable) {
-      setState(() { _enableNameAction = enable; });
-    }
-  }
-
-  /// 设置状态
-  void _setPasswordViewState(bool enable) {
-    if (_enablePasswordAction != enable) {
-      setState(() { _enablePasswordAction = enable; });
-    }
-  }
-
-  /// 创建忘记密码控件
-  Widget _buildForgetPassword({
-    required VoidCallback? onPressed,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        _buildTextButton(
-          text: S.of(context).forgetPassword,
-          onPressed: onPressed
-        )
-      ],
-    );
-  }
-
   /// 创建按钮
   Widget _buildTextButton({
     required String text,
-    Color? textColor,
     required VoidCallback? onPressed,
   }) {
     return TextButton(
@@ -212,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.normal,
-          color: textColor ?? Theme.of(context).colorScheme.onSurface
+          color: Theme.of(context).colorScheme.onSurface
         ),
       )
     );
@@ -224,10 +160,10 @@ class _LoginPageState extends State<LoginPage> {
     var name = _nameController.text;
     var password = _passwordController.text;
 
-    var appModel = context.read<AppMobileModel>();
+    var appModel = context.read<AppDesktopModel>();
 
     appModel.loginByAdmin(
-      name: name, password: password
+        name: name, password: password
     ).then((value) {
       Navigator.pushReplacementNamed(context, XRoute.home);
     }).onError((error, stackTrace) {
@@ -235,19 +171,4 @@ class _LoginPageState extends State<LoginPage> {
       MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
     });
   }
-
-  /// 注册
-  Future<void> _signUp() async {
-    final value = await Navigator.push<String>(
-      context,
-      MobilePageRoute<String>(
-        child: RegisterPage(name: _nameController.text)
-      )
-    );
-
-    if (value != null && value.isNotEmpty) {
-      Navigator.pushReplacementNamed(context, value);
-    }
-  }
 }
-

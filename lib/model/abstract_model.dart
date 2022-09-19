@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-import 'data/item/account_item.dart';
+import '../util/easy_notifier.dart';
 
-typedef ChooseItem<T> = bool Function(T value);
+class AbstractModel extends EasyNotifier {
 
-typedef AccountFilter = bool Function(AccountItem account);
-
-typedef PasswordCallback = Future<String?> Function();
-
-
-class XConstant {
-
-  static const String versionName = "1.0.2";
 }
-

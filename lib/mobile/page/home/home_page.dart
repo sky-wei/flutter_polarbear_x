@@ -16,49 +16,48 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
-import 'package:flutter_polarbear_x/mobile/dialog/hint_dialog.dart';
+import 'package:flutter_polarbear_x/generated/l10n.dart';
+import 'package:flutter_polarbear_x/mobile/dialog/input_dialog.dart';
+import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/account/edit_account_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/account_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/favorite_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/folder_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/search_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/setting/setting_page.dart';
+import 'package:flutter_polarbear_x/mobile/page/trash/trash_page.dart';
 import 'package:flutter_polarbear_x/route.dart';
+import 'package:flutter_polarbear_x/route/mobile_page_route.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
+import 'package:flutter_polarbear_x/util/error_util.dart';
+import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
+import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../dialog/input_dialog.dart';
-import '../../../generated/l10n.dart';
-import '../../../model/app_model.dart';
-import '../../../route/mobile_page_route.dart';
-import '../../../util/error_util.dart';
-import '../../../util/message_util.dart';
-import '../../../widget/action_menu_widget.dart';
-import '../trash/trash_page.dart';
 
 class HomePage extends StatefulWidget {
 
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => HomePageState();
+  State<StatefulWidget> createState() => _HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> {
 
   int _currentIndex = 0;
   DateTime? _lastPressTime;
   final PageController _pageController = PageController();
 
-  late AppModel _appModel;
+  late AppMobileModel _appModel;
 
   @override
   void initState() {
     super.initState();
-    _appModel = context.read<AppModel>();
+    _appModel = context.read<AppMobileModel>();
     _appModel.lockNotifier.addListener(_lockChange);
   }
 

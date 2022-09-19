@@ -15,7 +15,8 @@
  */
 import 'package:flutter/material.dart';
 
-import '../../theme/color.dart';
+import 'color.dart';
+
 
 class XTheme {
 

@@ -15,8 +15,9 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_polarbear_x/page/setting/security_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../item/time_item.dart';
 
 class AppSetting {
 

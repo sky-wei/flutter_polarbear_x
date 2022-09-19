@@ -14,43 +14,33 @@
  * limitations under the License.
  */
 
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_polarbear_x/desktop/model/app_desktop_model.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
-import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
 import 'package:flutter_polarbear_x/route.dart';
-import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/error_util.dart';
 import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
-import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
 import 'package:flutter_polarbear_x/widget/big_button_widget.dart';
 import 'package:flutter_polarbear_x/widget/big_input_widget.dart';
+import 'package:flutter_polarbear_x/widget/fade_animate_widget.dart';
 import 'package:provider/provider.dart';
 
 
-class RegisterPage extends StatefulWidget {
+class RegisterWidget extends StatefulWidget {
 
-  final String name;
-
-  const RegisterPage({
-    Key? key,
-    required this.name
-  }) : super(key: key);
+  const RegisterWidget({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => RegisterPageState();
+  State<StatefulWidget> createState() => _RegisterWidgetState();
 }
 
-class RegisterPageState extends State<RegisterPage> {
+class _RegisterWidgetState extends State<RegisterWidget> with SingleTickerProviderStateMixin {
 
+  late AnimationController _animationController;
   bool _enableView = false;
-  bool _enableNameAction = false;
-  bool _enablePasswordAction = false;
-  bool _enableConfirmPasswordAction = false;
-  bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
 
-  late TextEditingController _nameController;
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
@@ -62,7 +52,11 @@ class RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.name);
+    _animationController = AnimationController(
+        duration: const Duration(milliseconds: 800),
+        vsync: this
+    );
+    _animationController.forward();
     _nameController.addListener(_refreshViewState);
     _passwordController.addListener(_refreshViewState);
     _confirmPasswordController.addListener(_refreshViewState);
@@ -79,32 +73,16 @@ class RegisterPageState extends State<RegisterPage> {
     _nameFocusNode.removeListener(_focusEvent);
     _passwordFocusNode.removeListener(_focusEvent);
     _confirmPasswordFocusNode.removeListener(_focusEvent);
+    _animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: ActionMenuWidget(
-          iconName: 'ic_m_close.svg',
-          onPressed: () => Navigator.pop(context),
-        ),
-        elevation: 0,
-        backgroundColor: Theme.of(context).dialogBackgroundColor,
-      ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(40, 60, 40, 50),
+    return FadeAnimateWidget(
+      animation: _animationController,
+      child: Column(
         children: [
-          Text(
-            S.of(context).appName,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).mainTextColor
-            ),
-          ),
-          XBox.vertical60,
           BigInputWidget(
             controller: _nameController,
             iconName: 'ic_user.svg',
@@ -112,47 +90,36 @@ class RegisterPageState extends State<RegisterPage> {
             textInputAction: TextInputAction.next,
             focusNode: _nameFocusNode,
             autofocus: true,
-            actionIconName: _enableNameAction ? 'ic_close.svg' : null,
-            actionPressed: () => _nameController.clear()
           ),
-          XBox.vertical20,
+          XBox.vertical15,
           BigInputWidget(
             controller: _passwordController,
             iconName: 'ic_password.svg',
             labelText: S.of(context).password,
-            obscureText: _obscurePassword,
+            obscureText: true,
             textInputAction: TextInputAction.next,
             focusNode: _passwordFocusNode,
-            actionIconName: _enablePasswordAction ? (_obscurePassword ? 'ic_visibility.svg' : 'ic_invisible.svg') : null,
-            actionPressed: () {
-              setState(() => _obscurePassword = !_obscurePassword);
-            },
           ),
-          XBox.vertical20,
+          XBox.vertical15,
           BigInputWidget(
             controller: _confirmPasswordController,
             iconName: 'ic_password.svg',
             labelText: S.of(context).confirmPassword,
-            obscureText: _obscureConfirmPassword,
+            obscureText: true,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (value) {
               if (_enableView) _register();
             },
             focusNode: _confirmPasswordFocusNode,
-            actionIconName: _enableConfirmPasswordAction ? (_obscureConfirmPassword ? 'ic_visibility.svg' : 'ic_invisible.svg') : null,
-            actionPressed: () {
-              setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
-            },
           ),
           XBox.vertical40,
           BigButtonWidget(
             onPressed: _enableView ? _register : null,
             text: S.of(context).signUp,
-            size: const Size(double.infinity, 50),
           ),
+          // const SizedBox(height: 20),
         ],
       ),
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
     );
   }
 
@@ -161,9 +128,6 @@ class RegisterPageState extends State<RegisterPage> {
     final name = _nameController.text;
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
-    _setNameViewState(name.isNotEmpty);
-    _setPasswordViewState(password.isNotEmpty);
-    _setConfirmPasswordViewState(confirmPassword.isNotEmpty);
     _setViewState(name.isNotEmpty && password.isNotEmpty && confirmPassword.isNotEmpty);
   }
 
@@ -185,27 +149,6 @@ class RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  /// 设置状态
-  void _setNameViewState(bool enable) {
-    if (_enableNameAction != enable) {
-      setState(() { _enableNameAction = enable; });
-    }
-  }
-
-  /// 设置状态
-  void _setPasswordViewState(bool enable) {
-    if (_enablePasswordAction != enable) {
-      setState(() { _enablePasswordAction = enable; });
-    }
-  }
-
-  /// 设置状态
-  void _setConfirmPasswordViewState(bool enable) {
-    if (_enableConfirmPasswordAction != enable) {
-      setState(() { _enableConfirmPasswordAction = enable; });
-    }
-  }
-
   /// 注册
   void _register() {
 
@@ -219,12 +162,12 @@ class RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    var appModel = context.read<AppMobileModel>();
+    var appModel = context.read<AppDesktopModel>();
 
     appModel.createAdmin(
         name: name, password: password
     ).then((value) {
-      Navigator.pop(context, XRoute.home);
+      Navigator.pushReplacementNamed(context, XRoute.home);
     }).onError((error, stackTrace) {
       _lastFocusNode?.requestFocus();
       MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
