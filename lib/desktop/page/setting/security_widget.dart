@@ -55,14 +55,12 @@ class SecurityWidgetState extends State<SecurityWidget> {
   TimeItem get defaultLock => TimeItem.defaultLock;
   TimeItem get defaultClipboard => TimeItem.defaultClipboard;
 
-  late AppDesktopModel _appModel;
   late AppSetting _appSetting;
 
   @override
   void initState() {
     super.initState();
-    _appModel = context.read<AppDesktopModel>();
-    _appSetting = _appModel.getAppSetting();
+    _appSetting = context.select((AppDesktopModel value) => value.appSetting);
   }
 
   @override

@@ -18,6 +18,8 @@ import 'data/item/account_item.dart';
 
 typedef ChooseItem<T> = bool Function(T value);
 
+typedef IsLoginCallback = bool Function();
+
 typedef AccountFilter = bool Function(AccountItem account);
 
 typedef PasswordCallback = Future<String?> Function();

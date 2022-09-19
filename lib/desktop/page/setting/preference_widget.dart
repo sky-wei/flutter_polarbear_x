@@ -53,7 +53,7 @@ class PreferenceWidgetState extends State<PreferenceWidget> {
   void initState() {
     super.initState();
     _appModel = context.read<AppDesktopModel>();
-    _appSetting = _appModel.getAppSetting();
+    _appSetting = _appModel.appSetting;
   }
 
   @override

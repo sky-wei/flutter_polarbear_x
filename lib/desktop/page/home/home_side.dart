@@ -59,14 +59,14 @@ class _HomeSideState extends State<HomeSide> {
     super.initState();
     _appModel = context.read<AppDesktopModel>();
     _appModel.folderNotifier.addListener(_infoChange);
-    _appModel.lockNotifier.addListener(_lockChange);
+    _appModel.lockManager.addListener(_lockChange);
     _appModel.loadFolders();
   }
 
   @override
   void dispose() {
     _appModel.folderNotifier.removeListener(_infoChange);
-    _appModel.lockNotifier.removeListener(_lockChange);
+    _appModel.lockManager.removeListener(_lockChange);
     super.dispose();
   }
 
@@ -304,7 +304,7 @@ class _HomeSideState extends State<HomeSide> {
 
   /// 锁屏修改
   Future<void> _lockChange() async {
-    if (_appModel.lockNotifier.value) {
+    if (_appModel.lockManager.value) {
       Navigator.pushNamed(context, XRoute.lock);
     }
   }

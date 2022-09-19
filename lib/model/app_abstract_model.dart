@@ -19,18 +19,18 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_polarbear_x/component/clipboard_manager.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/model/abstract_model.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../component/lock_manager.dart';
 import '../constant.dart';
 import '../data/data_exception.dart';
 import '../data/item/account_item.dart';
 import '../data/item/admin_item.dart';
 import '../data/item/side_item.dart';
 import '../data/item/sort_item.dart';
-import '../data/item/time_item.dart';
 import '../data/objectbox.dart';
 import '../data/repository/app_repository.dart';
 import '../data/repository/app_setting.dart';
@@ -43,8 +43,9 @@ import '../widget/restart_widget.dart';
 abstract class AppAbstractModel extends AbstractModel {
 
   bool _init = false;
-  late AppRepository appRepository;
   final AppSetting appSetting;
+  late AppRepository appRepository;
+  late ClipboardManager clipboardManager;
 
   final List<FolderItem> folders = [];    /// 文件夹
   final List<AccountItem> accounts = [];  /// 账号
@@ -61,19 +62,14 @@ abstract class AppAbstractModel extends AbstractModel {
   SideItem get allItems => fixedSide[1];
   SideItem get trash => fixedSide[2];
 
-  late Timer _timer;
-  int _curTick = 0;
-  int _lastMonitorTime = 0;
-  int _lastCopyTime = 0;
-  String _lastCopyValue = "";
-
   AdminItem _admin = kDebugMode ? AdminItem(id: 1, name: 'sky', password: '123456') : AdminItem(name: '', password: '');
 
   AdminItem get admin => _admin;        // 当前管理员信息
   bool get isLogin => _admin.id > 0;    // 判断账号是不登录
 
   final EasyNotifier folderNotifier = EasyNotifier();
-  final ValueNotifier lockNotifier = ValueNotifier(false);
+  late LockManager lockManager;
+  late Timer _timer;
 
   AppAbstractModel({
     required this.appSetting
@@ -83,7 +79,13 @@ abstract class AppAbstractModel extends AbstractModel {
   Future<void> initialize() async {
     if (!_init) {
       _init = true;
-      onInitialize();
+      clipboardManager = ClipboardManager(
+          appSetting: appSetting
+      );
+      lockManager = LockManager(
+          appSetting: appSetting,
+          callback: () { return isLogin; }
+      );
       final dir = await getAppDirectory();
       appRepository = AppRepository(
           objectBox: await ObjectBox.create(directory: dir.path),
@@ -92,6 +94,7 @@ abstract class AppAbstractModel extends AbstractModel {
       _timer = Timer.periodic(
           const Duration(seconds: 1), (timer) => _timeHandler(timer)
       );
+      onInitialize();
       await Future.delayed(const Duration(milliseconds: 200));
     }
   }
@@ -104,7 +107,7 @@ abstract class AppAbstractModel extends AbstractModel {
     _disposeTimer();
     appRepository.dispose();
     folderNotifier.dispose();
-    lockNotifier.dispose();
+    lockManager.dispose();
     super.dispose();
   }
 
@@ -239,16 +242,6 @@ abstract class AppAbstractModel extends AbstractModel {
     return result;
   }
 
-  /// 解锁
-  Future<void> unlock(String password) async {
-
-    if (admin.password != password) {
-      throw DataException.type(type: ErrorType.passwordError);
-    }
-
-    lockNotifier.value = false;
-  }
-
   /// 获取App目录
   Future<Directory> getAppDirectory() async {
     return kDebugMode ? await getTemporaryDirectory() : await getApplicationSupportDirectory();
@@ -269,19 +262,24 @@ abstract class AppAbstractModel extends AbstractModel {
     return items;
   }
 
-  /// 获取主题
-  AppSetting getAppSetting() {
-    return appSetting;
-  }
-
   /// 更新监听时间
   void updateMonitorTime() {
-    _lastMonitorTime = _curTick;
+    lockManager.updateLastTime(_timer.tick);
   }
 
   /// 锁屏通知
   void lockNotice() {
-    lockNotifier.value = true;
+    lockManager.lock();
+  }
+
+  /// 解锁
+  Future<void> unlock(String password) async {
+
+    if (admin.password != password) {
+      throw DataException.type(type: ErrorType.passwordError);
+    }
+
+    lockManager.unlock();
   }
 
   /// 重启应用
@@ -291,23 +289,7 @@ abstract class AppAbstractModel extends AbstractModel {
 
   /// 复制内容到剪贴板
   Future<void> copyToClipboard(String value) async {
-    _lastCopyTime = _curTick;
-    _lastCopyValue = value;
-    return await Clipboard.setData(
-        ClipboardData(text:value)
-    );
-  }
-
-  /// 清除上一次剪贴板的内容
-  Future<void> clearClipboard() async {
-    final data = await Clipboard.getData('text/plain');
-    if (data != null && data.text == _lastCopyValue) {
-      _lastCopyTime = 0;
-      _lastCopyValue = '';
-      await Clipboard.setData(
-          const ClipboardData(text: '')
-      );
-    }
+    return await clipboardManager.copy(value);
   }
 
   /// 更新管理员信息
@@ -318,52 +300,13 @@ abstract class AppAbstractModel extends AbstractModel {
 
   /// 时间处理
   void _timeHandler(Timer timer) {
-    _curTick = timer.tick;
-    _handlerLockApp();
-    _handlerClipboard();
-  }
-
-  /// 处理锁定App
-  void _handlerLockApp() {
-
-    if (!isLogin || lockNotifier.value) {
-      // 没有登录或锁屏不需要处理
-      return;
-    }
-
-    final timeout = appSetting.getLockTimeBySecond(
-        TimeItem.defaultLock
-    );
-
-    if (timeout > 0 && _curTick - _lastMonitorTime >= timeout) {
-      lockNotice();
-    }
-  }
-
-  /// 处理剪贴板
-  void _handlerClipboard() {
-
-    if (_lastCopyTime <= 0) {
-      // 没有使用不需要处理
-      return;
-    }
-
-    final timeout = appSetting.getClipboardTimeBySecond(
-        TimeItem.defaultLock
-    );
-
-    if (timeout > 0 && _curTick - _lastCopyTime >= timeout) {
-      clearClipboard();
-    }
+    final curTick = timer.tick;
+    clipboardManager.checkTimeout(curTick);
+    lockManager.checkTimeout(curTick);
   }
 
   /// 释放定时器
   void _disposeTimer() {
     if (_timer.isActive) _timer.cancel();
-    _curTick = 0;
-    _lastMonitorTime = 0;
-    _lastCopyTime = 0;
-    _lastCopyValue = '';
   }
 }
-

@@ -58,14 +58,14 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _appModel = context.read<AppMobileModel>();
-    _appModel.lockNotifier.addListener(_lockChange);
+    _appModel.lockManager.addListener(_lockChange);
   }
 
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
-    _appModel.lockNotifier.removeListener(_lockChange);
+    _appModel.lockManager.removeListener(_lockChange);
   }
 
   @override
@@ -336,7 +336,7 @@ class _HomePageState extends State<HomePage> {
 
   /// 锁屏修改
   Future<void> _lockChange() async {
-    if (_appModel.lockNotifier.value) {
+    if (_appModel.lockManager.value) {
       Navigator.pushNamed(context, XRoute.lock);
     }
   }
