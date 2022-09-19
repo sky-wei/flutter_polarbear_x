@@ -18,6 +18,7 @@ import 'package:flutter_polarbear_x/data/entity/folder_entity.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/data/mapper/account_mapper.dart';
 import 'package:flutter_polarbear_x/data/mapper/folder_mapper.dart';
+import 'package:flutter_polarbear_x/util/log_util.dart';
 
 import '../data_exception.dart';
 import '../entity/account_entity.dart';
@@ -112,7 +113,7 @@ class AppRepository {
   Future<FolderItem> createFolder(FolderItem folder) async {
 
     final entity = folderBox
-        .query(FolderEntity_.name.equals(folder.name))
+        .query(FolderEntity_.adminId.equals(folder.adminId).and(FolderEntity_.name.equals(folder.name)))
         .build()
         .findFirst();
 
@@ -137,12 +138,12 @@ class AppRepository {
   Future<FolderItem> updateFolder(FolderItem folder) async {
 
     final entity = folderBox
-        .query(FolderEntity_.name.equals(folder.name))
+        .query(FolderEntity_.adminId.equals(folder.adminId).and(FolderEntity_.name.equals(folder.name)))
         .build()
         .findFirst();
 
     if (entity != null) {
-      throw DataException.type(type: ErrorType.updateError);
+      throw DataException.type(type: ErrorType.folderExist);
     }
 
     final result = folderBox.put(

@@ -24,7 +24,6 @@ class FolderEntity {
 
   int adminId;
 
-  @Unique()
   String name;
 
   int createTime;

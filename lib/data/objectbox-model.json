@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:7243920561383345351",
-      "lastPropertyId": "12:2316121011874826872",
+      "lastPropertyId": "13:732885442028952931",
       "name": "AccountEntity",
       "properties": [
         {
@@ -68,6 +68,11 @@
           "id": "12:2316121011874826872",
           "name": "updateTime",
           "type": 6
+        },
+        {
+          "id": "13:732885442028952931",
+          "name": "version",
+          "type": 6
         }
       ],
       "relations": []
@@ -127,9 +132,7 @@
         {
           "id": "2:8675753262262574228",
           "name": "name",
-          "type": 9,
-          "flags": 2080,
-          "indexId": "2:8578202736251352447"
+          "type": 9
         },
         {
           "id": "3:7661035055685820640",
@@ -152,7 +155,9 @@
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
-  "retiredIndexUids": [],
+  "retiredIndexUids": [
+    8578202736251352447
+  ],
   "retiredPropertyUids": [],
   "retiredRelationUids": [],
   "version": 1

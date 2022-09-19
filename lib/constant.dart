@@ -24,6 +24,7 @@ typedef AccountFilter = bool Function(AccountItem account);
 
 typedef PasswordCallback = Future<String?> Function();
 
+typedef CompleteCallback = void Function();
 
 class XConstant {
 

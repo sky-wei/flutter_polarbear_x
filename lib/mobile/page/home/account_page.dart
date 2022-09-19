@@ -114,7 +114,7 @@ class AccountPageState extends State<AccountPage> {
   void _infoChange() {
     setState(() {
       _accountItems.clear();
-      _accountItems.addAll(_appModel.accounts);
+      // _accountItems.addAll(_appModel.accounts);
     });
   }
 }

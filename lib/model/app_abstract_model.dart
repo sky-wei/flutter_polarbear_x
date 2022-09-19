@@ -15,8 +15,10 @@
  */
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/component/clipboard_manager.dart';
@@ -42,15 +44,10 @@ import '../widget/restart_widget.dart';
 
 abstract class AppAbstractModel extends AbstractModel {
 
-  bool _init = false;
   final AppSetting appSetting;
-  late AppRepository appRepository;
-  late ClipboardManager clipboardManager;
 
   final List<FolderItem> folders = [];    /// 文件夹
-  final List<AccountItem> accounts = [];  /// 账号
-
-  List<AccountItem> allAccountItems = [];      /// 当前用户可用的账号列表
+  final List<AccountItem> allAccountItems = [];      /// 当前用户下所有账号列表(包括回收箱的)
 
   final List<SideItem> fixedSide = [
     SideItem(name: S.current.favorites, icon: 'assets/svg/ic_favorites.svg', type: SortType.favorite, color: XColor.favoriteColor),
@@ -62,14 +59,22 @@ abstract class AppAbstractModel extends AbstractModel {
   SideItem get allItems => fixedSide[1];
   SideItem get trash => fixedSide[2];
 
+  final EasyNotifier folderNotifier = EasyNotifier();
+
   AdminItem _admin = kDebugMode ? AdminItem(id: 1, name: 'sky', password: '123456') : AdminItem(name: '', password: '');
 
   AdminItem get admin => _admin;        // 当前管理员信息
   bool get isLogin => _admin.id > 0;    // 判断账号是不登录
 
-  final EasyNotifier folderNotifier = EasyNotifier();
-  late LockManager lockManager;
+  bool _init = false;
   late Timer _timer;
+  late LockManager _lockManager;
+  late AppRepository _appRepository;
+  late ClipboardManager _clipboardManager;
+
+  LockManager get lockManager => _lockManager;
+  AppRepository get appRepository => _appRepository;
+  ClipboardManager get clipboardManager => _clipboardManager;
 
   AppAbstractModel({
     required this.appSetting
@@ -79,15 +84,15 @@ abstract class AppAbstractModel extends AbstractModel {
   Future<void> initialize() async {
     if (!_init) {
       _init = true;
-      clipboardManager = ClipboardManager(
+      _clipboardManager = ClipboardManager(
           appSetting: appSetting
       );
-      lockManager = LockManager(
+      _lockManager = LockManager(
           appSetting: appSetting,
           callback: () { return isLogin; }
       );
       final dir = await getAppDirectory();
-      appRepository = AppRepository(
+      _appRepository = AppRepository(
           objectBox: await ObjectBox.create(directory: dir.path),
           encryptStore: EncryptStore()
       );
@@ -124,6 +129,19 @@ abstract class AppAbstractModel extends AbstractModel {
     return _updateAdmin(admin);
   }
 
+  /// 登录账号
+  Future<AdminItem> loginByAdmin({
+    required String name,
+    required String password
+  }) async {
+
+    final admin = await appRepository.loginByAdmin(
+        AdminItem(name: name, password: password)
+    );
+
+    return _updateAdmin(admin);
+  }
+
   /// 更新账号信息
   Future<AdminItem> updateAdmin(AdminItem admin) async {
 
@@ -147,23 +165,28 @@ abstract class AppAbstractModel extends AbstractModel {
     return _updateAdmin(admin);
   }
 
-  /// 登录账号
-  Future<AdminItem> loginByAdmin({
-    required String name,
-    required String password
-  }) async {
+  /// 加载文件夹
+  Future<List<FolderItem>> loadFolders() async {
 
-    final admin = await appRepository.loginByAdmin(
-        AdminItem(name: name, password: password)
+    // 加载所有文件夹
+    final result = await appRepository.loadFoldersBy(admin);
+
+    result.add(
+        FolderItem(adminId: admin.id, name: S.current.noFolder)
     );
 
-    return _updateAdmin(admin);
+    folderNotifier.notify(() {
+      folders.clear();
+      folders.addAll(result);
+    });
+
+    return result;
   }
 
   /// 创建文件夹
   Future<FolderItem> createFolder(String name) async {
 
-    var folder = await appRepository.createFolder(
+    final folder = await appRepository.createFolder(
         FolderItem(adminId: admin.id, name: name)
     );
 
@@ -206,16 +229,141 @@ abstract class AppAbstractModel extends AbstractModel {
       await appRepository.updateAccounts(admin, accounts);
     }
 
-    folderNotifier.notify(() {
-      folders.remove(result);
-    });
+    folderNotifier.notify(() => folders.remove(result));
 
+    return result;
+  }
+
+  /// 加载所有账号
+  Future<List<AccountItem>> loadAllAccount() async {
+
+    final accounts = await appRepository.loadAllAccountBy(admin);
+
+    allAccountItems.clear();
+    allAccountItems.addAll(accounts);
+
+    return allAccountItems;
+  }
+
+  /// 创建账号
+  Future<AccountItem> createAccount(AccountItem account) async {
+    final result = await appRepository.createAccount(admin, account);
+    allAccountItems.add(result);
+    return result;
+  }
+
+  /// 删除账号
+  Future<AccountItem> deleteAccount(AccountItem account) async {
+    allAccountItems.remove(account);
+    return await appRepository.deleteAccount(admin, account);
+  }
+
+  /// 更新账号信息
+  Future<AccountItem> updateAccount(AccountItem account) async {
+    account.setUpdateTime();
+    return await appRepository.updateAccount(admin, account);
+  }
+
+  /// 收藏账号与取消
+  Future<AccountItem> favoriteAccount(AccountItem account) async {
+    account.favorite = !account.favorite;
+    account.setUpdateTime();
+    return await appRepository.updateAccount(admin, account);
+  }
+
+  /// 移到垃圾箱
+  Future<AccountItem> moveToTrash(AccountItem account) async {
+    account.trash = true;
+    updateAccountByAll(account);
+    return await appRepository.updateAccount(admin, account);
+  }
+
+  /// 恢复账号(移出垃圾箱)
+  Future<AccountItem> restoreAccount(AccountItem account) async {
+    account.trash = false;
+    return await appRepository.updateAccount(admin, account);
+  }
+
+  /// 导入账号
+  Future<bool> importAccount(PasswordCallback callback) async {
+
+    final file = await openFile(
+        acceptedTypeGroups: [XTypeGroup(label: 'json', extensions: ['json'])],
+        confirmButtonText: S.current.import
+    );
+
+    if (file == null) return false;
+
+    final text = await file.readAsString();
+    final values = json.decode(text) as List;
+
+    var accounts = values.map((e) => AccountItem.fromJson(e)).toList();
+    accounts.sort((a, b) => a.id.compareTo(b.id));
+
+    /// 回调请求用户密码
+    final password = await callback();
+
+    if (password == null) return false;
+
+    var count = 0;
+
+    accounts = accounts.map((account) {
+      final time = DateTime.now().millisecondsSinceEpoch + (count++);
+      final tAccount = appRepository.decryptAccount(password, account);
+      return tAccount.copy(
+          id: 0,
+          adminId: admin.id,
+          createTime: time,
+          updateTime: time
+      );
+    }).toList();
+
+    // 批量导入
+    final result = await appRepository.createAccountList(admin, accounts);
+
+    if (result.isNotEmpty) {
+      allAccountItems.addAll(result);
+    }
+    return true;
+  }
+
+  /// 导出账号
+  Future<bool> exportAccount(PasswordCallback callback) async {
+
+    var path = await getSavePath(
+        acceptedTypeGroups: [XTypeGroup(label: 'json', extensions: ['json'])],
+        suggestedName: "account_list.json",
+        confirmButtonText: S.current.export
+    );
+
+    if (path == null) return false;
+
+    /// 回调请求用户密码
+    final password = await callback();
+
+    if (password == null) return false;
+
+    final accountItems = allAccountItems.map((account) {
+      return appRepository.encryptAccount(password, account);
+    }).toList();
+
+    final value = json.encode(accountItems);
+    await File(path).writeAsString(value, flush: true);
+
+    return true;
+  }
+
+  /// 清除数据
+  Future<bool> clearData() async {
+    final result = await appRepository.clearData(admin);
+    if (result) {
+      allAccountItems.clear();
+    }
     return result;
   }
 
   /// 查找文件夹
   FolderItem findFolderBy(AccountItem account) {
-
     for (var folder in folders) {
       if (folder.id == account.folderId) {
         return folder;
@@ -224,22 +372,13 @@ abstract class AppAbstractModel extends AbstractModel {
     return folders[folders.length - 1];
   }
 
-  /// 加载文件夹
-  Future<List<FolderItem>> loadFolders() async {
-
-    // 加载所有文件夹
-    final result = await appRepository.loadFoldersBy(admin);
-
-    result.add(
-        FolderItem(adminId: admin.id, name: S.current.noFolder)
-    );
-
-    folderNotifier.notify(() {
-      folders.clear();
-      folders.addAll(result);
-    });
-
-    return result;
+  /// 更新列表中的账号
+  void updateAccountByAll(AccountItem item) {
+    final index = allAccountItems.indexOf(item);
+    if (index != -1) {
+      allAccountItems.removeAt(index);
+      allAccountItems.insert(index, item);
+    }
   }
 
   /// 获取App目录

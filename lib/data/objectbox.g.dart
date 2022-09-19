@@ -23,7 +23,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 7243920561383345351),
       name: 'AccountEntity',
-      lastPropertyId: const IdUid(12, 2316121011874826872),
+      lastPropertyId: const IdUid(13, 732885442028952931),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -85,6 +85,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(12, 2316121011874826872),
             name: 'updateTime',
             type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(13, 732885442028952931),
+            name: 'version',
+            type: 6,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -144,8 +149,7 @@ final _entities = <ModelEntity>[
             id: const IdUid(2, 8675753262262574228),
             name: 'name',
             type: 9,
-            flags: 2080,
-            indexId: const IdUid(2, 8578202736251352447)),
+            flags: 0),
         ModelProperty(
             id: const IdUid(3, 7661035055685820640),
             name: 'createTime',
@@ -186,7 +190,7 @@ ModelDefinition getObjectBoxModel() {
       lastRelationId: const IdUid(0, 0),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
-      retiredIndexUids: const [],
+      retiredIndexUids: const [8578202736251352447],
       retiredPropertyUids: const [],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -208,7 +212,7 @@ ModelDefinition getObjectBoxModel() {
           final passwordOffset = fbb.writeString(object.password);
           final urlOffset = fbb.writeString(object.url);
           final nodeOffset = fbb.writeString(object.node);
-          fbb.startTable(13);
+          fbb.startTable(14);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.adminId);
           fbb.addOffset(2, aliasOffset);
@@ -221,6 +225,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addBool(9, object.trash);
           fbb.addInt64(10, object.createTime);
           fbb.addInt64(11, object.updateTime);
+          fbb.addInt64(12, object.version);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -249,7 +254,8 @@ ModelDefinition getObjectBoxModel() {
               trash: const fb.BoolReader()
                   .vTableGet(buffer, rootOffset, 22, false),
               createTime: const fb.Int64Reader().vTableGet(buffer, rootOffset, 24, 0),
-              updateTime: const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0));
+              updateTime: const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0),
+              version: const fb.Int64Reader().vTableGet(buffer, rootOffset, 28, 0));
 
           return object;
         }),
@@ -381,6 +387,10 @@ class AccountEntity_ {
   /// see [AccountEntity.updateTime]
   static final updateTime =
       QueryIntegerProperty<AccountEntity>(_entities[0].properties[11]);
+
+  /// see [AccountEntity.version]
+  static final version =
+      QueryIntegerProperty<AccountEntity>(_entities[0].properties[12]);
 }
 
 /// [AdminEntity] entity fields to define ObjectBox queries.

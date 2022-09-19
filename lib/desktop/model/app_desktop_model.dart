@@ -15,17 +15,13 @@
  */
 
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter_polarbear_x/constant.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/data/item/side_item.dart';
 import 'package:flutter_polarbear_x/data/item/sort_item.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
-import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/model/app_abstract_model.dart';
 import 'package:flutter_polarbear_x/util/easy_notifier.dart';
 
@@ -41,6 +37,8 @@ class AppDesktopModel extends AppAbstractModel {
   final EasyNotifier listNotifier = EasyNotifier();
   final EasyNotifier infoNotifier = EasyNotifier();
   final EasyNotifier funStateNotifier = EasyNotifier();
+
+  final List<AccountItem> accounts = [];  /// 账号
 
   late SideItem chooseSide;
   SortType get sortType => chooseSide.type;
@@ -71,16 +69,10 @@ class AppDesktopModel extends AppAbstractModel {
     super.dispose();
   }
 
-  /// 文件夹修改通知
-  void _folderChange() {
-    infoNotifier.notifyListeners();
-  }
-
   /// 加载所有账号
+  @override
   Future<List<AccountItem>> loadAllAccount() async {
-
-    allAccountItems = await appRepository.loadAllAccountBy(admin);
-
+    await super.loadAllAccount();
     return await switchSide(side: allItems);
   }
 
@@ -156,11 +148,10 @@ class AppDesktopModel extends AppAbstractModel {
   }
 
   /// 创建账号
+  @override
   Future<AccountItem> createAccount(AccountItem account) async {
 
-    final result = await appRepository.createAccount(admin, account);
-
-    allAccountItems.add(result);
+    final result = await super.createAccount(account);
 
     refreshAccounts();
     viewAccountBy(result);
@@ -169,17 +160,15 @@ class AppDesktopModel extends AppAbstractModel {
   }
 
   /// 删除账号
+  @override
   Future<AccountItem> deleteAccount(AccountItem account) async {
 
     if (SortType.trash == chooseSide.type) {
       // 需要清除数据
-      allAccountItems.remove(account);
-      await appRepository.deleteAccount(admin, account);
+      await super.deleteAccount(account);
     } else {
       // 移动到垃圾箱
-      account.trash = true;
-      _updateListAccount(account);
-      await appRepository.updateAccount(admin, account);
+      await super.moveToTrash(account);
     }
 
     // 刷新账号
@@ -194,12 +183,12 @@ class AppDesktopModel extends AppAbstractModel {
   }
 
   /// 更新账号信息
+  @override
   Future<AccountItem> updateAccount(AccountItem account) async {
 
-    account.setUpdateTime();
-    final result = await appRepository.updateAccount(admin, account);
+    final result = await super.updateAccount(account);
 
-    _updateListAccount(result);
+    updateAccountByAll(result);
 
     refreshAccounts();
     viewAccountBy(result);
@@ -208,24 +197,22 @@ class AppDesktopModel extends AppAbstractModel {
   }
 
   /// 收藏账号与取消
+  @override
   Future<AccountItem> favoriteAccount(AccountItem account) async {
 
-    account.favorite = !account.favorite;
-    account.setUpdateTime();
-    final result = await appRepository.updateAccount(admin, account);
+    final result = await super.favoriteAccount(account);
 
-    _updateListAccount(result);
+    updateAccountByAll(result);
     refreshAccounts();
 
     return result;
   }
 
   /// 恢复账号
+  @override
   Future<AccountItem> restoreAccount(AccountItem account) async {
 
-    // 移出垃圾箱
-    account.trash = false;
-    final result = await appRepository.updateAccount(admin, account);
+    final result = await super.restoreAccount(account);
 
     // 刷新账号
     await refreshAccounts();
@@ -237,90 +224,24 @@ class AppDesktopModel extends AppAbstractModel {
 
     return result;
   }
-  
+
   /// 导入账号
+  @override
   Future<bool> importAccount(PasswordCallback callback) async {
-
-    final file = await openFile(
-        acceptedTypeGroups: [XTypeGroup(label: 'json', extensions: ['json'])],
-        confirmButtonText: S.current.import
-    );
-
-    if (file == null) return false;
-
-    final text = await file.readAsString();
-    final values = json.decode(text) as List;
-
-    var accounts = values.map((e) => AccountItem.fromJson(e)).toList();
-    accounts.sort((a, b) => a.id.compareTo(b.id));
-
-    /// 回调请求用户密码
-    final password = await callback();
-
-    if (password == null) return false;
-
-    var count = 0;
-
-    accounts = accounts.map((account) {
-      final time = DateTime.now().millisecondsSinceEpoch + (count++);
-      final tAccount = appRepository.decryptAccount(password, account);
-      return tAccount.copy(
-        id: 0,
-        adminId: admin.id,
-        createTime: time,
-        updateTime: time
-      );
-    }).toList();
-
-    // 批量导入
-    final result = await appRepository.createAccountList(admin, accounts);
-
-    if (result.isNotEmpty) {
-      allAccountItems.addAll(result);
-      refreshAccounts();
-    }
-
-    return true;
-  }
-
-  /// 导出账号
-  Future<bool> exportAccount(PasswordCallback callback) async {
-
-    var path = await getSavePath(
-        acceptedTypeGroups: [XTypeGroup(label: 'json', extensions: ['json'])],
-        suggestedName: "account_list.json",
-        confirmButtonText: S.current.export
-    );
-
-    if (path == null) return false;
-
-    /// 回调请求用户密码
-    final password = await callback();
-
-    if (password == null) return false;
-
-    final accountItems = allAccountItems.map((account) {
-      return appRepository.encryptAccount(password, account);
-    }).toList();
-
-    final value = json.encode(accountItems);
-    await File(path).writeAsString(value, flush: true);
-
-    return true;
+    final result = await super.importAccount(callback);
+    if (result) refreshAccounts();
+    return result;
   }
 
   /// 清除数据
+  @override
   Future<bool> clearData() async {
-
-    final result = await appRepository.clearData(admin);
-
+    final result = await super.clearData();
     if (result) {
-      allAccountItems.clear();
       clearChooseAccount();
       clearAccount();
       refreshAccounts();
     }
-
     return result;
   }
 
@@ -388,12 +309,8 @@ class AppDesktopModel extends AppAbstractModel {
     return items;
   }
 
-  /// 更新列表中的账号
-  void _updateListAccount(AccountItem item) {
-    final index = allAccountItems.indexOf(item);
-    if (index != -1) {
-      allAccountItems.removeAt(index);
-      allAccountItems.insert(index, item);
-    }
+  /// 文件夹修改通知
+  void _folderChange() {
+    infoNotifier.notifyListeners();
   }
 }
