@@ -50,6 +50,7 @@ dependencies:
   bitsdojo_window: ^0.1.2
   intl: ^0.17.0
   shared_preferences: ^2.0.15
+  flutter_slidable: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import 'package:flutter_polarbear_x/data/item/account_item.dart';
+import 'package:flutter_polarbear_x/data/item/folder_item.dart';
+import 'package:flutter_polarbear_x/data/item/sort_item.dart';
 import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/model/app_abstract_model.dart';
 
@@ -26,5 +29,45 @@ class AppMobileModel extends AppAbstractModel {
 
   @override
   void onInitialize() {
+  }
+
+  /// 过滤账号列表
+  Future<List<AccountItem>> loadAccountBy({
+    required SortType type,
+    FolderItem? folder
+  }) async {
+
+    final List<AccountItem> items;
+
+    switch(type) {
+      case SortType.favorite:
+        items = filterAccount(
+            accounts: allAccountItems,
+            filter: (item) => item.favorite && !item.trash
+        );
+        break;
+      case SortType.allItems:
+        items = filterAccount(
+            accounts: allAccountItems,
+            filter: (item) => !item.trash
+        );
+        break;
+      case SortType.trash:
+        items = filterAccount(
+            accounts: allAccountItems,
+            filter: (item) => item.trash
+        );
+        break;
+      case SortType.folder:
+        items = filterAccount(
+            accounts: allAccountItems,
+            filter: (item) => item.folderId == folder!.id && !item.trash
+        );
+        break;
+      default:
+        items = [];
+    }
+
+    return items;
   }
 }

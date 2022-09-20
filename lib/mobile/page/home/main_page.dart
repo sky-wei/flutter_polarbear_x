@@ -16,16 +16,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
+import 'package:flutter_polarbear_x/data/item/sort_item.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/mobile/dialog/input_dialog.dart';
 import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
+import 'package:flutter_polarbear_x/mobile/page/home/account/account_list_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/account/edit_account_page.dart';
-import 'package:flutter_polarbear_x/mobile/page/home/account_page.dart';
-import 'package:flutter_polarbear_x/mobile/page/home/favorite_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/folder_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/home/search_page.dart';
 import 'package:flutter_polarbear_x/mobile/page/setting/setting_page.dart';
-import 'package:flutter_polarbear_x/mobile/page/trash/trash_page.dart';
 import 'package:flutter_polarbear_x/route.dart';
 import 'package:flutter_polarbear_x/route/mobile_page_route.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
@@ -38,15 +37,15 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 
-class HomePage extends StatefulWidget {
+class MainPage extends StatefulWidget {
 
-  const HomePage({Key? key}) : super(key: key);
+  const MainPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _HomePageState();
+  State<StatefulWidget> createState() => _MainPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MainPageState extends State<MainPage> {
 
   int _currentIndex = 0;
   DateTime? _lastPressTime;
@@ -60,6 +59,7 @@ class _HomePageState extends State<HomePage> {
     _appModel = context.read<AppMobileModel>();
     _appModel.lockManager.addListener(_lockChange);
     _appModel.loadFolders();
+    _appModel.loadAllAccount();
   }
 
   @override
@@ -79,9 +79,9 @@ class _HomePageState extends State<HomePage> {
           controller: _pageController,
           physics: const NeverScrollableScrollPhysics(),
           children: const [
-            AccountPage(),
+            AccountListPage(pageState: false, sortType: SortType.allItems),
             FolderPage(),
-            FavoritePage(),
+            AccountListPage(pageState: false, sortType: SortType.favorite),
             SearchPage(),
           ],
         ),
@@ -351,7 +351,12 @@ class _HomePageState extends State<HomePage> {
   /// 打开回收箱
   void _openTrash(BuildContext context) {
     Scaffold.of(context).closeDrawer();
-    Navigator.push(context, MobilePageRoute(child: const TrashPage()));
+    Navigator.push(
+        context,
+        MobilePageRoute(
+            child: const AccountListPage(sortType: SortType.trash)
+        )
+    );
   }
 
   /// 锁定应用

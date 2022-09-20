@@ -18,9 +18,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/data/item/side_item.dart';
 import 'package:flutter_polarbear_x/data/item/sort_item.dart';
+import 'package:flutter_polarbear_x/generated/l10n.dart';
+import 'package:flutter_polarbear_x/mobile/dialog/hint_dialog.dart';
+import 'package:flutter_polarbear_x/mobile/dialog/input_dialog.dart';
 import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
+import 'package:flutter_polarbear_x/mobile/page/home/account/account_list_page.dart';
+import 'package:flutter_polarbear_x/route/mobile_page_route.dart';
+import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
+import 'package:flutter_polarbear_x/util/error_util.dart';
+import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
@@ -52,21 +61,37 @@ class FolderPageState extends State<FolderPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-      itemBuilder: (context, index) {
-        final folder = _appModel.folders[index];
-        return _SideItemWidget(
+    return SlidableAutoCloseBehavior(
+      child: ListView.separated(
+        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+        itemBuilder: (context, index) {
+          final folder = _appModel.folders[index];
+          return _buildSlidableWidget(folder);
+        },
+        separatorBuilder: (context, index) {
+          return const SizedBox(height: 10);
+        },
+        itemCount: _appModel.folders.length,
+      ),
+    );
+  }
+
+  /// 创建 Slidable
+  Slidable _buildSlidableWidget(FolderItem folder) {
+    return Slidable(
+      groupTag: '0',
+      endActionPane: folder.id > 0 ? ActionPane(
+          motion: const DrawerMotion(),
+          children: [
+            _buildEditAction(onPressed: (context) => _editFolder(folder)),
+            _buildDeleteAction(onPressed: (context) => _deleteFolder(folder)),
+          ]
+      ) : null,
+      child: _SideItemWidget(
           item: _buildSideItem(folder),
-          moreIcon: 'assets/svg/ic_arrow_right.svg',
-          onPressed: _chooseHandler,
-          onLongPress: () {}
-        );
-      },
-      separatorBuilder: (context, index) {
-        return const SizedBox(height: 10);
-      },
-      itemCount: _appModel.folders.length,
+          // moreIcon: 'assets/svg/ic_arrow_right.svg',
+          onPressed: (item) => _openFolder(folder),
+      ),
     );
   }
 
@@ -86,12 +111,99 @@ class FolderPageState extends State<FolderPage> {
     );
   }
 
-  /// 选择处理
-  void _chooseHandler(SideItem item) {
+  /// 创建编辑控件
+  SlidableAction _buildEditAction({
+    required SlidableActionCallback onPressed
+  }) {
+    return SlidableAction(
+      onPressed: onPressed,
+      backgroundColor: Theme.of(context).themeColor,
+      foregroundColor: Colors.white,
+      icon: Icons.edit,
+      label: S.of(context).edit,
+      borderRadius: const BorderRadius.all(Radius.circular(6)),
+    );
+  }
 
+  /// 创建删除控件
+  SlidableAction _buildDeleteAction({
+    required SlidableActionCallback onPressed
+  }) {
+    return SlidableAction(
+      onPressed: onPressed,
+      backgroundColor: Theme.of(context).deleteColor,
+      foregroundColor: Colors.white,
+      icon: Icons.delete,
+      label: S.of(context).delete,
+      borderRadius: const BorderRadius.all(Radius.circular(6)),
+    );
+  }
+
+  /// 编辑文件夹
+  Future<void> _editFolder(FolderItem folder) async {
+
+    final result = await showModalBottomSheet<String>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: XColor.transparent,
+        builder: (context) {
+          return InputDialog(
+            title: S.of(context).editFolder,
+            labelText: S.of(context).name,
+            value: folder.name,
+          );
+        }
+    );
+
+    if (result == null) {
+      return;
+    }
+
+    if (result.isEmpty) {
+      MessageUtil.showMessage(context, S.of(context).canNotEmpty);
+      return;
+    }
+
+    // 编辑文件夹
+    _appModel.updateFolder(folder.copy(name: result)).catchError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+    });
+  }
+
+  /// 删除文件夹
+  Future<void> _deleteFolder(FolderItem folder) async {
+
+    final result = await showModalBottomSheet<int>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: XColor.transparent,
+        builder: (context) {
+          return HintDialog(
+            title: S.of(context).deleteFolder,
+            message: S.of(context).deleteFolderMessage,
+          );
+        }
+    );
+
+    if (result == 1) {
+      _appModel.deleteFolder(folder).catchError((error, stackTrace) {
+        MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+      });
+    }
+  }
+
+  /// 点击处理
+  void _openFolder(FolderItem folder) {
+    Navigator.push(
+        context,
+        MobilePageRoute(
+            child: AccountListPage(sortType: SortType.folder, folder: folder)
+        )
+    );
   }
 }
 
+/// 文件夹控件
 class _SideItemWidget extends StatelessWidget {
 
   final SideItem item;
