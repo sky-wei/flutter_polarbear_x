@@ -16,7 +16,7 @@
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_polarbear_x/widget/window_buttons.dart';
+import 'package:flutter_polarbear_x/desktop/widget/window_buttons.dart';
 
 import 'home_info.dart';
 import 'home_list.dart';

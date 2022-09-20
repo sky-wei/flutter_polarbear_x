@@ -29,6 +29,7 @@ import 'page/home/home_page.dart';
 import 'page/lock/lock_page.dart';
 import 'page/login/login_page.dart';
 import 'page/splash/splash_page.dart';
+import 'widget/monitor_widget.dart';
 
 class PolarBearMobileX extends StatelessWidget {
 
@@ -58,7 +59,7 @@ class PolarBearMobileX extends StatelessWidget {
           XRoute.home: (context) => const HomePage(),
           XRoute.lock: (context) => const LockPage(),
         },
-        // builder: (context, child) => MonitorWidget(child: child),
+        builder: (context, child) => MonitorWidget(child: child),
         initialRoute: XRoute.splash,
         locale: appSetting.getLocale(),
         localizationsDelegates: const [

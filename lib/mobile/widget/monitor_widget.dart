@@ -17,7 +17,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../model/app_desktop_model.dart';
+import '../model/app_mobile_model.dart';
 
 class MonitorWidget extends StatefulWidget {
 
@@ -34,12 +34,12 @@ class MonitorWidget extends StatefulWidget {
 
 class _MonitorWidgetState extends State<MonitorWidget> {
 
-  late AppDesktopModel _appModel;
+  late AppMobileModel _appModel;
 
   @override
   void initState() {
     super.initState();
-    _appModel = context.read<AppDesktopModel>();
+    _appModel = context.read<AppMobileModel>();
   }
   
   @override

@@ -27,7 +27,7 @@ import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/big_button_widget.dart';
 import 'package:flutter_polarbear_x/widget/big_input_widget.dart';
 import 'package:flutter_polarbear_x/widget/head_logo_widget.dart';
-import 'package:flutter_polarbear_x/widget/window_buttons.dart';
+import 'package:flutter_polarbear_x/desktop/widget/window_buttons.dart';
 import 'package:provider/provider.dart';
 
 
