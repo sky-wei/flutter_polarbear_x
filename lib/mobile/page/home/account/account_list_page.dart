@@ -23,6 +23,8 @@ import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
 import 'package:flutter_polarbear_x/mobile/widget/list_item_widget.dart';
 import 'package:flutter_polarbear_x/route/mobile_page_route.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
+import 'package:flutter_polarbear_x/util/error_util.dart';
+import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
 import 'package:flutter_polarbear_x/widget/list_empty_widget.dart';
@@ -85,6 +87,7 @@ class _AccountListState extends State<AccountListPage> {
               fontWeight: FontWeight.w500
           ),
           centerTitle: true,
+          actions: _buildActions(widget.sortType),
           elevation: 0,
           backgroundColor: Theme.of(context).dialogBackgroundColor,
         ),
@@ -93,6 +96,20 @@ class _AccountListState extends State<AccountListPage> {
       );
     }
     return _buildBodyContent();
+  }
+
+  /// 创建 Widget
+  List<Widget>? _buildActions(SortType type) {
+    if (SortType.trash == type) {
+      return [
+        ActionMenuWidget(
+          iconName: 'ic_trash.svg',
+          iconColor: Theme.of(context).deleteColor,
+          onPressed: () => _cleanTrash(),
+        )
+      ];
+    }
+    return null;
   }
 
   /// 获取名称
@@ -157,18 +174,18 @@ class _AccountListState extends State<AccountListPage> {
       groupTag: '0',
       endActionPane: ActionPane(
         motion: const DrawerMotion(),
-        children: [
-          // _buildCopyAction(onPressed: (context) {}),
-          // _buildRestoreAction(onPressed: (context) {}),
-          _buildFavoriteAction(onPressed: (context) {}),
-          _buildDeleteAction(onPressed: (context) {}),
+        children: SortType.trash == widget.sortType ? [
+          _buildRestoreAction(onPressed: (context) => _restoreAccount(account)),
+          _buildDeleteAction(onPressed: (context) => _deleteAccount(account))
+        ] : [
+          _buildFavoriteAction(account: account, onPressed: (context) => _favoriteAccount(account)),
+          _buildDeleteAction(onPressed: (context) => _deleteAccount(account)),
         ]
       ),
       child: ListItemWidget(
         type: widget.sortType,
         account: account,
         onPressed: _editAccount,
-        onFavorite: (account) {},
       ),
     );
   }
@@ -203,13 +220,14 @@ class _AccountListState extends State<AccountListPage> {
 
   /// 创建收藏控件
   SlidableAction _buildFavoriteAction({
+    required AccountItem account,
     required SlidableActionCallback onPressed
   }) {
     return SlidableAction(
       onPressed: onPressed,
       backgroundColor: Theme.of(context).favoriteColor,
       foregroundColor: Colors.white,
-      icon: Icons.favorite_border,
+      icon: account.favorite ? Icons.favorite_border : Icons.favorite,
       label: S.of(context).favorite,
       borderRadius: const BorderRadius.all(Radius.circular(6)),
     );
@@ -266,6 +284,28 @@ class _AccountListState extends State<AccountListPage> {
         context,
         MobilePageRoute(child: EditAccountPage(account: account))
     );
+  }
+
+  /// 恢复账号
+  Future<void> _restoreAccount(AccountItem account) async {
+
+  }
+
+  /// 收藏账号
+  Future<void> _favoriteAccount(AccountItem account) async {
+    _appModel.favoriteAccount(account).catchError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+    });
+  }
+
+  /// 删除账号
+  Future<void> _deleteAccount(AccountItem account) async {
+
+  }
+  
+  /// 清除回收箱
+  Future<void> _cleanTrash() async {
+    
   }
 
   /// 加载账号

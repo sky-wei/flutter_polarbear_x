@@ -15,10 +15,8 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_polarbear_x/constant.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/item/sort_item.dart';
-import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_svg/svg.dart';
@@ -29,7 +27,6 @@ class ListItemWidget extends StatelessWidget {
   final SortType type;
   final AccountItem account;
   final ValueChanged<AccountItem> onPressed;
-  final ValueChanged<AccountItem> onFavorite;
   final EdgeInsetsGeometry? padding;
   final PointerDownEventListener? onPointerDown;
 
@@ -38,7 +35,6 @@ class ListItemWidget extends StatelessWidget {
     required this.type,
     required this.account,
     required this.onPressed,
-    required this.onFavorite,
     this.padding,
     this.onPointerDown
   }) : super(key: key);
@@ -46,7 +42,6 @@ class ListItemWidget extends StatelessWidget {
   final DateFormat _dateFormat = DateFormat.yMMMMd()..add_Hm();
 
   bool get favorite => SortType.trash != type && account.favorite;
-  bool get unFavorite => SortType.trash != type && !account.favorite;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +49,7 @@ class ListItemWidget extends StatelessWidget {
       color: Theme.of(context).dialogBackgroundColor,
       borderRadius: const BorderRadiusDirectional.all(Radius.circular(6)),
       child: Ink(
+        width: double.infinity,
         child: InkWell(
           borderRadius: BorderRadius.circular(6),
           onTap: () { onPressed(account); },
@@ -61,59 +57,59 @@ class ListItemWidget extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
             child: Stack(
               children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      account.alias,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        // color: XColor.sideTextColor,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16
-                      ),
-                    ),
-                    XBox.vertical10,
-                    Text(
-                      account.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: Theme.of(context).hintColor,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 14
-                      ),
-                    ),
-                    XBox.vertical5,
-                    Text(
-                      _dateFormat.format(account.updateDateTime),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: Theme.of(context).hintColor,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 14
-                      ),
-                    ),
-                  ],
-                ),
+                _buildContent(context),
                 if (favorite)
                   _buildFavorite(
                       icon: 'assets/svg/ic_favorite.svg',
                       color: Theme.of(context).favoriteColor
-                  ),
-                if (unFavorite)
-                  _buildFavorite(
-                      icon: 'assets/svg/ic_un_favorite.svg',
-                      color: Theme.of(context).hintColor
                   ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  /// 创建显示内容控件
+  Widget _buildContent(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          account.alias,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            // color: XColor.sideTextColor,
+              fontWeight: FontWeight.normal,
+              fontSize: 16
+          ),
+        ),
+        XBox.vertical10,
+        Text(
+          account.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+              color: Theme.of(context).hintColor,
+              fontWeight: FontWeight.normal,
+              fontSize: 14
+          ),
+        ),
+        XBox.vertical5,
+        Text(
+          _dateFormat.format(account.updateDateTime),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+              color: Theme.of(context).hintColor,
+              fontWeight: FontWeight.normal,
+              fontSize: 14
+          ),
+        ),
+      ],
     );
   }
 
