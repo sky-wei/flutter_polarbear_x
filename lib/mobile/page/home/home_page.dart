@@ -59,6 +59,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _appModel = context.read<AppMobileModel>();
     _appModel.lockManager.addListener(_lockChange);
+    _appModel.loadFolders();
   }
 
   @override

@@ -37,14 +37,11 @@ class FolderPageState extends State<FolderPage> {
 
   late AppMobileModel _appModel;
 
-  final List<SideItem> _sideItems = [];
-
   @override
   void initState() {
     super.initState();
     _appModel = context.read<AppMobileModel>();
     _appModel.folderNotifier.addListener(_infoChange);
-    _appModel.loadFolders();
   }
 
   @override
@@ -58,9 +55,9 @@ class FolderPageState extends State<FolderPage> {
     return ListView.separated(
       padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
       itemBuilder: (context, index) {
-        final item = _sideItems[index];
+        final folder = _appModel.folders[index];
         return _SideItemWidget(
-          item: item,
+          item: _buildSideItem(folder),
           moreIcon: 'assets/svg/ic_arrow_right.svg',
           onPressed: _chooseHandler,
           onLongPress: () {}
@@ -69,20 +66,13 @@ class FolderPageState extends State<FolderPage> {
       separatorBuilder: (context, index) {
         return const SizedBox(height: 10);
       },
-      itemCount: _sideItems.length,
+      itemCount: _appModel.folders.length,
     );
   }
 
   /// 信息修改
   Future<void> _infoChange() async {
-
-    final items = _appModel.folders;
-    final sideItems = items.map((value) => _buildSideItem(value)).toList();
-
-    setState(() {
-      _sideItems.clear();
-      _sideItems.addAll(sideItems);
-    });
+    setState(() { });
   }
 
   /// 创建SideItem
