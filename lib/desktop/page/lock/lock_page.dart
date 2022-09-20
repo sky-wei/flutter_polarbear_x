@@ -19,6 +19,7 @@ import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/desktop/model/app_desktop_model.dart';
+import 'package:flutter_polarbear_x/desktop/widget/window_buttons.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/error_util.dart';
@@ -27,7 +28,6 @@ import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/big_button_widget.dart';
 import 'package:flutter_polarbear_x/widget/big_input_widget.dart';
 import 'package:flutter_polarbear_x/widget/head_logo_widget.dart';
-import 'package:flutter_polarbear_x/desktop/widget/window_buttons.dart';
 import 'package:provider/provider.dart';
 
 
@@ -164,10 +164,7 @@ class _LockPageState extends State<LockPage> {
 
   /// 登录
   void _unlock() {
-
-    var appModel = context.read<AppDesktopModel>();
-
-    appModel.unlock(
+    _appModel.unlock(
       _passwordController.text
     ).then((value) {
       Navigator.pop(context);

@@ -69,10 +69,8 @@ class AppDesktopModel extends AppAbstractModel {
     super.dispose();
   }
 
-  /// 加载所有账号
-  @override
-  Future<List<AccountItem>> loadAllAccount() async {
-    await super.loadAllAccount();
+  /// 切换到默认
+  Future<List<AccountItem>> switchDefaultSide() async {
     return await switchSide(side: allItems);
   }
 
@@ -153,7 +151,7 @@ class AppDesktopModel extends AppAbstractModel {
 
     final result = await super.createAccount(account);
 
-    refreshAccounts();
+    await refreshAccounts();
     viewAccountBy(result);
 
     return result;
@@ -188,9 +186,7 @@ class AppDesktopModel extends AppAbstractModel {
 
     final result = await super.updateAccount(account);
 
-    updateAccountByAll(result);
-
-    refreshAccounts();
+    await refreshAccounts();
     viewAccountBy(result);
 
     return result;
@@ -202,8 +198,7 @@ class AppDesktopModel extends AppAbstractModel {
 
     final result = await super.favoriteAccount(account);
 
-    updateAccountByAll(result);
-    refreshAccounts();
+    await refreshAccounts();
 
     return result;
   }
@@ -229,7 +224,7 @@ class AppDesktopModel extends AppAbstractModel {
   @override
   Future<bool> importAccount(PasswordCallback callback) async {
     final result = await super.importAccount(callback);
-    if (result) refreshAccounts();
+    if (result) await refreshAccounts();
     return result;
   }
 
@@ -240,7 +235,7 @@ class AppDesktopModel extends AppAbstractModel {
     if (result) {
       clearChooseAccount();
       clearAccount();
-      refreshAccounts();
+      await refreshAccounts();
     }
     return result;
   }

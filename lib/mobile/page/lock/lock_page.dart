@@ -145,10 +145,8 @@ class _LockPageState extends State<LockPage> {
 
   /// 登录
   void _unlock() {
-
-    var appModel = context.read<AppMobileModel>();
-
-    appModel.unlock(
+    _appModel.updateMonitorTime();
+    _appModel.unlock(
         _passwordController.text
     ).then((value) {
       Navigator.pop(context);

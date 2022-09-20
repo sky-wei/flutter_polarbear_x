@@ -57,7 +57,11 @@ class _HomeListState extends State<HomeList> {
     _scrollController = ScrollController();
     _appModel = context.read<AppDesktopModel>();
     _appModel.listNotifier.addListener(_infoChange);
-    _appModel.loadAllAccount();
+    _appModel.loadAllAccount().then((value) {
+      _appModel.switchDefaultSide();
+    }).onError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+    });
   }
 
   @override
