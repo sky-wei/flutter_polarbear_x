@@ -15,7 +15,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/platform_util.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -39,11 +38,8 @@ class ListEmptyWidget extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(bottom: bottom),
         child: Material(
+          color: XColor.transparent,
           child: Ink(
-            decoration: BoxDecoration(
-              color: Theme.of(context).listColor,
-              borderRadius: BorderRadius.circular(6),
-            ),
             child: InkWell(
               borderRadius: BorderRadius.circular(6),
               onTap: onPressed,

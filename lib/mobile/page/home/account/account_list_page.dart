@@ -36,22 +36,25 @@ import 'edit_account_page.dart';
 class AccountListPage extends StatefulWidget {
 
   final bool pageState;
+  final bool openSearch;
   final SortType sortType;
   final FolderItem? folder;
 
   const AccountListPage({
     Key? key,
     this.pageState = true,
+    this.openSearch = false,
     required this.sortType,
     this.folder
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AccountListState();
+  State<StatefulWidget> createState() => AccountListState();
 }
 
-class _AccountListState extends State<AccountListPage> {
+class AccountListState extends State<AccountListPage> {
 
+  String _keyword = '';
   late AppMobileModel _appModel;
   late ScrollController _scrollController;
 
@@ -98,6 +101,13 @@ class _AccountListState extends State<AccountListPage> {
     return _buildBodyContent();
   }
 
+  /// 搜索
+  Future<void> search(String keyword) async {
+    if (widget.openSearch) {
+      setState(() { _keyword = keyword; });
+    }
+  }
+
   /// 创建 Widget
   List<Widget>? _buildActions(SortType type) {
     if (SortType.trash == type) {
@@ -135,7 +145,7 @@ class _AccountListState extends State<AccountListPage> {
             if (accountItems.isEmpty) {
               return ListEmptyWidget(
                 tips: S.of(context).emptyAccountListTip,
-                onPressed: SortType.allItems == widget.sortType ? _newAccount : null,
+                onPressed: _isHandlerEmptyEvent() ? _newAccount : null,
               );
             }
             return _buildListWidget(accountItems);
@@ -148,6 +158,11 @@ class _AccountListState extends State<AccountListPage> {
         return const Center();
       },
     );
+  }
+
+  /// 是不处理空控件事件
+  bool _isHandlerEmptyEvent() {
+    return SortType.trash != widget.sortType && !widget.openSearch;
   }
 
   /// 创建列表的控件
@@ -309,8 +324,27 @@ class _AccountListState extends State<AccountListPage> {
   }
 
   /// 加载账号
-  Future<List<AccountItem>> loadAccount() {
-    return _appModel.loadAccountBy(type: widget.sortType, folder: widget.folder);
+  Future<List<AccountItem>> loadAccount() async {
+
+    if (!widget.openSearch) {
+      // 不需要搜索直接返回
+      return await _appModel.loadAccountBy(
+          type: widget.sortType, folder: widget.folder
+      );
+    }
+
+    if (_keyword.isEmpty) {
+      return [];
+    }
+
+    final accounts = await _appModel.loadAccountBy(
+        type: widget.sortType, folder: widget.folder
+    );
+
+    return _appModel.filterAccount(
+        accounts: accounts,
+        filter: (item) => item.contains(_keyword)
+    );
   }
 
   /// 信息修改

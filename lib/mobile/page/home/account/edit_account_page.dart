@@ -23,12 +23,12 @@ import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
 
 class EditAccountPage extends StatefulWidget {
 
-  final bool viewState;
+  final bool editState;
   final AccountItem account;
 
   const EditAccountPage({
     Key? key,
-    this.viewState = true,
+    this.editState = true,
     required this.account
   }) : super(key: key);
 

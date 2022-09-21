@@ -233,12 +233,6 @@ abstract class AppAbstractModel extends AbstractModel {
 
     final accounts = await appRepository.loadAllAccountBy(admin);
 
-    accounts.add(AccountItem(adminId: admin.id, alias: 'Sky', name: 'Sky', password: '123456', favorite: true));
-    accounts.add(AccountItem(adminId: admin.id, alias: 'Sky', name: 'Sky', password: '123456'));
-    accounts.add(AccountItem(adminId: admin.id, alias: 'Sky', name: 'Sky', password: '123456', trash: true));
-    accounts.add(AccountItem(adminId: admin.id, alias: 'Sky', name: 'Sky', password: '123456'));
-    accounts.add(AccountItem(adminId: admin.id, alias: 'Sky', name: 'Sky', password: '123456'));
-
     allAccountNotifier.notify(() {
       allAccountItems.clear();
       allAccountItems.addAll(accounts);
