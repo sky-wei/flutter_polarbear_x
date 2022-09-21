@@ -19,6 +19,7 @@ import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/data/item/sort_item.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
+import 'package:flutter_polarbear_x/mobile/dialog/hint_dialog.dart';
 import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
 import 'package:flutter_polarbear_x/mobile/widget/list_item_widget.dart';
 import 'package:flutter_polarbear_x/route/mobile_page_route.dart';
@@ -58,6 +59,11 @@ class AccountListState extends State<AccountListPage> {
   late AppMobileModel _appModel;
   late ScrollController _scrollController;
 
+  bool get isFavorite => SortType.favorite == widget.sortType;
+  bool get isAllItems => SortType.allItems == widget.sortType;
+  bool get isFolder => SortType.folder == widget.sortType;
+  bool get isTrash => SortType.trash == widget.sortType;
+
   @override
   void initState() {
     super.initState();
@@ -78,22 +84,7 @@ class AccountListState extends State<AccountListPage> {
   Widget build(BuildContext context) {
     if (widget.pageState) {
       return Scaffold(
-        appBar: AppBar(
-          leading: ActionMenuWidget(
-            iconName: 'ic_back.svg',
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          title: Text(widget.folder?.name ?? _getNameByType(widget.sortType)),
-          titleTextStyle: TextStyle(
-              color: Theme.of(context).mainTextColor,
-              fontSize: 18,
-              fontWeight: FontWeight.w500
-          ),
-          centerTitle: true,
-          actions: _buildActions(widget.sortType),
-          elevation: 0,
-          backgroundColor: Theme.of(context).dialogBackgroundColor,
-        ),
+        appBar: _buildAppBar(),
         body: _buildBodyContent(),
         backgroundColor: Theme.of(context).backgroundColor,
       );
@@ -108,9 +99,28 @@ class AccountListState extends State<AccountListPage> {
     }
   }
 
+  AppBar _buildAppBar() {
+    return AppBar(
+      leading: ActionMenuWidget(
+        iconName: 'ic_back.svg',
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      title: Text(widget.folder?.name ?? _getTitleName()),
+      titleTextStyle: TextStyle(
+          color: Theme.of(context).mainTextColor,
+          fontSize: 18,
+          fontWeight: FontWeight.w500
+      ),
+      centerTitle: true,
+      actions: _buildActions(),
+      elevation: 0,
+      backgroundColor: Theme.of(context).dialogBackgroundColor,
+    );
+  }
+
   /// 创建 Widget
-  List<Widget>? _buildActions(SortType type) {
-    if (SortType.trash == type) {
+  List<Widget>? _buildActions() {
+    if (isTrash) {
       return [
         ActionMenuWidget(
           iconName: 'ic_trash.svg',
@@ -123,10 +133,10 @@ class AccountListState extends State<AccountListPage> {
   }
 
   /// 获取名称
-  String _getNameByType(SortType type) {
-    if (SortType.favorite == type) {
+  String _getTitleName() {
+    if (isFavorite) {
       return S.of(context).favorite;
-    } else if (SortType.trash == type) {
+    } else if (isTrash) {
       return S.of(context).trash;
     }
     return '';
@@ -162,7 +172,7 @@ class AccountListState extends State<AccountListPage> {
 
   /// 是不处理空控件事件
   bool _isHandlerEmptyEvent() {
-    return SortType.trash != widget.sortType && !widget.openSearch;
+    return !isTrash && !widget.openSearch;
   }
 
   /// 创建列表的控件
@@ -189,7 +199,7 @@ class AccountListState extends State<AccountListPage> {
       groupTag: '0',
       endActionPane: ActionPane(
         motion: const DrawerMotion(),
-        children: SortType.trash == widget.sortType ? [
+        children: isTrash ? [
           _buildRestoreAction(onPressed: (context) => _restoreAccount(account)),
           _buildDeleteAction(onPressed: (context) => _deleteAccount(account))
         ] : [
@@ -202,20 +212,6 @@ class AccountListState extends State<AccountListPage> {
         account: account,
         onPressed: _editAccount,
       ),
-    );
-  }
-
-  /// 创建恢复控件
-  SlidableAction _buildCopyAction({
-    required SlidableActionCallback onPressed
-  }) {
-    return SlidableAction(
-      onPressed: onPressed,
-      backgroundColor: Theme.of(context).themeColor,
-      foregroundColor: Colors.white,
-      icon: Icons.copy,
-      label: S.of(context).copy,
-      borderRadius: const BorderRadius.all(Radius.circular(6)),
     );
   }
 
@@ -281,16 +277,14 @@ class AccountListState extends State<AccountListPage> {
   }
 
   /// 创建账号
-  Future<void> _newAccount() async {
+  void _newAccount() {
 
     final account = AccountItem.formAdmin(
         _appModel.admin.id
-    );
-
-    Navigator.push<AccountItem>(
-        context,
-        MobilePageRoute(child: EditAccountPage(account: account))
-    );
+    ) ..favorite = isFavorite
+      ..folderId = widget.folder?.id ?? FolderItem.noFolder;
+    
+    _editAccount(account);
   }
 
   /// 编辑账号
@@ -303,7 +297,9 @@ class AccountListState extends State<AccountListPage> {
 
   /// 恢复账号
   Future<void> _restoreAccount(AccountItem account) async {
-
+    _appModel.restoreAccount(account).catchError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+    });
   }
 
   /// 收藏账号
@@ -315,7 +311,27 @@ class AccountListState extends State<AccountListPage> {
 
   /// 删除账号
   Future<void> _deleteAccount(AccountItem account) async {
+    if (isTrash) {
+      final result = await showModalBottomSheet<int>(
+          context: context,
+          builder: (context) {
+            return HintDialog(
+              title: S.of(context).deleteAccount,
+              message: S.of(context).deleteAccountMessage,
+            );
+          }
+      );
 
+      if (result == 1) {
+        _appModel.deleteAccount(account).catchError((error, stackTrace) {
+          MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+        });
+      }
+    } else {
+      _appModel.moveToTrash(account).catchError((error, stackTrace) {
+        MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+      });
+    }
   }
   
   /// 清除回收箱
