@@ -1169,6 +1169,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Are you sure you want to clear all current data！`
+  String get clearTrashTips {
+    return Intl.message(
+      'Are you sure you want to clear all current data！',
+      name: 'clearTrashTips',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

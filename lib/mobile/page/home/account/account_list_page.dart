@@ -127,7 +127,7 @@ class AccountListState extends State<AccountListPage> {
           iconName: 'ic_trash.svg',
           tooltip: S.of(context).trash,
           iconColor: Theme.of(context).deleteColor,
-          onPressed: () => _cleanTrash(),
+          onPressed: () => _clearTrash(),
         )
       ];
     }
@@ -351,8 +351,25 @@ class AccountListState extends State<AccountListPage> {
   }
   
   /// 清除回收箱
-  Future<void> _cleanTrash() async {
-    
+  Future<void> _clearTrash() async {
+
+    final result = await showModalBottomSheet<int>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: XColor.transparent,
+        builder: (context) {
+          return HintDialog(
+            title: S.of(context).clearData,
+            message: S.of(context).clearTrashTips,
+          );
+        }
+    );
+
+    if (result == 1) {
+      _appModel.clearTrash().catchError((error, stackTrace) {
+        MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+      });
+    }
   }
 
   /// 加载账号

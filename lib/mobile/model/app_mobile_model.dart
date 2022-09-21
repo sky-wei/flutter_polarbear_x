@@ -70,4 +70,10 @@ class AppMobileModel extends AppAbstractModel {
 
     return items;
   }
+
+  /// 清除回收箱
+  Future<List<AccountItem>> clearTrash() async {
+    final accounts = await loadAccountBy(type: SortType.trash);
+    return await deleteAccounts(accounts);
+  }
 }

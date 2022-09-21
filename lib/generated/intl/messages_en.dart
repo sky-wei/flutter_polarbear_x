@@ -59,6 +59,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "clearData": MessageLookupByLibrary.simpleMessage("Clear Data"),
         "clearDataMessage": MessageLookupByLibrary.simpleMessage(
             "Are you sure you want to clear all accounts under this account!"),
+        "clearTrashTips": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to clear all current data！"),
         "clone": MessageLookupByLibrary.simpleMessage("Clone"),
         "close": MessageLookupByLibrary.simpleMessage("Close"),
         "confirmPassword":

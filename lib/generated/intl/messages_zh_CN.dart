@@ -53,6 +53,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "clearData": MessageLookupByLibrary.simpleMessage("清除数据"),
         "clearDataMessage":
             MessageLookupByLibrary.simpleMessage("您确定要清除此账号下的所有账号吗!"),
+        "clearTrashTips":
+            MessageLookupByLibrary.simpleMessage("您确定要清除当前所有数据吗！"),
         "clone": MessageLookupByLibrary.simpleMessage("复制"),
         "close": MessageLookupByLibrary.simpleMessage("关闭"),
         "confirmPassword": MessageLookupByLibrary.simpleMessage("确认密码"),

@@ -15,20 +15,18 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/data/item/action_item.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
+import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/platform_util.dart';
-import 'package:flutter_polarbear_x/util/size_box_util.dart';
 
+class ChooseDialog extends StatelessWidget {
 
-class HintDialog extends StatelessWidget {
+  final List<ActionItem> actions;
 
-  final String title;
-  final String message;
-
-  const HintDialog({
+  const ChooseDialog({
     Key? key,
-    required this.title,
-    required this.message,
+    required this.actions
   }) : super(key: key);
 
   @override
@@ -52,33 +50,27 @@ class HintDialog extends StatelessWidget {
   /// 创建内容
   Widget _buildContent(BuildContext context) {
     return SingleChildScrollView(
+      padding: const EdgeInsets.only(bottom: 20),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
-          XBox.vertical30,
-          Text(
-            title,
-            style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600
-            ),
-          ),
-          XBox.vertical10,
-          Padding(
-            padding: const EdgeInsets.fromLTRB(40, 20, 40, 30),
-            child: Text(
-              message,
-              style: const TextStyle(
-                fontSize: 16,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: _buildTextButton(
-                text: S.of(context).ok,
-                onPressed: () => Navigator.pop(context, 1)
-            ),
+          ListView.separated(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return _buildTextButton(
+                context: context,
+                text: actions[index].name,
+                textColor: Theme.of(context).mainTextColor,
+                onPressed: () => Navigator.pop(context, index),
+              );
+            },
+            itemCount: actions.length,
+            separatorBuilder: (context, index) {
+              return const Divider(
+                height: 1,
+                thickness: 1,
+              );
+            },
           ),
           const Divider(
             height: 5,
@@ -87,28 +79,34 @@ class HintDialog extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: _buildTextButton(
+                context: context,
                 text: S.of(context).cancel,
                 onPressed: () => Navigator.pop(context)
             ),
-          ),
-          XBox.vertical20
+          )
         ],
       ),
     );
   }
 
   Widget _buildTextButton({
+    required BuildContext context,
     required String text,
+    Color? textColor,
     required VoidCallback? onPressed
   }) {
     final double height = PlatformUtil.isMobile() ? 18 : 26;
     return TextButton(
       onPressed: onPressed,
-      child: Text(text),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: textColor ?? Theme.of(context).themeColor
+        ),
+      ),
       style: ButtonStyle(
-          padding: MaterialStateProperty.all(EdgeInsets.fromLTRB(20, height, 20, height))
+        padding: MaterialStateProperty.all(EdgeInsets.fromLTRB(0, height, 0, height))
       ),
     );
   }
 }
-

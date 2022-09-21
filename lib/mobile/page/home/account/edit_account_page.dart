@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/item/action_item.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
+import 'package:flutter_polarbear_x/mobile/dialog/choose_dialog.dart';
 import 'package:flutter_polarbear_x/mobile/dialog/hint_dialog.dart';
 import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
@@ -60,7 +61,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
   bool _editState = true;
   bool _visibilityPassword = false;
   late AppMobileModel _appModel;
-  late AccountItem _oldAccount;
+  late AccountItem _rawAccount;
   late AccountItem _editAccount;
 
   bool get _visibilityNote => _editState || _editAccount.node.isNotEmpty;
@@ -85,8 +86,8 @@ class _EditAccountPageState extends State<EditAccountPage> {
   void initState() {
     _appModel = context.read<AppMobileModel>();
     _editState = widget.editState;
-    _oldAccount = widget.account;
-    _editAccount = _oldAccount.copy();
+    _rawAccount = widget.account;
+    _editAccount = _rawAccount.copy();
 
     _nameController = TextEditingController();
     _userNameController = TextEditingController();
@@ -169,7 +170,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
       ActionMenuWidget(
         iconName: 'ic_edit.svg',
         tooltip: S.of(context).edit,
-        onPressed: _editAccountBy,
+        onPressed: () => _editAccountBy(_rawAccount),
       ),
       ActionMenuWidget(
         iconName: 'ic_more.svg',
@@ -330,7 +331,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
       Navigator.of(context).pop();
       return;
     }
-    _setViewAccount(_oldAccount);
+    _setViewAccount(_rawAccount);
   }
 
   /// 返回事件处理
@@ -342,7 +343,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
     if (_isNewAccount || !_editState) {
       return Future.value(true);
     }
-    _setViewAccount(_oldAccount);
+    _setViewAccount(_rawAccount);
     return Future.value(false);
   }
 
@@ -405,23 +406,25 @@ class _EditAccountPageState extends State<EditAccountPage> {
   void _setViewAccount(AccountItem account) {
     setState(() {
       _editState = false;
-      _oldAccount = account;
+      _rawAccount = account;
       _editAccount = account.copy();
       _resetAccountInfo();
     });
   }
 
   /// 编辑账号
-  void _editAccountBy() {
+  void _editAccountBy(AccountItem account) {
     setState(() {
       _editState = true;
+      _rawAccount = account;
+      _editAccount = account.copy();
       _resetAccountInfo();
     });
   }
 
   /// 恢复账号
   void _restoreAccount() {
-    _appModel.restoreAccount(_editAccount).then((value) {
+    _appModel.restoreAccount(_rawAccount).then((value) {
       Navigator.of(context).pop();
     }).catchError((error, stackTrace) {
       MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
@@ -453,8 +456,36 @@ class _EditAccountPageState extends State<EditAccountPage> {
   }
 
   /// 显示更多
-  void _moreMenu() {
+  Future<void> _moreMenu() async {
 
+    final result = await showModalBottomSheet<int>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: XColor.transparent,
+        builder: (context) {
+          return ChooseDialog(
+            actions: [
+              ActionItem(icon: '', name: S.of(context).copy),
+              ActionItem(icon: '', name: S.of(context).delete),
+            ],
+          );
+        }
+    );
+
+    switch(result) {
+      case 0: // 复制
+        _editAccountBy(
+          _rawAccount.copy(id: 0, alias: '${_rawAccount.alias} - copy')
+        );
+        break;
+      case 1: // 删除
+        _appModel.moveToTrash(_rawAccount).then((value) {
+          Navigator.of(context).pop();
+        }).catchError((error, stackTrace) {
+          MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+        });
+        break;
+    }
   }
 
   /// 复制到粘贴板
@@ -496,7 +527,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
 
   /// 是否修改了账号
   bool isModifyAccount() {
-    return _editState && !_oldAccount.unanimous(_editAccount);
+    return _editState && !_rawAccount.unanimous(_editAccount);
   }
 }
 

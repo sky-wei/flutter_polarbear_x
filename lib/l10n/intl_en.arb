@@ -110,6 +110,7 @@
   "importTips": "Tip: No need to enter when there is no password！",
   "storage": "Storage",
   "settings": "Settings",
-  "exitTips": "Press again to return to desktop！"
+  "exitTips": "Press again to return to desktop！",
+  "clearTrashTips": "Are you sure you want to clear all current data！"
 }
 
