@@ -16,33 +16,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
-import 'package:flutter_svg/svg.dart';
 
-class ActionMenuWidget extends StatelessWidget {
+class SubItemLine extends StatelessWidget {
 
-  final String iconName;
-  final Color? iconColor;
-  final String? tooltip;
-  final VoidCallback? onPressed;
-
-  const ActionMenuWidget({
-    Key? key,
-    required this.iconName,
-    this.iconColor,
-    this.tooltip,
-    this.onPressed
-  }) : super(key: key);
+  const SubItemLine({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: onPressed,
-      icon: SvgPicture.asset(
-        'assets/svg/$iconName',
-        width: 20,
-        color: iconColor ?? Theme.of(context).iconColor,
-      ),
-      tooltip: tooltip
+    return Divider(
+        height: 24,
+        thickness: 1,
+        color: Theme.of(context).listChooseColor
     );
   }
 }

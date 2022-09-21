@@ -44,20 +44,23 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).dialogBackgroundColor,
-        elevation: 0,
-      ),
-      body: Center(
-        child: Text(
-          S.of(context).loading,
-          style: const TextStyle(
-            fontSize: 18
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).dialogBackgroundColor,
+          elevation: 0,
+        ),
+        body: Center(
+          child: Text(
+            S.of(context).loading,
+            style: const TextStyle(
+                fontSize: 18
+            ),
           ),
         ),
+        backgroundColor: Theme.of(context).dialogBackgroundColor,
       ),
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
+      onWillPop: () => Future.value(false)
     );
   }
 }

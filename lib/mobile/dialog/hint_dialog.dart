@@ -51,46 +51,48 @@ class HintDialog extends StatelessWidget {
 
   /// 创建内容
   Widget _buildContent(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        XBox.vertical30,
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600
-          ),
-        ),
-        XBox.vertical10,
-        Padding(
-          padding: const EdgeInsets.fromLTRB(40, 20, 40, 30),
-          child: Text(
-            message,
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          XBox.vertical30,
+          Text(
+            title,
             style: const TextStyle(
-              fontSize: 16,
+                fontSize: 16,
+                fontWeight: FontWeight.w600
             ),
           ),
-        ),
-        SizedBox(
-          width: double.infinity,
-          child: _buildTextButton(
-              text: S.of(context).ok,
-              onPressed: () => Navigator.pop(context, 1)
+          XBox.vertical10,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(40, 20, 40, 30),
+            child: Text(
+              message,
+              style: const TextStyle(
+                fontSize: 16,
+              ),
+            ),
           ),
-        ),
-        const Divider(
-          thickness: 5,
-        ),
-        SizedBox(
-          width: double.infinity,
-          child: _buildTextButton(
-              text: S.of(context).cancel,
-              onPressed: () => Navigator.pop(context)
+          SizedBox(
+            width: double.infinity,
+            child: _buildTextButton(
+                text: S.of(context).ok,
+                onPressed: () => Navigator.pop(context, 1)
+            ),
           ),
-        ),
-        XBox.vertical20
-      ],
+          const Divider(
+            thickness: 5,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: _buildTextButton(
+                text: S.of(context).cancel,
+                onPressed: () => Navigator.pop(context)
+            ),
+          ),
+          XBox.vertical20
+        ],
+      ),
     );
   }
 

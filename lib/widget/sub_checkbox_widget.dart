@@ -16,34 +16,44 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
-import 'package:flutter_svg/svg.dart';
 
-class ActionMenuWidget extends StatelessWidget {
+class SubCheckBoxWidget extends StatelessWidget {
 
-  final String iconName;
-  final Color? iconColor;
-  final String? tooltip;
-  final VoidCallback? onPressed;
+  final String title;
+  final bool value;
+  final FocusNode? focusNode;
+  final ValueChanged<bool>? onChanged;
 
-  const ActionMenuWidget({
+  const SubCheckBoxWidget({
     Key? key,
-    required this.iconName,
-    this.iconColor,
-    this.tooltip,
-    this.onPressed
+    required this.title,
+    this.value = false,
+    this.focusNode,
+    this.onChanged
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: onPressed,
-      icon: SvgPicture.asset(
-        'assets/svg/$iconName',
-        width: 20,
-        color: iconColor ?? Theme.of(context).iconColor,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 5, 20, 5),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+                title,
+                style: const TextStyle(fontSize: 16)
+            ),
+          ),
+          Checkbox(
+            value: value,
+            focusNode: focusNode,
+            activeColor: Theme.of(context).themeColor,
+            onChanged: (value) {
+              if (onChanged != null) onChanged!(value?? false);
+            },
+          )
+        ],
       ),
-      tooltip: tooltip
     );
   }
 }
-

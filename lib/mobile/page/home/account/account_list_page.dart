@@ -23,6 +23,7 @@ import 'package:flutter_polarbear_x/mobile/dialog/hint_dialog.dart';
 import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
 import 'package:flutter_polarbear_x/mobile/widget/list_item_widget.dart';
 import 'package:flutter_polarbear_x/route/mobile_page_route.dart';
+import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/error_util.dart';
 import 'package:flutter_polarbear_x/util/message_util.dart';
@@ -124,8 +125,18 @@ class AccountListState extends State<AccountListPage> {
       return [
         ActionMenuWidget(
           iconName: 'ic_trash.svg',
+          tooltip: S.of(context).trash,
           iconColor: Theme.of(context).deleteColor,
           onPressed: () => _cleanTrash(),
+        )
+      ];
+    }
+    if (isFolder) {
+      return [
+        ActionMenuWidget(
+          iconName: 'ic_add.svg',
+          tooltip: S.of(context).newAccount,
+          onPressed: () => _newAccount(),
         )
       ];
     }
@@ -239,7 +250,7 @@ class AccountListState extends State<AccountListPage> {
       backgroundColor: Theme.of(context).favoriteColor,
       foregroundColor: Colors.white,
       icon: account.favorite ? Icons.favorite_border : Icons.favorite,
-      label: S.of(context).favorite,
+      label: account.favorite ? S.of(context).cancel : S.of(context).favorite,
       borderRadius: const BorderRadius.all(Radius.circular(6)),
     );
   }
@@ -283,15 +294,18 @@ class AccountListState extends State<AccountListPage> {
         _appModel.admin.id
     ) ..favorite = isFavorite
       ..folderId = widget.folder?.id ?? FolderItem.noFolder;
-    
-    _editAccount(account);
+
+    Navigator.push<AccountItem>(
+        context,
+        MobilePageRoute(child: EditAccountPage(account: account))
+    );
   }
 
   /// 编辑账号
   Future<void> _editAccount(AccountItem account) async {
     Navigator.push<AccountItem>(
         context,
-        MobilePageRoute(child: EditAccountPage(account: account))
+        MobilePageRoute(child: EditAccountPage(editState: false, account: account))
     );
   }
 
@@ -314,6 +328,8 @@ class AccountListState extends State<AccountListPage> {
     if (isTrash) {
       final result = await showModalBottomSheet<int>(
           context: context,
+          isScrollControlled: true,
+          backgroundColor: XColor.transparent,
           builder: (context) {
             return HintDialog(
               title: S.of(context).deleteAccount,

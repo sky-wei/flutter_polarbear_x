@@ -18,7 +18,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
-import 'package:flutter_polarbear_x/data/item/folder_item.dart';
+import 'package:flutter_polarbear_x/data/item/action_item.dart';
 import 'package:flutter_polarbear_x/data/item/sort_item.dart';
 import 'package:flutter_polarbear_x/desktop/dialog/hint_dialog.dart';
 import 'package:flutter_polarbear_x/desktop/model/app_desktop_model.dart';
@@ -29,7 +29,11 @@ import 'package:flutter_polarbear_x/util/error_util.dart';
 import 'package:flutter_polarbear_x/util/launch_util.dart';
 import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
-import 'package:flutter_polarbear_x/widget/sub_title_widget.dart';
+import 'package:flutter_polarbear_x/widget/sub_checkbox_widget.dart';
+import 'package:flutter_polarbear_x/widget/sub_dropdown_widget.dart';
+import 'package:flutter_polarbear_x/widget/sub_item_line.dart';
+import 'package:flutter_polarbear_x/widget/sub_list_widget.dart';
+import 'package:flutter_polarbear_x/widget/sub_text_widget.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
@@ -483,14 +487,14 @@ class HomeInfoState extends State<HomeInfo> {
   }
 
   /// 创建账号
-  Future<void> _createAccount(AccountItem item) async {
+  void _createAccount(AccountItem item) {
     _appModel.createAccount(item).catchError((error, stackTrace) {
       MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
     });
   }
 
   /// 更新账号
-  Future<void> _updateAccount(AccountItem item) async {
+  void _updateAccount(AccountItem item) {
     _appModel.updateAccount(item).catchError((error, stackTrace) {
       MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
     });
@@ -605,242 +609,6 @@ class SubFrameWidget extends StatelessWidget {
   }
 }
 
-class SubListWidget extends StatelessWidget {
-  
-  final String? title;
-  final List<Widget> children;
-
-  const SubListWidget({
-    Key? key,
-    this.title,
-    this.children = const <Widget>[]
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (title != null) SubTitleWidget(title: title!),
-        if (title != null) XBox.vertical10,
-        Material(
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(6),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 0, 15),
-            child: Column(
-              children: children,
-            ),
-          )
-        )
-      ],
-    );
-  }
-}
-
-class SubCheckBoxWidget extends StatelessWidget {
-
-  final String title;
-  final bool value;
-  final FocusNode? focusNode;
-  final ValueChanged<bool>? onChanged;
-
-  const SubCheckBoxWidget({
-    Key? key,
-    required this.title,
-    this.value = false,
-    this.focusNode,
-    this.onChanged
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 5, 20, 5),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 16)
-            ),
-          ),
-          Checkbox(
-            value: value,
-            focusNode: focusNode,
-            activeColor: Theme.of(context).themeColor,
-            onChanged: (value) {
-              if (onChanged != null) onChanged!(value?? false);
-            },
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class SubDropdownWidget extends StatelessWidget {
-
-  final String title;
-  final FolderItem value;
-  final List<FolderItem> items;
-  final FocusNode? focusNode;
-  final ValueChanged<FolderItem>? onChanged;
-
-  const SubDropdownWidget({
-    Key? key,
-    required this.title,
-    required this.value,
-    required this.items,
-    this.focusNode,
-    this.onChanged
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 16)
-            ),
-          ),
-          DropdownButton<FolderItem>(
-            focusNode: focusNode,
-            value: value,
-            underline: const SizedBox(),
-            items: _buildMenuItem(items),
-            onChanged: (value) {
-              if (onChanged != null) onChanged!(value!);
-            },
-          )
-        ],
-      ),
-    );
-  }
-
-  List<DropdownMenuItem<FolderItem>> _buildMenuItem(List<FolderItem> items) {
-    return items.map<DropdownMenuItem<FolderItem>>((FolderItem value) {
-      return DropdownMenuItem<FolderItem> (
-        value: value,
-        child: Text(value.name),
-      );
-    }).toList();
-  }
-}
-
-class SubTextWidget extends StatelessWidget {
-
-  final String? title;
-  final TextEditingController? controller;
-  final FocusNode? focusNode;
-  final bool autofocus;
-  final int maxLines;
-  final String? hintText;
-  final TextInputAction? textInputAction;
-  final TextInputType keyboardType;
-  final ValueChanged<String>? onChanged;
-  final ValueChanged<ActionItem>? onAction;
-  final bool readOnly;
-  final bool obscureText;
-  final List<ActionItem> actions;
-
-  const SubTextWidget({
-    Key? key,
-    this.title,
-    this.controller,
-    this.focusNode,
-    this.autofocus = false,
-    this.maxLines = 1,
-    this.hintText,
-    this.textInputAction,
-    this.keyboardType = TextInputType.text,
-    this.onChanged,
-    this.readOnly = true,
-    this.obscureText = false,
-    this.actions = const <ActionItem>[],
-    this.onAction
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (title != null) XBox.vertical5,
-        if (title != null)
-          Text(
-            title!,
-            style: TextStyle(
-                color: Theme.of(context).hintColor
-            ),
-          ),
-        XBox.vertical5,
-        Row(
-          children: [
-            Expanded(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: maxLines == 1 ? 32 : 130,
-                ),
-                child: TextField(
-                  controller: controller,
-                  focusNode: focusNode,
-                  autofocus: autofocus,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: hintText,
-                  ),
-                  maxLines: maxLines,
-                  textInputAction: textInputAction,
-                  textAlignVertical: TextAlignVertical.bottom,
-                  keyboardType: keyboardType,
-                  onChanged: onChanged,
-                  readOnly: readOnly,
-                  obscureText: obscureText,
-                ),
-              ),
-            ),
-            actions.isEmpty ? XBox.horizontal15 : XBox.horizontal60,
-            for (var action in actions)
-              Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: IconButton(
-                  onPressed: () { if (onAction != null) onAction!(action); },
-                  tooltip: action.name,
-                  icon: SvgPicture.asset(
-                    action.icon,
-                    color: Theme.of(context).iconColor,
-                    width: 20
-                  )
-                ),
-              ),
-            if (actions.isNotEmpty) XBox.horizontal10,
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class SubItemLine extends StatelessWidget {
-
-  const SubItemLine({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Divider(
-      height: 24,
-      thickness: 1,
-      color: Theme.of(context).listChooseColor
-    );
-  }
-}
-
 enum MenuType {
   edit,
   copy,
@@ -863,31 +631,4 @@ class MenuItem {
     required this.type,
     this.color = XColor.black
   });
-}
-
-class ActionItem {
-
-  final String icon;
-  final String name;
-
-  ActionItem({
-    required this.icon,
-    required this.name,
-  });
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ActionItem &&
-          runtimeType == other.runtimeType &&
-          icon == other.icon &&
-          name == other.name;
-
-  @override
-  int get hashCode => icon.hashCode ^ name.hashCode;
-
-  @override
-  String toString() {
-    return 'ActionItem{icon: $icon, name: $name}';
-  }
 }
