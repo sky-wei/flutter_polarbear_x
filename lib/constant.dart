@@ -29,5 +29,9 @@ typedef CompleteCallback = void Function();
 class XConstant {
 
   static const String versionName = "1.0.2";
+
+  static const String mail = 'jingcai.wei@163.com';
+
+  static const String source = 'https://github.com/sky-wei/flutter_polarbear_x';
 }
 

@@ -21,16 +21,18 @@ import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/launch_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
+import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
 
-class AboutWidget extends StatefulWidget {
 
-  const AboutWidget({Key? key}) : super(key: key);
+class AboutPage extends StatefulWidget {
+
+  const AboutPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AboutWidgetState();
+  State<StatefulWidget> createState() => _AboutPageState();
 }
 
-class _AboutWidgetState extends State<AboutWidget> {
+class _AboutPageState extends State<AboutPage> {
 
   late TapGestureRecognizer _tapGestureRecognizer;
 
@@ -49,10 +51,38 @@ class _AboutWidgetState extends State<AboutWidget> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: _buildBodyContent(),
+      backgroundColor: Theme.of(context).dialogBackgroundColor,
+    );
+  }
+
+  /// 创建AppBar
+  AppBar _buildAppBar() {
+    return AppBar(
+      leading: ActionMenuWidget(
+        iconName: 'ic_back.svg',
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      title: Text(S.of(context).about),
+      titleTextStyle: TextStyle(
+        color: Theme.of(context).mainTextColor,
+        fontSize: 18,
+        fontWeight: FontWeight.w500
+      ),
+      centerTitle: true,
+      elevation: 0,
+      backgroundColor: Theme.of(context).dialogBackgroundColor,
+    );
+  }
+
+  /// 创建界面内容
+  Widget _buildBodyContent() {
     return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
       child: Column(
         children: [
-          XBox.vertical30,
           Image.asset(
             'assets/image/ic_head_logo.png',
             width: 100,
@@ -61,8 +91,8 @@ class _AboutWidgetState extends State<AboutWidget> {
           Text(
             S.of(context).appName,
             style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold
+                fontSize: 18,
+                fontWeight: FontWeight.bold
             ),
           ),
           XBox.vertical5,
@@ -76,18 +106,18 @@ class _AboutWidgetState extends State<AboutWidget> {
           SelectableText(S.of(context).mailX(XConstant.mail)),
           XBox.vertical10,
           Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(text: S.of(context).sourceX('')),
-                TextSpan(
-                  text: XConstant.source,
-                  style: TextStyle(
-                    color: Theme.of(context).themeColor
-                  ),
-                  recognizer: _tapGestureRecognizer
-                )
-              ]
-            )
+              TextSpan(
+                  children: [
+                    TextSpan(text: S.of(context).sourceX('')),
+                    TextSpan(
+                        text: XConstant.source,
+                        style: TextStyle(
+                            color: Theme.of(context).themeColor
+                        ),
+                        recognizer: _tapGestureRecognizer
+                    )
+                  ]
+              )
           ),
           XBox.vertical60,
           Material(
@@ -108,4 +138,3 @@ class _AboutWidgetState extends State<AboutWidget> {
     LaunchUtil.launchUrl(XConstant.source);
   }
 }
-

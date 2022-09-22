@@ -19,16 +19,22 @@ import 'package:flutter_polarbear_x/theme/theme.dart';
 
 class SubItemLine extends StatelessWidget {
 
+  final EdgeInsetsGeometry? padding;
+
   const SubItemLine({
-    Key? key
+    Key? key,
+    this.padding
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Divider(
-      height: 1,
-      thickness: 1,
-      color: Theme.of(context).listChooseColor
+    return Padding(
+      padding: padding ?? EdgeInsets.zero,
+      child: Divider(
+          height: 1,
+          thickness: 1,
+          color: Theme.of(context).listChooseColor
+      ),
     );
   }
 }

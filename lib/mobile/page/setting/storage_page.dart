@@ -16,12 +16,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
-import 'package:flutter_polarbear_x/mobile/page/setting/about_page.dart';
-import 'package:flutter_polarbear_x/mobile/page/setting/account_page.dart';
-import 'package:flutter_polarbear_x/mobile/page/setting/preference_page.dart';
-import 'package:flutter_polarbear_x/mobile/page/setting/security_page.dart';
-import 'package:flutter_polarbear_x/mobile/page/setting/storage_page.dart';
-import 'package:flutter_polarbear_x/route/mobile_page_route.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
@@ -30,15 +24,15 @@ import 'package:flutter_polarbear_x/widget/sub_list_widget.dart';
 import 'package:flutter_polarbear_x/widget/sub_menu_widget.dart';
 
 
-class SettingPage extends StatefulWidget {
+class StoragePage extends StatefulWidget {
 
-  const SettingPage({Key? key}) : super(key: key);
+  const StoragePage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SettingPageState();
+  State<StatefulWidget> createState() => _StoragePageState();
 }
 
-class _SettingPageState extends State<SettingPage> {
+class _StoragePageState extends State<StoragePage> {
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +50,7 @@ class _SettingPageState extends State<SettingPage> {
         iconName: 'ic_back.svg',
         onPressed: () => Navigator.of(context).pop(),
       ),
-      title: Text(S.of(context).settings),
+      title: Text(S.of(context).storage),
       titleTextStyle: TextStyle(
         color: Theme.of(context).mainTextColor,
         fontSize: 18,
@@ -74,53 +68,29 @@ class _SettingPageState extends State<SettingPage> {
       padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
       children: [
         SubListWidget(
+          title: "${S.of(context).import}/${S.of(context).export}".toUpperCase(),
           children: [
             SubMenuWidget(
-              iconName: 'ic_user.svg',
-              title: S.of(context).account,
+              title: S.of(context).import,
               moreIconName: 'ic_arrow_right.svg',
               padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-              onTap: () => Navigator.push(context, MobilePageRoute(child: const AccountPage())),
-            )
-          ],
-        ),
-        XBox.vertical20,
-        SubListWidget(
-          children: [
-            SubMenuWidget(
-              iconName: 'ic_all_items.svg',
-              title: S.of(context).preference,
-              moreIconName: 'ic_arrow_right.svg',
-              padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-              onTap: () => Navigator.push(context, MobilePageRoute(child: const PreferencePage())),
             ),
-            const SubItemLine(padding: EdgeInsets.only(left: 55)),
+            const SubItemLine(padding: EdgeInsets.only(left: 20)),
             SubMenuWidget(
-              iconName: 'ic_security.svg',
-              title: S.of(context).security,
+              title: S.of(context).export,
               moreIconName: 'ic_arrow_right.svg',
               padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-              onTap: () => Navigator.push(context, MobilePageRoute(child: const SecurityPage())),
-            ),
-            const SubItemLine(padding: EdgeInsets.only(left: 55)),
-            SubMenuWidget(
-              iconName: 'ic_storage.svg',
-              title: S.of(context).storage,
-              moreIconName: 'ic_arrow_right.svg',
-              padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-              onTap: () => Navigator.push(context, MobilePageRoute(child: const StoragePage())),
             ),
           ],
         ),
         XBox.vertical20,
         SubListWidget(
+          title: S.of(context).data.toUpperCase(),
           children: [
             SubMenuWidget(
-              iconName: 'ic_about.svg',
-              title: S.of(context).about,
+              title: S.of(context).clearData,
               moreIconName: 'ic_arrow_right.svg',
               padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-              onTap: () => Navigator.push(context, MobilePageRoute(child: const AboutPage())),
             ),
           ],
         )

@@ -18,21 +18,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
-import 'package:flutter_polarbear_x/widget/sub_list_widget.dart';
-import 'package:flutter_polarbear_x/widget/sub_title_widget.dart';
-import 'package:flutter_polarbear_x/widget/text_label_widget.dart';
-import 'package:flutter_polarbear_x/widget/text_menu_widget.dart';
 
 
-class AboutPage extends StatefulWidget {
+class SecurityPage extends StatefulWidget {
 
-  const AboutPage({Key? key}) : super(key: key);
+  const SecurityPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AboutPagePageState();
+  State<StatefulWidget> createState() => _SecurityPageState();
 }
 
-class _AboutPagePageState extends State<AboutPage> {
+class _SecurityPageState extends State<SecurityPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +46,7 @@ class _AboutPagePageState extends State<AboutPage> {
         iconName: 'ic_back.svg',
         onPressed: () => Navigator.of(context).pop(),
       ),
-      title: Text(S.of(context).settings),
+      title: Text(S.of(context).security),
       titleTextStyle: TextStyle(
         color: Theme.of(context).mainTextColor,
         fontSize: 18,
@@ -64,20 +60,6 @@ class _AboutPagePageState extends State<AboutPage> {
 
   /// 创建界面内容
   Widget _buildBodyContent() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(15, 20, 15, 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SubTitleWidget(title: '参数设置'),
-          TextMenuWidget(
-              "属性设置",
-              '',
-              onTap: () {
-              }
-          ),
-        ],
-      ),
-    );
+    return Center();
   }
 }
