@@ -19,14 +19,16 @@ import 'package:flutter_polarbear_x/theme/theme.dart';
 
 class SubItemLine extends StatelessWidget {
 
-  const SubItemLine({Key? key}) : super(key: key);
+  const SubItemLine({
+    Key? key
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Divider(
-        height: 24,
-        thickness: 1,
-        color: Theme.of(context).listChooseColor
+      height: 1,
+      thickness: 1,
+      color: Theme.of(context).listChooseColor
     );
   }
 }

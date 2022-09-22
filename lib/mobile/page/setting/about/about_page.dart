@@ -24,15 +24,15 @@ import 'package:flutter_polarbear_x/widget/text_label_widget.dart';
 import 'package:flutter_polarbear_x/widget/text_menu_widget.dart';
 
 
-class SettingPage extends StatefulWidget {
+class AboutPage extends StatefulWidget {
 
-  const SettingPage({Key? key}) : super(key: key);
+  const AboutPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SettingPageState();
+  State<StatefulWidget> createState() => _AboutPagePageState();
 }
 
-class _SettingPageState extends State<SettingPage> {
+class _AboutPagePageState extends State<AboutPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +64,20 @@ class _SettingPageState extends State<SettingPage> {
 
   /// 创建界面内容
   Widget _buildBodyContent() {
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-      children: [
-        SubListWidget(
-
-        )
-      ],
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(15, 20, 15, 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SubTitleWidget(title: '参数设置'),
+          TextMenuWidget(
+              "属性设置",
+              '',
+              onTap: () {
+              }
+          ),
+        ],
+      ),
     );
   }
 }

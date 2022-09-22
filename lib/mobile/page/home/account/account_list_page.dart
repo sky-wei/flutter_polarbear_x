@@ -27,7 +27,6 @@ import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/error_util.dart';
 import 'package:flutter_polarbear_x/util/message_util.dart';
-import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
 import 'package:flutter_polarbear_x/widget/list_empty_widget.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -99,7 +98,8 @@ class AccountListState extends State<AccountListPage> {
   /// 搜索
   Future<void> search(String keyword) async {
     if (widget.openSearch) {
-      setState(() { _keyword = keyword; });
+      _keyword = keyword;
+      _infoChange();
     }
   }
 
@@ -174,7 +174,7 @@ class AccountListState extends State<AccountListPage> {
     return SlidableAutoCloseBehavior(
       child: ListView.separated(
         controller: _scrollController,
-        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+        padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
         itemBuilder: (context, index) {
           final account = _accountItems[index];
           return _buildSlidableWidget(account);

@@ -24,6 +24,7 @@ class SubDropdownWidget extends StatelessWidget {
   final List<FolderItem> items;
   final FocusNode? focusNode;
   final ValueChanged<FolderItem>? onChanged;
+  final EdgeInsetsGeometry? padding;
 
   const SubDropdownWidget({
     Key? key,
@@ -31,13 +32,14 @@ class SubDropdownWidget extends StatelessWidget {
     required this.value,
     required this.items,
     this.focusNode,
-    this.onChanged
+    this.onChanged,
+    this.padding
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+      padding: padding ?? EdgeInsets.zero,
       child: Row(
         children: [
           Expanded(

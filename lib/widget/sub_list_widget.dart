@@ -22,27 +22,32 @@ import 'sub_title_widget.dart';
 class SubListWidget extends StatelessWidget {
 
   final String? title;
+  final EdgeInsetsGeometry? padding;
   final List<Widget> children;
 
   const SubListWidget({
     Key? key,
     this.title,
+    this.padding,
     this.children = const <Widget>[]
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (title != null) SubTitleWidget(title: title!),
-        if (title != null) XBox.vertical10,
+        if (title != null) XBox.vertical15,
         Material(
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(6),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 0, 15),
+              padding: padding ?? EdgeInsets.zero,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: children,
               ),
             )

@@ -23,19 +23,21 @@ class SubCheckBoxWidget extends StatelessWidget {
   final bool value;
   final FocusNode? focusNode;
   final ValueChanged<bool>? onChanged;
+  final EdgeInsetsGeometry? padding;
 
   const SubCheckBoxWidget({
     Key? key,
     required this.title,
     this.value = false,
     this.focusNode,
-    this.onChanged
+    this.onChanged,
+    this.padding
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 5, 20, 5),
+      padding: padding ?? EdgeInsets.zero,
       child: Row(
         children: [
           Expanded(

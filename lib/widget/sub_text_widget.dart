@@ -17,7 +17,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/action_item.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -38,6 +37,7 @@ class SubTextWidget extends StatelessWidget {
   final List<ActionItem> actions;
   final VoidCallback? onEditingComplete;
   final ValueChanged<String>? onSubmitted;
+  final EdgeInsetsGeometry? padding;
 
   const SubTextWidget({
     Key? key,
@@ -55,69 +55,71 @@ class SubTextWidget extends StatelessWidget {
     this.onEditingComplete,
     this.onSubmitted,
     this.actions = const <ActionItem>[],
-    this.onAction
+    this.onAction,
+    this.padding
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (title != null) XBox.vertical5,
-        if (title != null)
-          Text(
-            title!,
-            style: TextStyle(
-                color: Theme.of(context).hintColor
+    return Padding(
+      padding: padding ?? EdgeInsets.zero,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (title != null)
+            Text(
+              title!,
+              style: TextStyle(
+                  color: Theme.of(context).hintColor
+              ),
             ),
-          ),
-        XBox.vertical5,
-        Row(
-          children: [
-            Expanded(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: maxLines == 1 ? 32 : 130,
-                ),
-                child: TextField(
-                  controller: controller,
-                  focusNode: focusNode,
-                  autofocus: autofocus,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: hintText,
+          Row(
+            children: [
+              Expanded(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: maxLines == 1 ? 40 : 200,
                   ),
-                  maxLines: maxLines,
-                  textInputAction: textInputAction,
-                  textAlignVertical: TextAlignVertical.bottom,
-                  keyboardType: keyboardType,
-                  onChanged: onChanged,
-                  readOnly: readOnly,
-                  obscureText: obscureText,
-                  onEditingComplete: onEditingComplete,
-                  onSubmitted: onSubmitted,
+                  child: TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    autofocus: autofocus,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: hintText,
+                    ),
+                    maxLines: maxLines,
+                    textInputAction: textInputAction,
+                    textAlignVertical: TextAlignVertical.bottom,
+                    keyboardType: keyboardType,
+                    onChanged: onChanged,
+                    readOnly: readOnly,
+                    obscureText: obscureText,
+                    onEditingComplete: onEditingComplete,
+                    onSubmitted: onSubmitted,
+                  ),
                 ),
               ),
-            ),
-            actions.isEmpty ? XBox.horizontal15 : XBox.horizontal60,
-            for (var action in actions)
-              Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: IconButton(
-                    onPressed: () { if (onAction != null) onAction!(action); },
-                    tooltip: action.name,
-                    icon: SvgPicture.asset(
-                        action.icon,
-                        color: Theme.of(context).iconColor,
-                        width: 20
-                    )
+              actions.isEmpty ? XBox.horizontal15 : XBox.horizontal30,
+              for (var action in actions)
+                Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: IconButton(
+                      onPressed: () { if (onAction != null) onAction!(action); },
+                      tooltip: action.name,
+                      icon: SvgPicture.asset(
+                          action.icon,
+                          color: Theme.of(context).iconColor,
+                          width: 20
+                      )
+                  ),
                 ),
-              ),
-            if (actions.isNotEmpty) XBox.horizontal10,
-          ],
-        ),
-      ],
+              if (actions.isNotEmpty) XBox.horizontal10,
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

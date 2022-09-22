@@ -148,8 +148,12 @@ class _HomeListState extends State<HomeList> {
       itemCount: _accountItems.length,
       separatorBuilder: (context, index) {
         return Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: Divider(color: Theme.of(context).listChooseColor),
+          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+          child: Divider(
+            height: 1,
+            thickness: 1,
+            color: Theme.of(context).listChooseColor
+          ),
         );
       },
     );

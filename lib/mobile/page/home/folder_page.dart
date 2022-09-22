@@ -63,7 +63,7 @@ class FolderPageState extends State<FolderPage> {
   Widget build(BuildContext context) {
     return SlidableAutoCloseBehavior(
       child: ListView.separated(
-        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+        padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
         itemBuilder: (context, index) {
           final folder = _appModel.folders[index];
           return _buildSlidableWidget(folder);

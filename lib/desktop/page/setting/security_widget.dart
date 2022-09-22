@@ -60,7 +60,7 @@ class SecurityWidgetState extends State<SecurityWidget> {
   @override
   void initState() {
     super.initState();
-    _appSetting = context.select((AppDesktopModel value) => value.appSetting);
+    _appSetting = context.read<AppDesktopModel>().appSetting;
   }
 
   @override

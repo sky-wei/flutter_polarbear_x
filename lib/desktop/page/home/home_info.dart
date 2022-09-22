@@ -176,8 +176,10 @@ class HomeInfoState extends State<HomeInfo> {
       children: [
         SubListWidget(
           title: itemTitle,
+          padding: const EdgeInsets.only(left: 20),
           children: [
             SubTextWidget(
+              padding: const EdgeInsets.only(top: 15, bottom: 5),
               controller: _nameController,
               focusNode: _nameFocus,
               title: S.of(context).name,
@@ -187,6 +189,7 @@ class HomeInfoState extends State<HomeInfo> {
             ),
             const SubItemLine(),
             SubTextWidget(
+              padding: const EdgeInsets.only(top: 15, bottom: 5),
               controller: _userNameController,
               focusNode: _userNameFocus,
               title: S.of(context).userName,
@@ -200,6 +203,7 @@ class HomeInfoState extends State<HomeInfo> {
             ),
             const SubItemLine(),
             SubTextWidget(
+              padding: const EdgeInsets.only(top: 15, bottom: 5),
               controller: _passwordController,
               focusNode: _passwordFocus,
               title: S.of(context).password,
@@ -211,15 +215,17 @@ class HomeInfoState extends State<HomeInfo> {
                 action: action,
                 value: _passwordController.text
               ),
-            ),
+            )
           ],
         ),
         if (_isEdit) XBox.vertical30,
         if (_isEdit)
           SubListWidget(
             // title: 'OPTIONS',
+            padding: const EdgeInsets.only(left: 20),
             children: [
               SubDropdownWidget(
+                padding: const EdgeInsets.only(top: 10, bottom: 5, right: 20),
                 title: S.of(context).folder,
                 value: _appModel.findFolderBy(_editAccount),
                 items: _appModel.folders,
@@ -232,6 +238,7 @@ class HomeInfoState extends State<HomeInfo> {
               ),
               const SubItemLine(),
               SubCheckBoxWidget(
+                padding: const EdgeInsets.only(top: 15, bottom: 15, right: 20),
                 title: S.of(context).favorite,
                 value: _editAccount.favorite,
                 focusNode: _favoriteFocus,
@@ -247,8 +254,10 @@ class HomeInfoState extends State<HomeInfo> {
         if (_visibilityUrl)
           SubListWidget(
             title: S.of(context).url.toUpperCase(),
+            padding: const EdgeInsets.only(left: 20),
             children: [
               SubTextWidget(
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
                 controller: _websiteController,
                 focusNode: _websiteFocus,
                 hintText: S.of(context).urlEx,
@@ -266,8 +275,10 @@ class HomeInfoState extends State<HomeInfo> {
         if (_visibilityNote)
           SubListWidget(
             title: S.of(context).notes.toUpperCase(),
+            padding: const EdgeInsets.only(left: 20),
             children: [
               SubTextWidget(
+                padding: const EdgeInsets.only(top: 15, bottom: 5),
                 controller: _notesController,
                 focusNode: _notesFocus,
                 hintText: S.of(context).sayWhat,
