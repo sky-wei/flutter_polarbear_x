@@ -14,15 +14,28 @@
  * limitations under the License.
  */
 
+import 'package:flutter/material.dart';
+
 class ActionItem {
 
   final String icon;
+  final Color? iconColor;
   final String name;
+  final Color? textColor;
 
   ActionItem({
     required this.icon,
     required this.name,
+    this.iconColor,
+    this.textColor
   });
+
+  factory ActionItem.name({
+    required String name,
+    Color? textColor
+  }) {
+    return ActionItem(icon: '', name: name, textColor: textColor);
+  }
 
   @override
   bool operator ==(Object other) =>

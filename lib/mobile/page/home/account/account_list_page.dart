@@ -257,24 +257,6 @@ class AccountListState extends State<AccountListPage> {
     );
   }
 
-  /// 创建错误的控件
-  Widget _buildErrorWidget() {
-    return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.error,
-              color: Colors.red,
-              size: 48,
-            ),
-            XBox.vertical20,
-            Text(S.of(context).handlerError)
-          ],
-        )
-    );
-  }
-
   /// 创建账号
   void _newAccount() {
 

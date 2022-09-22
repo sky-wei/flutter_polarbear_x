@@ -465,8 +465,8 @@ class _EditAccountPageState extends State<EditAccountPage> {
         builder: (context) {
           return ChooseDialog(
             actions: [
-              ActionItem(icon: '', name: S.of(context).copy),
-              ActionItem(icon: '', name: S.of(context).delete),
+              ActionItem.name(name: S.of(context).copy),
+              ActionItem.name(name: S.of(context).delete, textColor: Theme.of(context).deleteColor),
             ],
           );
         }

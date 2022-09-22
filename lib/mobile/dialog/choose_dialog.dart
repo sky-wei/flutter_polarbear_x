@@ -60,7 +60,7 @@ class ChooseDialog extends StatelessWidget {
               return _buildTextButton(
                 context: context,
                 text: actions[index].name,
-                textColor: Theme.of(context).mainTextColor,
+                textColor: actions[index].textColor,
                 onPressed: () => Navigator.pop(context, index),
               );
             },
@@ -81,6 +81,7 @@ class ChooseDialog extends StatelessWidget {
             child: _buildTextButton(
                 context: context,
                 text: S.of(context).cancel,
+                textColor: Theme.of(context).themeColor,
                 onPressed: () => Navigator.pop(context)
             ),
           )
@@ -101,7 +102,7 @@ class ChooseDialog extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          color: textColor ?? Theme.of(context).themeColor
+          color: textColor ?? Theme.of(context).mainTextColor
         ),
       ),
       style: ButtonStyle(
