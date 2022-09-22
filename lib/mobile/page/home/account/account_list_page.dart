@@ -56,6 +56,9 @@ class AccountListPage extends StatefulWidget {
 
 class AccountListState extends State<AccountListPage> {
 
+  final List<AccountItem> _accountItems = [];
+
+  bool _loading = true;
   String _keyword = '';
   late AppMobileModel _appModel;
   late ScrollController _scrollController;
@@ -100,6 +103,7 @@ class AccountListState extends State<AccountListPage> {
     }
   }
 
+  /// 创建AppBar
   AppBar _buildAppBar() {
     return AppBar(
       leading: ActionMenuWidget(
@@ -155,53 +159,37 @@ class AccountListState extends State<AccountListPage> {
 
   /// 创建内容体
   Widget _buildBodyContent() {
-    return FutureBuilder<List<AccountItem>>(
-      future: loadAccount(),
-      builder: (context, snapshot) {
 
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasData) {
-            final accountItems = snapshot.data!;
-            
-            if (accountItems.isEmpty) {
-              return ListEmptyWidget(
-                tips: S.of(context).emptyAccountListTip,
-                onPressed: _isHandlerEmptyEvent() ? _newAccount : null,
-              );
-            }
-            return _buildListWidget(accountItems);
-          }
+    if (_loading) {
+      return const Center();
+    }
 
-          if (snapshot.hasError) {
-            return _buildErrorWidget();
-          }
-        }
-        return const Center();
-      },
+    if (_accountItems.isEmpty) {
+      return ListEmptyWidget(
+        tips: S.of(context).emptyAccountListTip,
+        onPressed: _isHandlerEmptyEvent() ? _newAccount : null,
+      );
+    }
+
+    return SlidableAutoCloseBehavior(
+      child: ListView.separated(
+        controller: _scrollController,
+        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+        itemBuilder: (context, index) {
+          final account = _accountItems[index];
+          return _buildSlidableWidget(account);
+        },
+        itemCount: _accountItems.length,
+        separatorBuilder: (context, index) {
+          return const SizedBox(height: 10);
+        },
+      ),
     );
   }
 
   /// 是不处理空控件事件
   bool _isHandlerEmptyEvent() {
     return !isTrash && !widget.openSearch;
-  }
-
-  /// 创建列表的控件
-  Widget _buildListWidget(List<AccountItem> accountItems) {
-    return SlidableAutoCloseBehavior(
-      child: ListView.separated(
-        controller: _scrollController,
-        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-        itemBuilder: (context, index) {
-          final account = accountItems[index];
-          return _buildSlidableWidget(account);
-        },
-        itemCount: accountItems.length,
-        separatorBuilder: (context, index) {
-          return const SizedBox(height: 10);
-        },
-      ),
-    );
   }
 
   /// 创建 Slidable
@@ -353,6 +341,11 @@ class AccountListState extends State<AccountListPage> {
   /// 清除回收箱
   Future<void> _clearTrash() async {
 
+    if (_accountItems.isEmpty) {
+      // 不需要处理
+      return;
+    }
+
     final result = await showModalBottomSheet<int>(
         context: context,
         isScrollControlled: true,
@@ -366,7 +359,7 @@ class AccountListState extends State<AccountListPage> {
     );
 
     if (result == 1) {
-      _appModel.clearTrash().catchError((error, stackTrace) {
+      _appModel.deleteAccounts(_accountItems).catchError((error, stackTrace) {
         MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
       });
     }
@@ -397,8 +390,15 @@ class AccountListState extends State<AccountListPage> {
   }
 
   /// 信息修改
-  void _infoChange() {
-    setState(() {  });
+  Future<void> _infoChange() async {
+
+    final accounts = await loadAccount();
+
+    setState(() {
+      _loading = false;
+      _accountItems.clear();
+      _accountItems.addAll(accounts);
+    });
   }
 }
 

@@ -257,16 +257,15 @@ abstract class AppAbstractModel extends AbstractModel {
 
   /// 删除账号
   Future<List<AccountItem>> deleteAccounts(List<AccountItem> accounts) async {
-    final results = <AccountItem>[];
     for (var account in accounts) {
-      results.add(await appRepository.deleteAccount(admin, account));
+      await appRepository.deleteAccount(admin, account);
     }
     allAccountNotifier.notify(() {
-      for (var value in results) {
+      for (var value in accounts) {
         allAccountItems.remove(value);
       }
     });
-    return results;
+    return accounts;
   }
 
   /// 更新账号信息
