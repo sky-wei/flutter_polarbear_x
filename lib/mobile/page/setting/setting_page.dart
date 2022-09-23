@@ -64,7 +64,7 @@ class _SettingPageState extends State<SettingPage> {
       ),
       centerTitle: true,
       elevation: 0,
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
+      backgroundColor: Theme.of(context).backgroundColor,
     );
   }
 

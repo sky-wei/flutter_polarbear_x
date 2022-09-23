@@ -219,7 +219,7 @@ class MainAppBarState extends State<MainAppBar> {
       ),
       centerTitle: true,
       elevation: 0,
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
+      backgroundColor: Theme.of(context).backgroundColor,
     );
   }
 
@@ -244,7 +244,7 @@ class MainAppBarState extends State<MainAppBar> {
         )
       ],
       elevation: 0,
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
+      backgroundColor: Theme.of(context).backgroundColor,
     );
   }
 

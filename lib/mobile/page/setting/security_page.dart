@@ -92,7 +92,7 @@ class _SecurityPageState extends State<SecurityPage> {
       ),
       centerTitle: true,
       elevation: 0,
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
+      backgroundColor: Theme.of(context).backgroundColor,
     );
   }
 

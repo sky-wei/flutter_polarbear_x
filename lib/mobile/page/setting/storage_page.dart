@@ -19,6 +19,7 @@ import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/mobile/dialog/hint_dialog.dart';
 import 'package:flutter_polarbear_x/mobile/dialog/input_dialog.dart';
 import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
+import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/error_util.dart';
 import 'package:flutter_polarbear_x/util/message_util.dart';
@@ -72,7 +73,7 @@ class _StoragePageState extends State<StoragePage> {
       ),
       centerTitle: true,
       elevation: 0,
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
+      backgroundColor: Theme.of(context).backgroundColor,
     );
   }
 
@@ -136,7 +137,6 @@ class _StoragePageState extends State<StoragePage> {
       );
     }).then((value) {
       if (value) {
-        Navigator.pop(context);
         MessageUtil.showMessage(context, S.of(context).importCompleted);
       }
     }).catchError((error, stackTrace) {
@@ -153,7 +153,6 @@ class _StoragePageState extends State<StoragePage> {
       );
     }).then((value) {
       if (value) {
-        Navigator.pop(context);
         MessageUtil.showMessage(context, S.of(context).exportCompleted);
       }
     }).catchError((error, stackTrace) {
@@ -166,6 +165,8 @@ class _StoragePageState extends State<StoragePage> {
 
     final result = await showModalBottomSheet<int>(
         context: context,
+        isScrollControlled: true,
+        backgroundColor: XColor.transparent,
         builder: (context) {
           return HintDialog(
             title: S.of(context).clearData,
@@ -191,6 +192,8 @@ class _StoragePageState extends State<StoragePage> {
   }) async {
     return await showModalBottomSheet<String>(
         context: context,
+        isScrollControlled: true,
+        backgroundColor: XColor.transparent,
         builder: (context) {
           return InputDialog(
             title: title,

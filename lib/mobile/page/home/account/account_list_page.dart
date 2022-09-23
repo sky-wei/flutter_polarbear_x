@@ -119,7 +119,7 @@ class AccountListState extends State<AccountListPage> {
       centerTitle: true,
       actions: _buildActions(),
       elevation: 0,
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
+      backgroundColor: Theme.of(context).backgroundColor,
     );
   }
 

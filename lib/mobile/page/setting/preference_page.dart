@@ -85,7 +85,7 @@ class _PreferencePageState extends State<PreferencePage> {
       ),
       centerTitle: true,
       elevation: 0,
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
+      backgroundColor: Theme.of(context).backgroundColor,
     );
   }
 

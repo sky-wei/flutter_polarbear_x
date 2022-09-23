@@ -137,7 +137,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
       centerTitle: true,
       elevation: 0,
       actions: _buildActions(),
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
+      backgroundColor: Theme.of(context).backgroundColor,
     );
   }
 
@@ -478,7 +478,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
           return ChooseDialog(
             actions: [
               ActionItem.name(name: S.of(context).copy),
-              ActionItem.name(name: S.of(context).delete, textColor: Theme.of(context).deleteColor),
+              ActionItem.name(name: S.of(context).delete),
             ],
           );
         }

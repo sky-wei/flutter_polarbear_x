@@ -17,6 +17,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/admin_item.dart';
 import 'package:flutter_polarbear_x/desktop/dialog/input_dialog.dart';
+import 'package:flutter_polarbear_x/desktop/dialog/password_dialog.dart';
 import 'package:flutter_polarbear_x/desktop/model/app_desktop_model.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
@@ -26,7 +27,6 @@ import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'password_dialog.dart';
 import 'sub_text_widget.dart';
 
 

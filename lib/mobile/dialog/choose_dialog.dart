@@ -81,7 +81,6 @@ class ChooseDialog extends StatelessWidget {
             child: _buildTextButton(
                 context: context,
                 text: S.of(context).cancel,
-                textColor: Theme.of(context).themeColor,
                 onPressed: () => Navigator.pop(context)
             ),
           )

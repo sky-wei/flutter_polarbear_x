@@ -37,7 +37,7 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     context.read<AppMobileModel>().initialize().then((value) {
       Navigator.pushReplacementNamed(
-          context, kDebugMode ? XRoute.home : XRoute.login
+          context, kDebugMode ? XRoute.login : XRoute.login
       );
     });
   }

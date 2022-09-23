@@ -53,6 +53,7 @@ class SubDropdownWidget<T extends Choose> extends StatelessWidget {
             value: value,
             underline: const SizedBox(),
             items: _buildMenuItem(items),
+            alignment: AlignmentDirectional.centerEnd,
             onChanged: (value) {
               if (onChanged != null) onChanged!(value!);
             },
