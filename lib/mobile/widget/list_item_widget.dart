@@ -83,7 +83,7 @@ class ListItemWidget extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
             // color: XColor.sideTextColor,
-              fontWeight: FontWeight.normal,
+            //   fontWeight: FontWeight.normal,
               fontSize: 16
           ),
         ),
@@ -94,7 +94,6 @@ class ListItemWidget extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
               color: Theme.of(context).hintColor,
-              fontWeight: FontWeight.normal,
               fontSize: 14
           ),
         ),
@@ -105,7 +104,6 @@ class ListItemWidget extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
               color: Theme.of(context).hintColor,
-              fontWeight: FontWeight.normal,
               fontSize: 14
           ),
         ),

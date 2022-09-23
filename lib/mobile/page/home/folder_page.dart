@@ -248,7 +248,7 @@ class _SideItemWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Theme.of(context).mainTextColor,
-                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
                     ),
                   ),
                 ),

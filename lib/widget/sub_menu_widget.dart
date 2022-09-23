@@ -9,6 +9,8 @@ class SubMenuWidget extends StatelessWidget {
 
   final String? iconName;
   final String title;
+  final String? desc;
+  final String? value;
   final String? moreIconName;
   final EdgeInsetsGeometry? padding;
   final GestureTapCallback? onTap;
@@ -17,6 +19,8 @@ class SubMenuWidget extends StatelessWidget {
     Key? key,
     this.iconName,
     required this.title,
+    this.desc,
+    this.value,
     this.moreIconName,
     this.padding,
     this.onTap
@@ -45,15 +49,41 @@ class SubMenuWidget extends StatelessWidget {
                 if (iconName != null)
                   XBox.horizontal15,
                 Expanded(
-                  child: Text(
-                    title,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).mainTextColor
+                        ),
+                        maxLines: 1,
+                      ),
+                      if (desc != null)
+                        Text(
+                          desc!,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).hintColor
+                          ),
+                          maxLines: 1,
+                        ),
+                    ],
+                  ),
+                ),
+                if (value != null)
+                  Text(
+                    value!,
                     style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).mainTextColor
+                      color: Theme.of(context).hintColor,
+                      fontSize: 16,
                     ),
                     maxLines: 1,
                   ),
-                ),
+                if (value != null)
+                  XBox.horizontal5,
                 if (moreIconName != null)
                   SvgPicture.asset(
                     'assets/svg/$moreIconName',
