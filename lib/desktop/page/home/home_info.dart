@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/item/action_item.dart';
+import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/data/item/sort_item.dart';
 import 'package:flutter_polarbear_x/desktop/dialog/hint_dialog.dart';
 import 'package:flutter_polarbear_x/desktop/model/app_desktop_model.dart';
@@ -224,7 +225,7 @@ class HomeInfoState extends State<HomeInfo> {
             // title: 'OPTIONS',
             padding: const EdgeInsets.only(left: 20),
             children: [
-              SubDropdownWidget(
+              SubDropdownWidget<FolderItem>(
                 padding: const EdgeInsets.only(top: 10, bottom: 5, right: 20),
                 title: S.of(context).folder,
                 value: _appModel.findFolderBy(_editAccount),

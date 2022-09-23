@@ -15,15 +15,15 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_polarbear_x/data/item/folder_item.dart';
+import 'package:flutter_polarbear_x/data/item/choose.dart';
 
-class SubDropdownWidget extends StatelessWidget {
+class SubDropdownWidget<T extends Choose> extends StatelessWidget {
 
   final String title;
-  final FolderItem value;
-  final List<FolderItem> items;
+  final T value;
+  final List<T> items;
   final FocusNode? focusNode;
-  final ValueChanged<FolderItem>? onChanged;
+  final ValueChanged<T>? onChanged;
   final EdgeInsetsGeometry? padding;
 
   const SubDropdownWidget({
@@ -48,7 +48,7 @@ class SubDropdownWidget extends StatelessWidget {
                 style: const TextStyle(fontSize: 16)
             ),
           ),
-          DropdownButton<FolderItem>(
+          DropdownButton<T>(
             focusNode: focusNode,
             value: value,
             underline: const SizedBox(),
@@ -62,9 +62,9 @@ class SubDropdownWidget extends StatelessWidget {
     );
   }
 
-  List<DropdownMenuItem<FolderItem>> _buildMenuItem(List<FolderItem> items) {
-    return items.map<DropdownMenuItem<FolderItem>>((FolderItem value) {
-      return DropdownMenuItem<FolderItem> (
+  List<DropdownMenuItem<T>> _buildMenuItem(List<T> items) {
+    return items.map<DropdownMenuItem<T>>((T value) {
+      return DropdownMenuItem<T> (
         value: value,
         child: Text(value.name),
       );

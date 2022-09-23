@@ -173,18 +173,9 @@ class SecurityWidgetState extends State<SecurityWidget> {
 
   List<DropdownMenuItem<TimeItem>> _buildTimeMenuItem(List<TimeItem> items) {
     return items.map<DropdownMenuItem<TimeItem>>((TimeItem time) {
-      final String text;
-      if (time.value <= 0) {
-        text = S.of(context).never;
-      } else {
-        final type = time.type == TimeItem.second
-            ? S.of(context).second : time.type == TimeItem.minute
-            ? S.of(context).minute : S.of(context).hour;
-        text = '${time.value} $type';
-      }
       return DropdownMenuItem<TimeItem> (
         value: time,
-        child: Text(text),
+        child: Text(time.name),
       );
     }).toList();
   }

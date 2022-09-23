@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-class ThemeItem {
+import 'package:flutter_polarbear_x/data/item/choose.dart';
+
+class ThemeItem with Choose {
 
   static const int system = 0;
   static const int light = 1;
   static const int dark = 2;
 
+  @override
   final String name;
   final int value;
 

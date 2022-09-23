@@ -84,17 +84,13 @@ class _StoragePageState extends State<StoragePage> {
         SubListWidget(
           title: "${S.of(context).import}/${S.of(context).export}".toUpperCase(),
           children: [
-            SubMenuWidget(
+            _buildTextMenuWidget(
               title: S.of(context).import,
-              moreIconName: 'ic_arrow_right.svg',
-              padding: const EdgeInsets.fromLTRB(20, 15, 15, 15),
               onTap: _importAccount,
             ),
-            const SubItemLine(padding: EdgeInsets.only(left: 20)),
-            SubMenuWidget(
+            _buildLineWidget(),
+            _buildTextMenuWidget(
               title: S.of(context).export,
-              moreIconName: 'ic_arrow_right.svg',
-              padding: const EdgeInsets.fromLTRB(20, 15, 15, 15),
               onTap: _exportAccount,
             ),
           ],
@@ -103,16 +99,32 @@ class _StoragePageState extends State<StoragePage> {
         SubListWidget(
           title: S.of(context).data.toUpperCase(),
           children: [
-            SubMenuWidget(
+            _buildTextMenuWidget(
               title: S.of(context).clearData,
-              moreIconName: 'ic_arrow_right.svg',
-              padding: const EdgeInsets.fromLTRB(20, 15, 15, 15),
               onTap: _clearData,
             ),
           ],
         )
       ],
     );
+  }
+
+  /// 创建菜单
+  Widget _buildTextMenuWidget({
+    required String title,
+    required GestureTapCallback onTap
+  }) {
+    return SubMenuWidget(
+      title: title,
+      moreIconName: 'ic_arrow_right.svg',
+      padding: const EdgeInsets.fromLTRB(20, 15, 15, 15),
+      onTap: onTap,
+    );
+  }
+
+  /// 创建分割线
+  Widget _buildLineWidget() {
+    return const SubItemLine(padding: EdgeInsets.only(left: 20));
   }
 
   /// 导入账号

@@ -17,6 +17,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/item/action_item.dart';
+import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/mobile/dialog/choose_dialog.dart';
 import 'package:flutter_polarbear_x/mobile/dialog/hint_dialog.dart';
@@ -240,7 +241,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
             // title: 'OPTIONS',
             padding: const EdgeInsets.only(left: 20),
             children: [
-              SubDropdownWidget(
+              SubDropdownWidget<FolderItem>(
                 padding: const EdgeInsets.only(top: 10, bottom: 10, right: 20),
                 title: S.of(context).folder,
                 value: _appModel.findFolderBy(_editAccount),

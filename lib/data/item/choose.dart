@@ -14,28 +14,7 @@
  * limitations under the License.
  */
 
+mixin Choose {
 
-import 'dart:ui';
-
-import 'package:flutter_polarbear_x/data/item/choose.dart';
-
-class LocaleItem with Choose {
-
-  @override
-  final String name;
-  final Locale? value;
-
-  LocaleItem(this.name, this.value);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is LocaleItem &&
-              runtimeType == other.runtimeType &&
-              name == other.name &&
-              value == other.value;
-
-  @override
-  int get hashCode => name.hashCode ^ value.hashCode;
+  String get name;
 }
-

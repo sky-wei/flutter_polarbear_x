@@ -75,11 +75,9 @@ class _SettingPageState extends State<SettingPage> {
       children: [
         SubListWidget(
           children: [
-            SubMenuWidget(
+            _buildIconMenuWidget(
               iconName: 'ic_user.svg',
               title: S.of(context).account,
-              moreIconName: 'ic_arrow_right.svg',
-              padding: const EdgeInsets.fromLTRB(20, 15, 15, 15),
               onTap: () => Navigator.push(context, MobilePageRoute(child: const AccountPage())),
             )
           ],
@@ -87,27 +85,21 @@ class _SettingPageState extends State<SettingPage> {
         XBox.vertical20,
         SubListWidget(
           children: [
-            SubMenuWidget(
+            _buildIconMenuWidget(
               iconName: 'ic_all_items.svg',
               title: S.of(context).preference,
-              moreIconName: 'ic_arrow_right.svg',
-              padding: const EdgeInsets.fromLTRB(20, 15, 15, 15),
               onTap: () => Navigator.push(context, MobilePageRoute(child: const PreferencePage())),
             ),
-            const SubItemLine(padding: EdgeInsets.only(left: 55)),
-            SubMenuWidget(
+            _buildLineWidget(),
+            _buildIconMenuWidget(
               iconName: 'ic_security.svg',
               title: S.of(context).security,
-              moreIconName: 'ic_arrow_right.svg',
-              padding: const EdgeInsets.fromLTRB(20, 15, 15, 15),
               onTap: () => Navigator.push(context, MobilePageRoute(child: const SecurityPage())),
             ),
-            const SubItemLine(padding: EdgeInsets.only(left: 55)),
-            SubMenuWidget(
+            _buildLineWidget(),
+            _buildIconMenuWidget(
               iconName: 'ic_storage.svg',
               title: S.of(context).storage,
-              moreIconName: 'ic_arrow_right.svg',
-              padding: const EdgeInsets.fromLTRB(20, 15, 15, 15),
               onTap: () => Navigator.push(context, MobilePageRoute(child: const StoragePage())),
             ),
           ],
@@ -115,16 +107,34 @@ class _SettingPageState extends State<SettingPage> {
         XBox.vertical20,
         SubListWidget(
           children: [
-            SubMenuWidget(
+            _buildIconMenuWidget(
               iconName: 'ic_about.svg',
               title: S.of(context).about,
-              moreIconName: 'ic_arrow_right.svg',
-              padding: const EdgeInsets.fromLTRB(20, 15, 15, 15),
               onTap: () => Navigator.push(context, MobilePageRoute(child: const AboutPage())),
             ),
           ],
         )
       ],
     );
+  }
+
+  /// 创建菜单
+  Widget _buildIconMenuWidget({
+    required String iconName,
+    required String title,
+    required GestureTapCallback onTap
+  }) {
+    return SubMenuWidget(
+      iconName: iconName,
+      title: title,
+      moreIconName: 'ic_arrow_right.svg',
+      padding: const EdgeInsets.fromLTRB(20, 15, 15, 15),
+      onTap: onTap,
+    );
+  }
+
+  /// 创建分割线
+  Widget _buildLineWidget() {
+    return const SubItemLine(padding: EdgeInsets.only(left: 55));
   }
 }

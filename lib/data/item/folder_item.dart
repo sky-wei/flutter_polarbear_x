@@ -21,12 +21,15 @@
 //   folder
 // }
 
-class FolderItem {
+import 'choose.dart';
+
+class FolderItem with Choose {
 
   static const int noFolder = 0;
 
   final int id;
   int adminId;
+  @override
   final String name;
   final int createTime;
 

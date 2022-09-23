@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-class TimeItem {
+import 'package:flutter_polarbear_x/data/item/choose.dart';
+import 'package:flutter_polarbear_x/generated/l10n.dart';
+
+class TimeItem with Choose {
 
   static TimeItem defaultLock = TimeItem(value: 30);
   static TimeItem defaultClipboard = TimeItem(value: 30, type: second);
@@ -27,10 +30,26 @@ class TimeItem {
   final int type;
   final int secondValue;
 
+  @override
+  String get name => _timeToString();
+
   TimeItem({
     required this.value,
     this.type = minute
   }): secondValue = type == hour ? value * 60 * 60 : type == minute ? value * 60 : value;
+
+  String _timeToString() {
+    final String text;
+    if (value <= 0) {
+      text = S.current.never;
+    } else {
+      final temp = type == TimeItem.second
+          ? S.current.second : type == TimeItem.minute
+          ? S.current.minute : S.current.hour;
+      text = '$value $temp';
+    }
+    return text;
+  }
 
   @override
   bool operator ==(Object other) =>
