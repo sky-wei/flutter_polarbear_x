@@ -5,10 +5,8 @@
 ### 截图
 ![](screenshot/screenshot1.jpg)
 ![](screenshot/screenshot2.jpg)
+![](screenshot/screenshot3.jpg)
 
-
-### 一起来讨论
-![](screenshot/card.jpg)
 
 ## License
 

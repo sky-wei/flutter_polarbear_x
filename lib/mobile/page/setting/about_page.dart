@@ -54,7 +54,7 @@ class _AboutPageState extends State<AboutPage> {
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildBodyContent(),
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme.of(context).dialogBackgroundColor,
     );
   }
 
@@ -73,7 +73,7 @@ class _AboutPageState extends State<AboutPage> {
       ),
       centerTitle: true,
       elevation: 0,
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme.of(context).dialogBackgroundColor,
     );
   }
 
@@ -121,7 +121,7 @@ class _AboutPageState extends State<AboutPage> {
           ),
           XBox.vertical60,
           Material(
-            color: Theme.of(context).dialogBackgroundColor,
+            color: Theme.of(context).backgroundColor,
             borderRadius: BorderRadius.circular(6),
             child: Padding(
               padding: const EdgeInsets.all(20),
