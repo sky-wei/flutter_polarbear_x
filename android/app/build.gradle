@@ -40,21 +40,33 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.sky.flutter_polarbear_x"
+        applicationId "com.sky.flutter.polarbear.x"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a"
+        }
     }
-
+    signingConfigs {
+        passwordx {
+            storeFile file("${rootDir}/keyStore/sky.jks")
+            storePassword localProperties.getProperty('storePassword')
+            keyAlias localProperties.getProperty('keyAlias')
+            keyPassword localProperties.getProperty('keyPassword')
+        }
+    }
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            minifyEnabled true
+            zipAlignEnabled true
+            signingConfig signingConfigs.passwordx
+        }
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.passwordx
         }
     }
 }
