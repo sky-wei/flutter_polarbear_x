@@ -111,6 +111,18 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
+  fonts:
+    - family: MiSans
+      fonts:
+        - asset: fonts/MiSans-Regular.ttf
+        - asset: fonts/MiSans-Normal.ttf
+          style: italic
+    - family: MiSansMono
+      fonts:
+        - asset: fonts/MiSans-Regular.ttf
+        - asset: fonts/MiSans-Bold.ttf
+          weight: 700
+
 flutter_intl:
   enabled: true
 

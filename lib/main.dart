@@ -6,7 +6,6 @@ import 'package:flutter_polarbear_x/mobile/polarbear_mobile.dart';
 import 'package:flutter_polarbear_x/util/logger.dart';
 import 'package:flutter_polarbear_x/util/platform_util.dart';
 import 'package:flutter_polarbear_x/widget/restart_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/context.dart';
 
