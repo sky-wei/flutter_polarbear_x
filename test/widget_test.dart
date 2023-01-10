@@ -6,19 +6,17 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
+import 'package:flutter_polarbear_x/core/context.dart';
 import 'package:flutter_polarbear_x/desktop/polarbear_desktop.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    final appSetting = AppSetting(
-        await SharedPreferences.getInstance()
-    );
+    final baseContext = BaseContext();
+    await baseContext.initialize();
     await tester.pumpWidget(
-        PolarBearDesktopX(appSetting: appSetting)
+        PolarBearDesktopX(baseContext: baseContext)
     );
 
     // Verify that our counter starts at 0.

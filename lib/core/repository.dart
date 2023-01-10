@@ -14,42 +14,83 @@
  * limitations under the License.
  */
 
+import 'package:flutter_polarbear_x/core/database.dart';
 import 'package:flutter_polarbear_x/data/entity/folder_entity.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/data/mapper/account_mapper.dart';
 import 'package:flutter_polarbear_x/data/mapper/folder_mapper.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
 
-import '../data_exception.dart';
-import '../entity/account_entity.dart';
-import '../entity/admin_entity.dart';
-import '../item/account_item.dart';
-import '../item/admin_item.dart';
-import '../mapper/admin_mapper.dart';
-import '../objectbox.dart';
-import '../objectbox.g.dart';
-import 'encrypt_store.dart';
+import '../data/data_exception.dart';
+import '../data/entity/account_entity.dart';
+import '../data/entity/admin_entity.dart';
+import '../data/item/account_item.dart';
+import '../data/item/admin_item.dart';
+import '../data/mapper/admin_mapper.dart';
+import '../data/objectbox.g.dart';
+import 'component.dart';
+import 'context.dart';
+import 'encrypt.dart';
 
-class AppRepository {
 
-  final ObjectBox objectBox;
-  final EncryptStore encryptStore;
+abstract class XRepository implements XComponent {
 
-  Box<AdminEntity> get adminBox => objectBox.adminBox;
-  Box<FolderEntity> get folderBox => objectBox.folderBox;
-  Box<AccountEntity> get accountBox => objectBox.accountBox;
+  static const String componentName = 'appRepository';
+
+  static XRepository getAppRepository(XContext context) {
+    return context.getComponent(componentName);
+  }
+
+  Future<AdminItem> createAdmin(AdminItem admin);
+
+  Future<AdminItem> updateAdmin(AdminItem admin);
+
+  Future<AdminItem> loginByAdmin(AdminItem admin);
+
+  Future<FolderItem> createFolder(FolderItem folder);
+
+  Future<FolderItem> deleteFolder(FolderItem folder);
+
+  Future<FolderItem> updateFolder(FolderItem folder);
+
+  Future<List<FolderItem>> loadFoldersBy(AdminItem admin);
+
+  Future<List<AccountItem>> loadAllAccountBy(AdminItem admin);
+
+  Future<AccountItem> createAccount(AdminItem admin, AccountItem account);
+
+  Future<List<AccountItem>> createAccountList(AdminItem admin, List<AccountItem> accounts);
+
+  Future<AccountItem> updateAccount(AdminItem admin, AccountItem account);
+
+  Future<List<AccountItem>> updateAccounts(AdminItem admin, List<AccountItem> accounts);
+
+  Future<AccountItem> deleteAccount(AdminItem admin, AccountItem account);
+
+  Future<bool> clearData(AdminItem admin);
+
+  AccountItem encryptAccount(String password, AccountItem account);
+
+  AccountItem decryptAccount(String password, AccountItem account);
+}
+
+class AppRepository extends AbstractComponent implements XRepository {
+
+  final XDataManager dataManager;
+  final XEncrypt encryptStore;
+
+  Box<AdminEntity> get adminBox => dataManager.adminBox;
+
+  Box<FolderEntity> get folderBox => dataManager.folderBox;
+
+  Box<AccountEntity> get accountBox => dataManager.accountBox;
 
   AppRepository({
-    required this.objectBox,
+    required this.dataManager,
     required this.encryptStore
   });
 
-  /// 释放资源
-  void dispose() {
-    objectBox.dispose();
-  }
-
   /// 创建管理员账号
+  @override
   Future<AdminItem> createAdmin(AdminItem admin) async {
 
     final enAdmin = _encryptAdmin(admin);
@@ -69,6 +110,7 @@ class AppRepository {
   }
 
   /// 更新管理员账号
+  @override
   Future<AdminItem> updateAdmin(AdminItem admin) async {
 
     final enAdmin = _encryptAdmin(admin);
@@ -88,6 +130,7 @@ class AppRepository {
   }
 
   /// 登录账号
+  @override
   Future<AdminItem> loginByAdmin(AdminItem admin) async {
 
     final enAdmin = _encryptAdmin(admin);
@@ -110,6 +153,7 @@ class AppRepository {
 
 
   /// 创建文件夹
+  @override
   Future<FolderItem> createFolder(FolderItem folder) async {
 
     final entity = folderBox
@@ -127,6 +171,7 @@ class AppRepository {
   }
 
   /// 删除文件夹
+  @override
   Future<FolderItem> deleteFolder(FolderItem folder) async {
     if (!folderBox.remove(folder.id)) {
       throw DataException.type(type: ErrorType.deleteError);
@@ -135,6 +180,7 @@ class AppRepository {
   }
 
   /// 更新文件夹
+  @override
   Future<FolderItem> updateFolder(FolderItem folder) async {
 
     final entity = folderBox
@@ -158,6 +204,7 @@ class AppRepository {
   }
 
   /// 加载文件夹
+  @override
   Future<List<FolderItem>> loadFoldersBy(AdminItem admin) async {
 
     final entities = folderBox
@@ -169,6 +216,7 @@ class AppRepository {
   }
 
   /// 加载所有账号(包括删除的账号)
+  @override
   Future<List<AccountItem>> loadAllAccountBy(AdminItem admin) async {
 
     final entities = accountBox
@@ -184,6 +232,7 @@ class AppRepository {
   }
 
   /// 创建账号
+  @override
   Future<AccountItem> createAccount(AdminItem admin, AccountItem account) async {
 
     final enAccount = _encryptAccount(admin, account);
@@ -194,6 +243,7 @@ class AppRepository {
   }
 
   /// 创建账号
+  @override
   Future<List<AccountItem>> createAccountList(AdminItem admin, List<AccountItem> accounts) async {
 
     if (accounts.isEmpty) return accounts;
@@ -208,6 +258,7 @@ class AppRepository {
   }
 
   /// 更新账号信息
+  @override
   Future<AccountItem> updateAccount(AdminItem admin, AccountItem account) async {
 
     final enAccount = _encryptAccount(admin, account);
@@ -223,6 +274,7 @@ class AppRepository {
   }
 
   /// 更新账号信息
+  @override
   Future<List<AccountItem>> updateAccounts(AdminItem admin, List<AccountItem> accounts) async {
 
     if (accounts.isEmpty) return accounts;
@@ -242,6 +294,7 @@ class AppRepository {
   }
 
   /// 删除账号
+  @override
   Future<AccountItem> deleteAccount(AdminItem admin, AccountItem account) async {
     if (!accountBox.remove(account.id)) {
       throw DataException.type(type: ErrorType.deleteError);
@@ -250,6 +303,7 @@ class AppRepository {
   }
 
   /// 清除数据
+  @override
   Future<bool> clearData(AdminItem admin) async {
 
     final result = accountBox
@@ -261,6 +315,28 @@ class AppRepository {
       throw DataException.type(type: ErrorType.deleteError);
     }
     return true;
+  }
+
+  /// 加密账号信息
+  @override
+  AccountItem encryptAccount(String password, AccountItem account) {
+    return password.isEmpty ? account : account.copy(
+      name: encryptStore.encrypt(password, account.name),
+      password: encryptStore.encrypt(password, account.password),
+      url: encryptStore.encrypt(password, account.url),
+      node: encryptStore.encrypt(password, account.node),
+    );
+  }
+
+  /// 解密账号信息
+  @override
+  AccountItem decryptAccount(String password, AccountItem account) {
+    return password.isEmpty ? account : account.copy(
+      name: encryptStore.decrypt(password, account.name),
+      password: encryptStore.decrypt(password, account.password),
+      url: encryptStore.decrypt(password, account.url),
+      node: encryptStore.decrypt(password, account.node),
+    );
   }
 
   /// 加密管理员的密码
@@ -276,25 +352,5 @@ class AppRepository {
   /// 解密账号信息
   AccountItem _decryptAccount(AdminItem admin, AccountItem account) {
     return decryptAccount(admin.password, account);
-  }
-
-  /// 加密账号信息
-  AccountItem encryptAccount(String password, AccountItem account) {
-    return password.isEmpty ? account : account.copy(
-      name: encryptStore.encrypt(password, account.name),
-      password: encryptStore.encrypt(password, account.password),
-      url: encryptStore.encrypt(password, account.url),
-      node: encryptStore.encrypt(password, account.node),
-    );
-  }
-
-  /// 解密账号信息
-  AccountItem decryptAccount(String password, AccountItem account) {
-    return password.isEmpty ? account : account.copy(
-      name: encryptStore.decrypt(password, account.name),
-      password: encryptStore.decrypt(password, account.password),
-      url: encryptStore.decrypt(password, account.url),
-      node: encryptStore.decrypt(password, account.node),
-    );
   }
 }

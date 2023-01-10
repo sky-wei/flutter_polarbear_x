@@ -21,30 +21,23 @@ import 'dart:io';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_polarbear_x/component/clipboard_manager.dart';
-import 'package:flutter_polarbear_x/data/item/folder_item.dart';
-import 'package:flutter_polarbear_x/model/abstract_model.dart';
-import 'package:path_provider/path_provider.dart';
 
-import '../component/lock_manager.dart';
 import '../constant.dart';
+import '../core/context.dart';
 import '../data/data_exception.dart';
 import '../data/item/account_item.dart';
 import '../data/item/admin_item.dart';
+import '../data/item/folder_item.dart';
 import '../data/item/side_item.dart';
 import '../data/item/sort_item.dart';
-import '../data/objectbox.dart';
-import '../data/repository/app_repository.dart';
-import '../data/repository/app_setting.dart';
-import '../data/repository/encrypt_store.dart';
 import '../generated/l10n.dart';
 import '../theme/color.dart';
 import '../util/easy_notifier.dart';
 import '../widget/restart_widget.dart';
+import 'abstract_model.dart';
+import 'lock_manager.dart';
 
 abstract class AppAbstractModel extends AbstractModel {
-
-  final AppSetting appSetting;
 
   final List<FolderItem> folders = [];    /// 文件夹
   final List<AccountItem> allAccountItems = [];      /// 当前用户下所有账号列表(包括回收箱的)
@@ -67,51 +60,20 @@ abstract class AppAbstractModel extends AbstractModel {
   AdminItem get admin => _admin;        // 当前管理员信息
   bool get isLogin => _admin.id > 0;    // 判断账号是不登录
 
-  bool _init = false;
-  late Timer _timer;
-  late LockManager _lockManager;
-  late AppRepository _appRepository;
-  late ClipboardManager _clipboardManager;
+  Timer? _timer;
+  LockManager? _lockManager;
 
-  LockManager get lockManager => _lockManager;
-  AppRepository get appRepository => _appRepository;
-  ClipboardManager get clipboardManager => _clipboardManager;
+  Timer get timer => _timer ?? (_timer = _createTimer());
+  LockManager get lockManager => _lockManager ?? (_lockManager = _createLockManager());
 
-  AppAbstractModel({
-    required this.appSetting
-  });
+  AppAbstractModel(XContext context) : super(context);
 
-  /// 初始化
-  Future<void> initialize() async {
-    if (!_init) {
-      _init = true;
-      _clipboardManager = ClipboardManager(
-          appSetting: appSetting
-      );
-      _lockManager = LockManager(
-          appSetting: appSetting,
-          callback: () { return isLogin; }
-      );
-      final dir = await getAppDirectory();
-      _appRepository = AppRepository(
-          objectBox: await ObjectBox.create(directory: dir.path),
-          encryptStore: EncryptStore()
-      );
-      _timer = Timer.periodic(
-          const Duration(seconds: 1), (timer) => _timeHandler(timer)
-      );
-      onInitialize();
-      await Future.delayed(const Duration(milliseconds: 200));
-    }
+  void initialize() {
   }
-
-  /// 初始化
-  void onInitialize();
 
   @override
   void dispose() {
     _disposeTimer();
-    appRepository.dispose();
     folderNotifier.dispose();
     allAccountNotifier.dispose();
     lockManager.dispose();
@@ -401,11 +363,6 @@ abstract class AppAbstractModel extends AbstractModel {
     return account;
   }
 
-  /// 获取App目录
-  Future<Directory> getAppDirectory() async {
-    return kDebugMode ? await getTemporaryDirectory() : await getApplicationSupportDirectory();
-  }
-
   /// 过滤账号
   List<AccountItem> filterAccount({
     required List<AccountItem> accounts,
@@ -423,7 +380,7 @@ abstract class AppAbstractModel extends AbstractModel {
 
   /// 更新监听时间
   void updateMonitorTime() {
-    lockManager.updateLastTime(_timer.tick);
+    lockManager.updateLastTime(timer.tick);
   }
 
   /// 锁屏通知
@@ -451,6 +408,21 @@ abstract class AppAbstractModel extends AbstractModel {
     return await clipboardManager.copy(value);
   }
 
+  /// 创建定时器
+  Timer _createTimer() {
+    return Timer.periodic(
+        const Duration(seconds: 1), (timer) => _timeHandler(timer)
+    );
+  }
+
+  /// 创建锁屏管理
+  LockManager _createLockManager() {
+    return LockManager(
+        appSetting: appSetting,
+        callback: () { return isLogin; }
+    );
+  }
+
   /// 更新管理员信息
   AdminItem _updateAdmin(AdminItem item) {
     notify(() => _admin = item);
@@ -466,6 +438,6 @@ abstract class AppAbstractModel extends AbstractModel {
 
   /// 释放定时器
   void _disposeTimer() {
-    if (_timer.isActive) _timer.cancel();
+    if (timer.isActive) timer.cancel();
   }
 }

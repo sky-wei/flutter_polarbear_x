@@ -15,9 +15,9 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/core/settings.dart';
 import 'package:flutter_polarbear_x/data/item/locale_item.dart';
 import 'package:flutter_polarbear_x/data/item/theme_item.dart';
-import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/desktop/model/app_desktop_model.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
@@ -47,7 +47,7 @@ class PreferenceWidgetState extends State<PreferenceWidget> {
   ];
 
   late AppDesktopModel _appModel;
-  late AppSetting _appSetting;
+  late XSettings _appSetting;
 
   @override
   void initState() {

@@ -14,8 +14,25 @@
  * limitations under the License.
  */
 
+import 'package:flutter_polarbear_x/core/repository.dart';
+
+import '../core/clipboard.dart';
+import '../core/context.dart';
+import '../core/database.dart';
+import '../core/settings.dart';
 import '../util/easy_notifier.dart';
 
 class AbstractModel extends EasyNotifier {
 
+  final XContext context;
+
+  AbstractModel(this.context);
+
+  XSettings get appSetting => context.appSetting;
+
+  XDataManager get dataManager => context.dataManager;
+
+  XRepository get appRepository => context.appRepository;
+
+  XClipboard get clipboardManager => context.clipboardManager;
 }

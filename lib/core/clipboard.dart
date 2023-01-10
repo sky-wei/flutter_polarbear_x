@@ -15,22 +15,40 @@
  */
 
 import 'package:flutter/services.dart';
+import 'package:flutter_polarbear_x/core/settings.dart';
 
 import '../data/item/time_item.dart';
-import '../data/repository/app_setting.dart';
+import 'component.dart';
+import 'context.dart';
 
-class ClipboardManager {
+abstract class XClipboard implements XComponent {
+
+  static const String componentName = 'clipboardManager';
+
+  static XClipboard getClipboardManager(XContext context) {
+    return context.getComponent(componentName);
+  }
+
+  Future<void> copy(String value);
+
+  bool checkTimeout(int time);
+
+  Future<void> clear();
+}
+
+class ClipboardManager extends AbstractComponent implements XClipboard {
+
+  final XSettings _setting;
 
   int _curTime = 0;
   int _lastCopyTime = 0;
   String _lastCopyValue = "";
 
-  final AppSetting _appSetting;
-
   ClipboardManager({
-    required AppSetting appSetting,
-  }): _appSetting = appSetting;
+    required XSettings setting,
+  }): _setting = setting;
 
+  @override
   /// 复制内容到剪贴板
   Future<void> copy(String value) async {
     _lastCopyTime = _curTime;
@@ -40,6 +58,7 @@ class ClipboardManager {
     );
   }
 
+  @override
   /// 清除上一次剪贴板的内容
   Future<void> clear() async {
     final data = await Clipboard.getData('text/plain');
@@ -51,27 +70,32 @@ class ClipboardManager {
     }
   }
 
+  @override
   /// 检测剪贴板是否超时
-  void checkTimeout(int time) {
+  bool checkTimeout(int time) {
 
     if (_lastCopyTime <= 0) {
       // 没有使用不需要处理
-      return;
+      return false;
     }
 
     _curTime = time;
 
-    final timeout = _appSetting.getClipboardTimeBySecond(
+    final timeout = _setting.getClipboardTimeBySecond(
         TimeItem.defaultLock
     );
 
     if (timeout > 0 && _curTime - _lastCopyTime >= timeout) {
       clear();
+      return true;
     }
+    return false;
   }
 
   /// 释放
+  @override
   void dispose() {
+    super.dispose();
     _resetInfo();
   }
 

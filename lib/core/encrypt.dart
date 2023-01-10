@@ -19,23 +19,50 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart';
-import 'package:flutter_polarbear_x/util/log_util.dart';
+import 'package:flutter_polarbear_x/core/component.dart';
 
-class EncryptStore {
+import '../util/log_util.dart';
+import 'context.dart';
+
+
+abstract class XEncrypt implements XComponent {
+
+  static const String componentName = 'encryptStore';
+
+  static XEncrypt getClipboardManager(XContext context) {
+    return context.getComponent(componentName);
+  }
+
+  String encodeBase64(String data);
+
+  String decodeBase64(String data);
+
+  String md5sum(String data);
+
+  String encrypt(String password, String data);
+
+  String decrypt(String password, String data);
+}
+
+
+class EncryptStore extends AbstractComponent implements XEncrypt {
 
   final _ivBytes = [98, 10, 60, 80, 20, 1, 9, 8, 9, 20, 21, 11, 10, 26, 6, 97];
 
   /// Base64加密
+  @override
   String encodeBase64(String data){
     return base64Encode(utf8.encode(data));
   }
 
   /// Base64解密
+  @override
   String decodeBase64(String data){
     return String.fromCharCodes(base64Decode(data));
   }
 
   /// md5加密
+  @override
   String md5sum(String data) {
     return encodeBase64(
         md5.convert(utf8.encode(data)).toString()
@@ -43,11 +70,12 @@ class EncryptStore {
   }
 
   /// 加密数据
+  @override
   String encrypt(String password, String data) {
 
     if (data.isEmpty) return "";
 
-    final key = buildKey(password);
+    final key = _buildKey(password);
     final iv = IV(Uint8List.fromList(_ivBytes));
 
     final encrypt = Encrypter(
@@ -58,11 +86,12 @@ class EncryptStore {
   }
 
   /// 解密数据
+  @override
   String decrypt(String password, String data) {
 
     if (data.isEmpty) return "";
 
-    final key = buildKey(password);
+    final key = _buildKey(password);
     final iv = IV(Uint8List.fromList(_ivBytes));
 
     final encrypt = Encrypter(
@@ -78,7 +107,7 @@ class EncryptStore {
   }
 
   /// 生成Key
-  Key buildKey(String password) {
+  Key _buildKey(String password) {
     return Key(
       Uint8List.fromList(
         sha256.convert(utf8.encode(password)).bytes

@@ -15,8 +15,8 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/core/settings.dart';
 import 'package:flutter_polarbear_x/data/item/time_item.dart';
-import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
@@ -60,7 +60,7 @@ class _SecurityPageState extends State<SecurityPage> {
   TimeItem get defaultLock => TimeItem.defaultLock;
   TimeItem get defaultClipboard => TimeItem.defaultClipboard;
 
-  late AppSetting _appSetting;
+  late XSettings _appSetting;
 
   @override
   void initState() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 The sky Authors.
+ * Copyright (c) 2023 The sky Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,16 @@ import 'package:flutter/material.dart';
 
 import '../constant.dart';
 import '../data/item/time_item.dart';
-import '../data/repository/app_setting.dart';
+import '../core/settings.dart';
 
 class LockManager extends ValueNotifier<bool> {
 
-  final AppSetting _appSetting;
+  final XSettings _appSetting;
   final IsLoginCallback _isLogin;
   int _lastTime = 0;
 
   LockManager({
-    required AppSetting appSetting,
+    required XSettings appSetting,
     required IsLoginCallback callback
   }): _appSetting = appSetting, _isLogin = callback, super(false) ;
 

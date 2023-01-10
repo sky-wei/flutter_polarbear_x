@@ -15,26 +15,61 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../item/time_item.dart';
+import '../data/item/time_item.dart';
+import 'preferences.dart';
 
-class AppSetting {
+abstract class XSettings {
 
-  final SharedPreferences _preferences;
+  int getDarkMode(int defaultValue);
 
-  AppSetting(this._preferences);
+  Future<bool> setDarkMode(int mode);
+
+  Locale? getLocale();
+
+  Future<bool> setLocale(Locale? locale);
+
+  double getDisplaySize();
+
+  Future<bool> setDisplaySize(double size);
+
+  double getFontSize();
+
+  Future<bool> setFontSize(double size);
+
+  TimeItem getLockTime(TimeItem defaultValue);
+
+  int getLockTimeBySecond(TimeItem defaultValue);
+
+  Future<bool> setLockTime(TimeItem time);
+
+  TimeItem getClipboardTime(TimeItem defaultValue);
+
+  int getClipboardTimeBySecond(TimeItem defaultValue);
+
+  Future<bool> setClipboardTime(TimeItem time);
+}
+
+
+class AppSettings implements XSettings {
+
+  final XPreferences _preferences;
+
+  AppSettings(this._preferences);
 
   /// 获取主题模式
+  @override
   int getDarkMode(int defaultValue) {
     return _preferences.getInt('dark_mode') ?? defaultValue;
   }
 
   /// 设置主题模式
-  Future<bool> setDarkMode(int mode) async {
-    return await _preferences.setInt('dark_mode', mode);
+  @override
+  Future<bool> setDarkMode(int mode) {
+    return _preferences.setInt('dark_mode', mode);
   }
 
+  @override
   /// 获取锁定时间信息
   TimeItem getLockTime(TimeItem defaultValue) {
     final value = _preferences.getInt('lock_time') ?? defaultValue.value;
@@ -42,11 +77,13 @@ class AppSetting {
     return TimeItem(value: value, type: type);
   }
 
+  @override
   /// 获取锁定时间信息
   int getLockTimeBySecond(TimeItem defaultValue) {
     return _preferences.getInt('lock_time_second') ?? defaultValue.secondValue;
   }
 
+  @override
   /// 设置锁定时间信息
   Future<bool> setLockTime(TimeItem time) async {
     await _preferences.setInt('lock_time', time.value);
@@ -55,6 +92,7 @@ class AppSetting {
     return true;
   }
 
+  @override
   /// 获取剪贴板时间信息
   TimeItem getClipboardTime(TimeItem defaultValue) {
     final value = _preferences.getInt('clipboard_time') ?? defaultValue.value;
@@ -62,11 +100,13 @@ class AppSetting {
     return TimeItem(value: value, type: type);
   }
 
+  @override
   /// 获取剪贴板时间信息
   int getClipboardTimeBySecond(TimeItem defaultValue) {
     return _preferences.getInt('clipboard_time_second') ?? defaultValue.secondValue;
   }
 
+  @override
   /// 设置剪贴板时间信息
   Future<bool> setClipboardTime(TimeItem time) async {
     await _preferences.setInt('clipboard_time', time.value);
@@ -76,6 +116,7 @@ class AppSetting {
   }
 
   /// 获取Locale
+  @override
   Locale? getLocale() {
     final language = _preferences.getString('language');
     if (language != null && language.isNotEmpty) {
@@ -92,13 +133,38 @@ class AppSetting {
   }
 
   /// 设置Locale
-  Future<bool> setLocale(Locale? locale) async {
+  @override
+  Future<bool> setLocale(Locale? locale) {
     if (locale == null) {
       return _preferences.setString('language', '');
     }
     return _preferences.setString(
         'language', '${locale.languageCode}_${locale.countryCode ?? ''}'
     );
+  }
+
+  /// 获取显示大小
+  @override
+  double getDisplaySize() {
+    return _preferences.getDouble('display_size') ?? 1.0;
+  }
+
+  /// 设置显示大小
+  @override
+  Future<bool> setDisplaySize(double size) {
+    return _preferences.setDouble('display_size', size);
+  }
+
+  /// 获取字体大小
+  @override
+  double getFontSize() {
+    return _preferences.getDouble('font_size') ?? 1.0;
+  }
+
+  /// 设置字体大小
+  @override
+  Future<bool> setFontSize(double size) {
+    return _preferences.setDouble('font_size', size);
   }
 }
 
