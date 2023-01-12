@@ -28,10 +28,14 @@ typedef CompleteCallback = void Function();
 
 class XConstant {
 
-  static const String versionName = "1.0.3";
+  static const String versionName = "1.1.0";
 
   static const String mail = 'jingcai.wei@163.com';
 
   static const String source = 'https://github.com/sky-wei/flutter_polarbear_x';
+
+  static const String headLogo = 'assets/image/ic_head_logo.png';
+
+  static const String userImage = 'assets/image/ic_user_head.png';
 }
 

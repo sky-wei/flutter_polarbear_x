@@ -29,6 +29,7 @@ import 'package:flutter_polarbear_x/route/mobile_page_route.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/error_util.dart';
+import 'package:flutter_polarbear_x/util/image_util.dart';
 import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
@@ -400,8 +401,8 @@ class MainSideWidgetState extends State<MainSideWidget> {
         children: [
           XBox.vertical20,
           ClipOval(
-            child: Image.asset(
-                'assets/image/ic_user_head.jpg',
+            child: ImageUtil.create(
+                _appModel.admin.getUserImage(),
                 width: 56
             ),
           ),

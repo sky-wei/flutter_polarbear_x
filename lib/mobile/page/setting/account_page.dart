@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/constant.dart';
 import 'package:flutter_polarbear_x/data/item/admin_item.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/mobile/dialog/input_dialog.dart';
@@ -23,6 +25,7 @@ import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/error_util.dart';
+import 'package:flutter_polarbear_x/util/image_util.dart';
 import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
@@ -102,7 +105,7 @@ class _AccountPageState extends State<AccountPage> {
             Padding(
               padding: const EdgeInsets.only(top: 20, bottom: 20),
               child: _buildHeadWidget(
-                  onPressed: () => MessageUtil.showMessage(context, S.of(context).notSupport)
+                  onPressed: () => _changeHeadImage(admin)
               ),
             )
           ],
@@ -170,9 +173,9 @@ class _AccountPageState extends State<AccountPage> {
       child: Stack(
         alignment: AlignmentDirectional.topCenter,
         children: [
-          Image.asset(
-              'assets/image/ic_user_head.jpg',
-              width: 70
+          ImageUtil.create(
+            admin.getUserImage(),
+            width: 70
           ),
           Positioned(
             top: 50,
@@ -285,6 +288,32 @@ class _AccountPageState extends State<AccountPage> {
           });
         }
     );
+  }
+
+  /// 修改头像
+  Future<void> _changeHeadImage(AdminItem admin) async {
+
+    final typeGroup = XTypeGroup(
+      label: 'images',
+      extensions: <String>['jpg', 'png'],
+    );
+    final file = await openFile(
+        acceptedTypeGroups: <XTypeGroup>[typeGroup]
+    );
+
+    if (file == null) {
+      return;
+    }
+
+    // 更新头像信息
+    _appModel.updateHeadImage(
+        admin, file
+    ).then((value) {
+      Navigator.pop(context);
+      MessageUtil.showMessage(context, S.of(context).updateCompleted);
+    }).catchError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+    });
   }
 
   /// 显示编辑Dialog

@@ -18,6 +18,7 @@ import 'dart:io';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/constant.dart';
 import 'package:flutter_polarbear_x/desktop/widget/window_buttons.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
@@ -61,7 +62,7 @@ class _LauncherPageState extends State<LauncherPage> {
             Align(
               alignment: Alignment.topLeft,
               child: HeadLogoWidget(
-                logo: 'assets/image/ic_head_logo.png',
+                logo: XConstant.headLogo,
                 title: S.of(context).appName,
                 logoColor: XColor.white.withOpacity(0.8),
                 titleColor: XColor.white.withOpacity(0.8),

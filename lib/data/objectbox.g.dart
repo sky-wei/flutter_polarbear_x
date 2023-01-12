@@ -97,7 +97,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(2, 7229556591746610788),
       name: 'AdminEntity',
-      lastPropertyId: const IdUid(6, 2741697708274369194),
+      lastPropertyId: const IdUid(7, 5346329168322733736),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -130,6 +130,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(6, 2741697708274369194),
             name: 'updateTime',
             type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 5346329168322733736),
+            name: 'headImage',
+            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -271,13 +276,15 @@ ModelDefinition getObjectBoxModel() {
           final nameOffset = fbb.writeString(object.name);
           final passwordOffset = fbb.writeString(object.password);
           final descOffset = fbb.writeString(object.desc);
-          fbb.startTable(7);
+          final headImageOffset = fbb.writeString(object.headImage);
+          fbb.startTable(8);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
           fbb.addOffset(2, passwordOffset);
           fbb.addOffset(3, descOffset);
           fbb.addInt64(4, object.createTime);
           fbb.addInt64(5, object.updateTime);
+          fbb.addOffset(6, headImageOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -291,6 +298,8 @@ ModelDefinition getObjectBoxModel() {
                   .vTableGet(buffer, rootOffset, 6, ''),
               password: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 8, ''),
+              headImage: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 16, ''),
               desc: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 10, ''),
               createTime:
@@ -418,6 +427,10 @@ class AdminEntity_ {
   /// see [AdminEntity.updateTime]
   static final updateTime =
       QueryIntegerProperty<AdminEntity>(_entities[1].properties[5]);
+
+  /// see [AdminEntity.headImage]
+  static final headImage =
+      QueryStringProperty<AdminEntity>(_entities[1].properties[6]);
 }
 
 /// [FolderEntity] entity fields to define ObjectBox queries.

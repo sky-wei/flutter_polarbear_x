@@ -21,6 +21,7 @@ import 'dart:io';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '../constant.dart';
 import '../core/context.dart';
@@ -406,6 +407,24 @@ abstract class AppAbstractModel extends AbstractModel {
   /// 复制内容到剪贴板
   Future<void> copyToClipboard(String value) async {
     return await clipboardManager.copy(value);
+  }
+
+  /// 获取保存头像图片路径
+  Future<AdminItem> updateHeadImage(AdminItem admin, XFile image) async {
+
+    final newName = const Uuid().v1();
+    final imageFile = File(image.path);
+    final extName = image.name.substring(image.name.lastIndexOf('.'));
+    final newImagePath = '${context.appDirectory.path}/$newName$extName';
+
+    // 复制文件
+    imageFile.copySync(newImagePath);
+
+    if (admin.headImage.isNotEmpty) {
+      File(admin.headImage).delete();
+    }
+
+    return await updateAdmin(admin.copy(headImage: newImagePath));
   }
 
   /// 创建定时器

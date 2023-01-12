@@ -80,7 +80,7 @@ class _HomeSideState extends State<HomeSide> {
         children: [
           if (Platform.isLinux || Platform.isWindows)
             HeadLogoWidget(
-              logo: 'assets/image/ic_head_logo.png',
+              logo: XConstant.headLogo,
               title: S.of(context).appName,
             ),
           if (Platform.isMacOS)

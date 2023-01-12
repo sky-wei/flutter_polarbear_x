@@ -31,6 +31,7 @@ class AdminMapper {
       id: entity.id,
       name: entity.name,
       password: entity.password,
+      headImage: entity.headImage,
       desc: entity.desc,
       createTime: entity.createTime,
       updateTime: entity.updateTime
@@ -46,6 +47,7 @@ class AdminMapper {
       id: item.id,
       name: item.name,
       password: item.password,
+      headImage: item.headImage,
       desc: item.desc,
       createTime: item.createTime,
       updateTime: item.updateTime

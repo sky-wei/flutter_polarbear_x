@@ -27,6 +27,8 @@ class AdminEntity {
 
   String password;
 
+  String headImage;
+
   String desc;
 
   int createTime;
@@ -37,6 +39,7 @@ class AdminEntity {
     this.id = 0,
     required this.name,
     required this.password,
+    this.headImage = '',
     this.desc = '',
     this.createTime = 0,
     this.updateTime = 0
