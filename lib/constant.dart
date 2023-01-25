@@ -28,7 +28,7 @@ typedef CompleteCallback = void Function();
 
 class XConstant {
 
-  static const String versionName = "1.1.0";
+  static const String versionName = "1.2.0";
 
   static const String mail = 'jingcai.wei@163.com';
 

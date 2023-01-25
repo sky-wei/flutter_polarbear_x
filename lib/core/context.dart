@@ -49,7 +49,7 @@ abstract class XContext {
 class BaseContext extends XContext {
 
   @override
-  final XVersion appVersion = AppVersion(XConstant.versionName, 1);
+  final XVersion appVersion = AppVersion(XConstant.versionName, 2);
 
   @override
   late Directory appDirectory;
