@@ -22,11 +22,41 @@ class AccountItem {
 
   final int id;
   final int adminId;
-  String alias;
-  String name;
+
+  String _alias;
+  String _lowerAlias;
+  String get alias => _alias;
+  set alias(String value) {
+    _alias = value;
+    _lowerAlias = value.toLowerCase();
+  }
+
+  String _name;
+  String _lowerName;
+  String get name => _name;
+  set name(String value) {
+    _name = value;
+    _lowerName = value.toLowerCase();
+  }
+
   String password;
-  String url;
-  String node;
+
+  String _url;
+  String _lowerUrl;
+  String get url => _url;
+  set url(String value) {
+    _url = value;
+    _lowerUrl = value.toLowerCase();
+  }
+
+  String _node;
+  String _lowerNode;
+  String get node => _node;
+  set node(String value) {
+    _node = value;
+    _lowerNode = value.toLowerCase();
+  }
+
   int folderId;
   bool favorite;
   bool trash;
@@ -41,18 +71,26 @@ class AccountItem {
   AccountItem({
     this.id = 0,
     required this.adminId,
-    required this.alias,
-    required this.name,
+    required String alias,
+    required String name,
     required this.password,
-    this.url = '',
-    this.node = '',
+    String url = '',
+    String node = '',
     this.folderId = FolderItem.noFolder,
     this.favorite = false,
     this.trash = false,
     int? createTime,
     int? updateTime,
     this.version = 0
-  }): createTime = createTime ?? DateTime.now().millisecondsSinceEpoch,
+  }): _alias = alias,
+    _lowerAlias = alias.toLowerCase(),
+    _name = name,
+    _lowerName = name.toLowerCase(),
+    _url = url,
+    _lowerUrl = url.toLowerCase(),
+    _node = node,
+    _lowerNode = node.toLowerCase(),
+    createTime = createTime ?? DateTime.now().millisecondsSinceEpoch,
     updateTime = updateTime ?? DateTime.now().millisecondsSinceEpoch;
 
   AccountItem copy({
@@ -124,7 +162,11 @@ class AccountItem {
   };
 
   bool contains(String keyword) {
-    return alias.contains(keyword) || name.contains(keyword) || url.contains(keyword);
+    final lowerKeyword = keyword.toLowerCase();
+    return _lowerAlias.contains(lowerKeyword)
+        || _lowerName.contains(lowerKeyword)
+        || _lowerUrl.contains(lowerKeyword)
+        || _lowerNode.contains(lowerKeyword);
   }
 
   bool _contains(List<String> values, String keyword) {

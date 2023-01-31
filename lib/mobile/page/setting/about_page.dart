@@ -84,7 +84,7 @@ class _AboutPageState extends State<AboutPage> {
       child: Column(
         children: [
           Image.asset(
-            'assets/image/ic_head_logo.png',
+            XConstant.headLogo,
             width: 100,
             height: 100,
           ),

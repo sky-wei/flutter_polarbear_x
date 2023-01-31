@@ -16,10 +16,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_polarbear_x/core/settings.dart';
 import 'package:provider/provider.dart';
 
+import '../core/context.dart';
 import '../data/item/theme_item.dart';
-import '../data/repository/app_setting.dart';
 import '../generated/l10n.dart';
 import '../route.dart';
 import '../theme/theme.dart';
@@ -33,11 +34,13 @@ import 'widget/monitor_widget.dart';
 
 class PolarBearMobileX extends StatelessWidget {
 
-  final AppSetting appSetting;
+  final BaseContext baseContext;
+
+  XSettings get appSetting => baseContext.appSetting;
 
   const PolarBearMobileX({
     Key? key,
-    required this.appSetting
+    required this.baseContext
   }) : super(key: key);
 
   // This widget is the root of your application.
@@ -45,7 +48,12 @@ class PolarBearMobileX extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AppMobileModel(appSetting: appSetting)),
+        ChangeNotifierProvider(
+            create: (context) => AppContext(baseContext: baseContext)
+        ),
+        ChangeNotifierProvider(
+            create: (context) => AppMobileModel(context.read<AppContext>())..initialize()
+        ),
       ],
       child: MaterialApp(
         title: 'PasswordX',

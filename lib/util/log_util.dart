@@ -18,8 +18,12 @@ import 'package:flutter/foundation.dart';
 
 class XLog {
 
+  static const bool _debug = kDebugMode;
+
   XLog._();
 
-  static void d(String? message)=> debugPrint(message);
+  static void d(String? message) {
+    if (_debug) debugPrint(message);
+  }
 }
 

@@ -16,7 +16,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_polarbear_x/desktop/model/app_desktop_model.dart';
+import 'package:flutter_polarbear_x/core/context.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/route.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +35,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    context.read<AppDesktopModel>().initialize().then((value) {
+    context.read<AppContext>().initialize().then((value) {
       Navigator.pushReplacementNamed(
           context, kDebugMode ? XRoute.launcher : XRoute.launcher
       );

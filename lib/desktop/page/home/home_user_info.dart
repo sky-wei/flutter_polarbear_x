@@ -15,9 +15,11 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/constant.dart';
 import 'package:flutter_polarbear_x/desktop/model/app_desktop_model.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
+import 'package:flutter_polarbear_x/util/image_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -69,8 +71,8 @@ class _HomeUserInfoState extends State<HomeUserInfoWidget> {
               child: Row(
                 children: [
                   ClipOval(
-                    child: Image.asset(
-                        'assets/image/ic_user_head.jpg',
+                    child: ImageUtil.create(
+                        _appModel.admin.getUserImage(),
                         width: 36
                     ),
                   ),

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import 'package:flutter_polarbear_x/constant.dart';
+
 class AdminItem {
 
   static final AdminItem empty = AdminItem(name: '', password: '');
@@ -21,6 +23,7 @@ class AdminItem {
   final int id;
   final String name;
   final String password;
+  final String headImage;
   final String desc;
   final int createTime;
   int updateTime;
@@ -29,6 +32,7 @@ class AdminItem {
    this.id = 0,
    required this.name,
    required this.password,
+   this.headImage = '',
    this.desc = 'Admin',
     int? createTime,
     int? updateTime,
@@ -41,6 +45,7 @@ class AdminItem {
     id = item.id,
     name = item.name,
     password = item.password,
+    headImage = item.headImage,
     desc = item.desc,
     createTime = item.createTime,
     updateTime = item.updateTime;
@@ -49,6 +54,7 @@ class AdminItem {
     int? id,
     String? name,
     String? password,
+    String? headImage,
     String? desc,
     int? createTime,
     int? updateTime
@@ -57,6 +63,7 @@ class AdminItem {
       id: id ?? this.id,
       name: name ?? this.name,
       password: password ?? this.password,
+      headImage: headImage ?? this.headImage,
       desc: desc ?? this.desc,
       createTime: createTime ?? this.createTime,
       updateTime: updateTime ?? this.updateTime
@@ -65,6 +72,10 @@ class AdminItem {
 
   void setUpdateTime() {
     updateTime = DateTime.now().millisecondsSinceEpoch;
+  }
+
+  String getUserImage() {
+    return headImage.isEmpty ? XConstant.userImage : headImage;
   }
 
   @override
@@ -77,7 +88,7 @@ class AdminItem {
 
   @override
   String toString() {
-    return 'AdminItem{id: $id, name: $name, password: $password, desc: $desc, createTime: $createTime, updateTime: $updateTime}';
+    return 'AdminItem{id: $id, name: $name, password: $password, headImage: $headImage, desc: $desc, createTime: $createTime, updateTime: $updateTime}';
   }
 }
 

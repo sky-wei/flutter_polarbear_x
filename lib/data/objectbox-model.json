@@ -79,7 +79,7 @@
     },
     {
       "id": "2:7229556591746610788",
-      "lastPropertyId": "6:2741697708274369194",
+      "lastPropertyId": "7:5346329168322733736",
       "name": "AdminEntity",
       "properties": [
         {
@@ -114,6 +114,11 @@
           "id": "6:2741697708274369194",
           "name": "updateTime",
           "type": 6
+        },
+        {
+          "id": "7:5346329168322733736",
+          "name": "headImage",
+          "type": 9
         }
       ],
       "relations": []

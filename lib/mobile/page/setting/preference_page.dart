@@ -15,16 +15,15 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/core/settings.dart';
 import 'package:flutter_polarbear_x/data/item/locale_item.dart';
 import 'package:flutter_polarbear_x/data/item/theme_item.dart';
-import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/action_menu_widget.dart';
 import 'package:flutter_polarbear_x/widget/sub_dropdown_widget.dart';
-import 'package:flutter_polarbear_x/widget/sub_label_widget.dart';
 import 'package:flutter_polarbear_x/widget/sub_list_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -52,7 +51,7 @@ class _PreferencePageState extends State<PreferencePage> {
   ];
 
   late AppMobileModel _appModel;
-  late AppSetting _appSetting;
+  late XSettings _appSetting;
 
   @override
   void initState() {

@@ -23,6 +23,7 @@ class XTheme {
   XTheme._();
 
   static ThemeData lightTheme() => ThemeData(
+    fontFamily: 'MiSans',
     primarySwatch: XColor.blue,
     backgroundColor: const Color(0xFFF7F7F7),
     iconTheme: const IconThemeData(color: XColor.black),
@@ -31,6 +32,7 @@ class XTheme {
   );
 
   static ThemeData darkTheme() => ThemeData(
+    fontFamily: 'MiSans',
     brightness: Brightness.dark,
     primarySwatch: XColor.blue,
     backgroundColor: const Color(0xFF333333),

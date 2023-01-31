@@ -17,11 +17,11 @@
 import 'dart:async';
 
 import 'package:flutter_polarbear_x/constant.dart';
+import 'package:flutter_polarbear_x/core/context.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/data/item/side_item.dart';
 import 'package:flutter_polarbear_x/data/item/sort_item.dart';
-import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/model/app_abstract_model.dart';
 import 'package:flutter_polarbear_x/util/easy_notifier.dart';
 
@@ -40,7 +40,7 @@ class AppDesktopModel extends AppAbstractModel {
 
   final List<AccountItem> accounts = [];  /// 账号
 
-  late SideItem chooseSide;
+  late SideItem chooseSide = allItems;
   SortType get sortType => chooseSide.type;
   AccountItem chooseAccount = AccountItem.empty;
   String keyword = '';
@@ -49,14 +49,11 @@ class AppDesktopModel extends AppAbstractModel {
 
   List<AccountItem> _filterAccountItems = [];   // 当前账号列表
 
-  AppDesktopModel({
-    required AppSetting appSetting
-  }) : super(appSetting: appSetting);
+  AppDesktopModel(XContext context) : super(context);
 
 
   @override
-  void onInitialize() {
-    chooseSide = allItems;
+  void initialize() {
     folderNotifier.addListener(_folderChange);
   }
 

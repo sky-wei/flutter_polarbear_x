@@ -17,6 +17,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_polarbear_x/constant.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/item/action_item.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
@@ -353,7 +354,7 @@ class HomeInfoState extends State<HomeInfo> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Image.asset(
-            'assets/image/ic_head_logo.png',
+            XConstant.headLogo,
             width: 65,
             color: Theme.of(context).highlightColor,
           ),

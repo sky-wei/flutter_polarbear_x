@@ -1,25 +1,25 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/desktop/polarbear_desktop.dart';
 import 'package:flutter_polarbear_x/mobile/polarbear_mobile.dart';
 import 'package:flutter_polarbear_x/util/logger.dart';
 import 'package:flutter_polarbear_x/util/platform_util.dart';
 import 'package:flutter_polarbear_x/widget/restart_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import 'core/context.dart';
 
 
 void main() {
+
   initLogger(() async {
-    final appSetting = AppSetting(
-      await SharedPreferences.getInstance()
-    );
+    final baseContext = BaseContext();
+    await baseContext.initialize();
     runApp(
       RestartWidget(
         child: PlatformUtil.isPC() ?
-        PolarBearDesktopX(appSetting: appSetting) :
-        PolarBearMobileX(appSetting: appSetting)
+        PolarBearDesktopX(baseContext: baseContext) :
+        PolarBearMobileX(baseContext: baseContext)
       )
     );
   });

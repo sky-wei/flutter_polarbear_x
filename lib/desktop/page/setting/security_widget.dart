@@ -15,8 +15,8 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/core/settings.dart';
 import 'package:flutter_polarbear_x/data/item/time_item.dart';
-import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/desktop/model/app_desktop_model.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
@@ -55,7 +55,7 @@ class SecurityWidgetState extends State<SecurityWidget> {
   TimeItem get defaultLock => TimeItem.defaultLock;
   TimeItem get defaultClipboard => TimeItem.defaultClipboard;
 
-  late AppSetting _appSetting;
+  late XSettings _appSetting;
 
   @override
   void initState() {

@@ -54,7 +54,7 @@ class _AboutWidgetState extends State<AboutWidget> {
         children: [
           XBox.vertical30,
           Image.asset(
-            'assets/image/ic_head_logo.png',
+            XConstant.headLogo,
             width: 100,
             height: 100,
           ),

@@ -54,9 +54,18 @@ class _HomePageState extends State {
   Widget _buildHomeFrame(BuildContext context) {
     return Row(
       children: [
-        const HomeSide(),
-        const HomeList(),
-        Expanded(child: HomeInfo(themeData: Theme.of(context)))
+        const Expanded(
+          flex: 2,
+          child: HomeSide(),
+        ),
+        const Expanded(
+          flex: 2,
+          child: HomeList(),
+        ),
+        Expanded(
+          flex: 6,
+          child: HomeInfo(themeData: Theme.of(context))
+        )
       ],
     );
   }

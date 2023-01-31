@@ -15,10 +15,12 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/constant.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/mobile/model/app_mobile_model.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/error_util.dart';
+import 'package:flutter_polarbear_x/util/image_util.dart';
 import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:flutter_polarbear_x/widget/big_button_widget.dart';
@@ -74,8 +76,8 @@ class _LockPageState extends State<LockPage> {
               children: [
                 XBox.vertical50,
                 ClipOval(
-                  child: Image.asset(
-                    'assets/image/ic_user_head.jpg',
+                  child: ImageUtil.create(
+                    _appModel.admin.getUserImage(),
                     width: 70,
                   ),
                 ),

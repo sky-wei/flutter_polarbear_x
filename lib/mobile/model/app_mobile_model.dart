@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
+import 'package:flutter_polarbear_x/core/context.dart';
 import 'package:flutter_polarbear_x/data/item/account_item.dart';
 import 'package:flutter_polarbear_x/data/item/folder_item.dart';
 import 'package:flutter_polarbear_x/data/item/sort_item.dart';
-import 'package:flutter_polarbear_x/data/repository/app_setting.dart';
 import 'package:flutter_polarbear_x/model/app_abstract_model.dart';
 
 class AppMobileModel extends AppAbstractModel {
 
-  AppMobileModel({
-    required AppSetting appSetting
-  }) : super(appSetting: appSetting);
-
-
-  @override
-  void onInitialize() {
-  }
+  AppMobileModel(XContext context) : super(context);
 
   /// 过滤账号列表
   Future<List<AccountItem>> loadAccountBy({
