@@ -111,6 +111,10 @@
   "storage": "存储",
   "settings": "设置",
   "exitTips": "再按一次返回桌面！",
+  "countX": "数量: {value}",
+  "sortBy": "排序",
+  "dateCreated": "创建时间",
+  "dateModified": "修改时间",
   "clearTrashTips": "您确定要清除当前所有数据吗！"
 }
 

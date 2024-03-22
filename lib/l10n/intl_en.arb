@@ -111,6 +111,10 @@
   "storage": "Storage",
   "settings": "Settings",
   "exitTips": "Press again to return to desktop！",
+  "countX": "Count: {value}",
+  "sortBy": "Sort by",
+  "dateCreated": "Date created",
+  "dateModified": "Date modified",
   "clearTrashTips": "Are you sure you want to clear all current data！"
 }
 

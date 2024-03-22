@@ -80,6 +80,7 @@ class _HomeListState extends State<HomeList> {
       child: Column(
         children: [
           _buildListHead(),
+          _buildListInfo(),
           XBox.horizontal20,
           Expanded(
             child: _buildAccountList(),
@@ -93,7 +94,7 @@ class _HomeListState extends State<HomeList> {
   Widget _buildListHead() {
     return Padding(
       padding: const EdgeInsets.only(
-        left: 20, top: 26, right: 20, bottom: 30
+        left: 20, top: 26, right: 20, bottom: 10
       ),
       child: Row(
         children: [
@@ -105,16 +106,135 @@ class _HomeListState extends State<HomeList> {
             ),
           ),
           XBox.horizontal5,
-          IconButton(
-            onPressed: _newAccount,
-            icon: SvgPicture.asset(
-              'assets/svg/ic_add.svg',
-              color: Theme.of(context).iconColor,
-              width: 20,
-              height: 20,
+          Material(
+            color: XColor.transparent,
+            child: IconButton(
+              onPressed: _newAccount,
+              icon: SvgPicture.asset(
+                'assets/svg/ic_add.svg',
+                color: Theme.of(context).iconColor,
+                width: 20,
+                height: 20,
+              ),
+              tooltip: S.of(context).addAccountTip,
             ),
-            tooltip: S.of(context).addAccountTip,
           )
+        ],
+      ),
+    );
+  }
+
+  /// 创建列表信息
+  Widget _buildListInfo() {
+    return Padding(
+      padding: const EdgeInsets.only(
+          left: 22, top: 0, right: 22, bottom: 5
+      ),
+      child: Row(
+        children: [
+          Text(
+            S.of(context).countX(_accountItems.length),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Theme.of(context).hintColor,
+              fontWeight: FontWeight.normal,
+              fontSize: 13
+            ),
+          ),
+          const Spacer(),
+          Material(
+            color: XColor.transparent,
+            child: _buildListSortWidget(),
+          )
+        ],
+      ),
+    );
+  }
+
+  /// 创建列表过滤控件
+  Widget _buildListSortWidget() {
+    return PopupMenuButton<int>(
+      tooltip: S.of(context).sortBy,
+      icon: SvgPicture.asset(
+        'assets/svg/ic_arrow_menu.svg',
+        color: Theme.of(context).hintColor,
+        width: 18,
+        height: 18,
+      ),
+      itemBuilder: (context) {
+        return [
+          PopupMenuItem(
+            value: 0,
+            enabled: false,
+            child: Text(
+              S.of(context).sortBy,
+              style: const TextStyle(
+                fontSize: 13
+              ),
+            ),
+          ),
+          _buildMenuItem(
+            value: 1,
+            checked: _appModel.sort == Sort.create,
+            ascend: _appModel.ascend,
+            labelText: S.of(context).dateCreated
+          ),
+          _buildMenuItem(
+            value: 2,
+            checked: _appModel.sort == Sort.modify,
+            ascend: _appModel.ascend,
+            labelText: S.of(context).dateModified,
+          ),
+        ];
+      },
+      onSelected: (index) {
+        switch(index) {
+          case 1:
+            _appModel.filterSort(Sort.create);
+            break;
+          case 2:
+            _appModel.filterSort(Sort.modify);
+            break;
+        }
+      },
+    );
+  }
+
+  /// 创建菜单项
+  PopupMenuItem<int> _buildMenuItem({
+    required int value,
+    bool checked = false,
+    bool ascend = true,
+    required String labelText,
+  }) {
+
+    String iconName;
+    if (ascend) {
+      iconName = 'assets/svg/ic_sort_up.svg';
+    } else {
+      iconName = 'assets/svg/ic_sort_down.svg';
+    }
+
+    return PopupMenuItem(
+      value: value,
+      child: Row(
+        children: [
+          Text(
+            labelText,
+            style: TextStyle(
+                color: Theme.of(context).mainTextColor,
+                fontSize: 15
+            ),
+          ),
+          XBox.horizontal10,
+          const Spacer(),
+          if (checked)
+            SvgPicture.asset(
+              iconName,
+              color: Theme.of(context).hintColor,
+              width: 18
+            )
         ],
       ),
     );

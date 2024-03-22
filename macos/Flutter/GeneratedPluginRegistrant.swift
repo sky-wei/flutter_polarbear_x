@@ -8,8 +8,8 @@ import Foundation
 import bitsdojo_window_macos
 import file_selector_macos
 import objectbox_flutter_libs
-import path_provider_macos
-import shared_preferences_macos
+import path_provider_foundation
+import shared_preferences_foundation
 import url_launcher_macos
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {

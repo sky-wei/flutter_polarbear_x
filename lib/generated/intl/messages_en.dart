@@ -20,13 +20,15 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(value) => "Mail: ${value}";
+  static String m0(value) => "Count: ${value}";
 
-  static String m1(value) => "Source: ${value}";
+  static String m1(value) => "Mail: ${value}";
 
-  static String m2(value) => "Version: ${value}";
+  static String m2(value) => "Source: ${value}";
 
-  static String m3(value) => "${value} can not be empty!";
+  static String m3(value) => "Version: ${value}";
+
+  static String m4(value) => "${value} can not be empty!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -69,8 +71,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "copyToClipboard": MessageLookupByLibrary.simpleMessage(
             "The current information has been copied!"),
         "copyValue": MessageLookupByLibrary.simpleMessage("Copy Value"),
+        "countX": m0,
         "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
         "data": MessageLookupByLibrary.simpleMessage("Data"),
+        "dateCreated": MessageLookupByLibrary.simpleMessage("Date created"),
+        "dateModified": MessageLookupByLibrary.simpleMessage("Date modified"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleteAccount": MessageLookupByLibrary.simpleMessage("Delete Account"),
         "deleteAccountMessage": MessageLookupByLibrary.simpleMessage(
@@ -125,7 +130,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Automatically lock apps over time！"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "logout": MessageLookupByLibrary.simpleMessage("Logout"),
-        "mailX": m0,
+        "mailX": m1,
         "minute": MessageLookupByLibrary.simpleMessage("Minute"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "never": MessageLookupByLibrary.simpleMessage("Never"),
@@ -153,7 +158,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "simplifiedChinese": MessageLookupByLibrary.simpleMessage("简体中文"),
-        "sourceX": m1,
+        "sortBy": MessageLookupByLibrary.simpleMessage("Sort by"),
+        "sourceX": m2,
         "storage": MessageLookupByLibrary.simpleMessage("Storage"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "toggleInvisible":
@@ -176,8 +182,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "urlEx": MessageLookupByLibrary.simpleMessage(
             "\'ex. https://www.xxxxxx.com\'"),
         "userName": MessageLookupByLibrary.simpleMessage("UserName"),
-        "versionX": m2,
+        "versionX": m3,
         "view": MessageLookupByLibrary.simpleMessage("View"),
-        "xCanNotEmpty": m3
+        "xCanNotEmpty": m4
       };
 }

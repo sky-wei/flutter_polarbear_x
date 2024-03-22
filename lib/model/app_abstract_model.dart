@@ -268,7 +268,7 @@ abstract class AppAbstractModel extends AbstractModel {
   Future<bool> importAccount(PasswordCallback callback) async {
 
     final file = await openFile(
-        acceptedTypeGroups: [XTypeGroup(label: 'json', extensions: ['json'])],
+        acceptedTypeGroups: [const XTypeGroup(label: 'json', extensions: ['json'])],
         confirmButtonText: S.current.import
     );
 
@@ -310,13 +310,13 @@ abstract class AppAbstractModel extends AbstractModel {
   /// 导出账号
   Future<bool> exportAccount(PasswordCallback callback) async {
 
-    var path = await getSavePath(
-        acceptedTypeGroups: [XTypeGroup(label: 'json', extensions: ['json'])],
+    var fileLocation = await getSaveLocation(
+        acceptedTypeGroups: [const XTypeGroup(label: 'json', extensions: ['json'])],
         suggestedName: "account_list.json",
         confirmButtonText: S.current.export
     );
 
-    if (path == null) return false;
+    if (fileLocation == null) return false;
 
     /// 回调请求用户密码
     final password = await callback();
@@ -328,7 +328,7 @@ abstract class AppAbstractModel extends AbstractModel {
     }).toList();
 
     final value = json.encode(accountItems);
-    await File(path).writeAsString(value, flush: true);
+    await File(fileLocation.path).writeAsString(value, flush: true);
 
     return true;
   }

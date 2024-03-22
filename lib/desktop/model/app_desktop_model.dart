@@ -32,6 +32,11 @@ enum FunState {
   none
 }
 
+enum Sort {
+  create,
+  modify
+}
+
 class AppDesktopModel extends AppAbstractModel {
 
   final EasyNotifier listNotifier = EasyNotifier();
@@ -44,6 +49,8 @@ class AppDesktopModel extends AppAbstractModel {
   SortType get sortType => chooseSide.type;
   AccountItem chooseAccount = AccountItem.empty;
   String keyword = '';
+  Sort sort = Sort.create;
+  bool ascend = true;
   FunState funState = FunState.none;
   AccountItem editAccount = AccountItem.empty;
 
@@ -74,6 +81,16 @@ class AppDesktopModel extends AppAbstractModel {
   /// 刷新账号
   Future<List<AccountItem>> refreshAccounts() async {
     return await switchSide(side: chooseSide);
+  }
+
+  Future<List<AccountItem>> filterSort(Sort sort) async {
+    if (this.sort != sort) {
+      ascend = true;  // 重置
+    } else {
+      ascend = !ascend;
+    }
+    this.sort = sort;
+    return await refreshAccounts();
   }
 
   /// 过滤账号列表
@@ -113,6 +130,27 @@ class AppDesktopModel extends AppAbstractModel {
         break;
       default:
         items = [];
+        break;
+    }
+
+    /// 排序
+    switch(sort) {
+      case Sort.create:
+        if (ascend) {
+          items.sort((a, b) => a.createTime.compareTo(b.createTime));
+        } else {
+          items.sort((a, b) => -a.createTime.compareTo(b.createTime));
+        }
+      break;
+      case Sort.modify:
+        if (ascend) {
+          items.sort((a, b) => a.updateTime.compareTo(b.updateTime));
+        } else {
+          items.sort((a, b) => -a.updateTime.compareTo(b.updateTime));
+        }
+        break;
+      default:
+        break;
     }
 
     _filterAccountItems = items;

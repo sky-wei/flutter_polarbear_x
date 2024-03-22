@@ -40,15 +40,12 @@ dependencies:
   objectbox: ^1.6.0
   objectbox_flutter_libs: any
   url_launcher: ^6.1.5
-  file_selector: ^0.9.0
-  file_selector_windows: ^0.9.1
-  file_selector_macos: ^0.9.0
-  file_selector_linux: ^0.0.2+1
+  file_selector: ^1.0.3
   encrypt: ^5.0.1
   path_provider: ^2.0.11
   flutter_toastr: ^1.0.3
   bitsdojo_window: ^0.1.2
-  intl: ^0.17.0
+  intl: ^0.18.1
   shared_preferences: ^2.0.15
   flutter_slidable: ^2.0.0
   uuid: ^3.0.7
@@ -62,8 +59,10 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^1.0.0
-  build_runner: ^2.0.0
+  flutter_lints: ^3.0.1
+  build_runner: ^2.4.8
+  intl_utils: ^2.8.5
+  watcher: ^1.1.0
   objectbox_generator: any
 
 # For information on the generic Dart part of this file, see the

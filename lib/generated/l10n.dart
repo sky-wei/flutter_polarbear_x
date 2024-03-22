@@ -1170,6 +1170,46 @@ class S {
     );
   }
 
+  /// `Count: {value}`
+  String countX(Object value) {
+    return Intl.message(
+      'Count: $value',
+      name: 'countX',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Sort by`
+  String get sortBy {
+    return Intl.message(
+      'Sort by',
+      name: 'sortBy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Date created`
+  String get dateCreated {
+    return Intl.message(
+      'Date created',
+      name: 'dateCreated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Date modified`
+  String get dateModified {
+    return Intl.message(
+      'Date modified',
+      name: 'dateModified',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Are you sure you want to clear all current data！`
   String get clearTrashTips {
     return Intl.message(

@@ -20,13 +20,15 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh_CN';
 
-  static String m0(value) => "邮箱: ${value}";
+  static String m0(value) => "数量: ${value}";
 
-  static String m1(value) => "源代码: ${value}";
+  static String m1(value) => "邮箱: ${value}";
 
-  static String m2(value) => "版本: ${value}";
+  static String m2(value) => "源代码: ${value}";
 
-  static String m3(value) => "${value}不能为空!";
+  static String m3(value) => "版本: ${value}";
+
+  static String m4(value) => "${value}不能为空!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -61,8 +63,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "copy": MessageLookupByLibrary.simpleMessage("复制"),
         "copyToClipboard": MessageLookupByLibrary.simpleMessage("当前信息已复制!"),
         "copyValue": MessageLookupByLibrary.simpleMessage("复制信息"),
+        "countX": m0,
         "darkMode": MessageLookupByLibrary.simpleMessage("黑暗模式"),
         "data": MessageLookupByLibrary.simpleMessage("数据"),
+        "dateCreated": MessageLookupByLibrary.simpleMessage("创建时间"),
+        "dateModified": MessageLookupByLibrary.simpleMessage("修改时间"),
         "delete": MessageLookupByLibrary.simpleMessage("删除"),
         "deleteAccount": MessageLookupByLibrary.simpleMessage("删除账号"),
         "deleteAccountMessage":
@@ -107,7 +112,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "lockAppTips": MessageLookupByLibrary.simpleMessage("超时自动锁定应用！"),
         "login": MessageLookupByLibrary.simpleMessage("登入"),
         "logout": MessageLookupByLibrary.simpleMessage("退出"),
-        "mailX": m0,
+        "mailX": m1,
         "minute": MessageLookupByLibrary.simpleMessage("分钟"),
         "name": MessageLookupByLibrary.simpleMessage("名称"),
         "never": MessageLookupByLibrary.simpleMessage("从不"),
@@ -132,7 +137,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings": MessageLookupByLibrary.simpleMessage("设置"),
         "signUp": MessageLookupByLibrary.simpleMessage("注册"),
         "simplifiedChinese": MessageLookupByLibrary.simpleMessage("简体中文"),
-        "sourceX": m1,
+        "sortBy": MessageLookupByLibrary.simpleMessage("排序"),
+        "sourceX": m2,
         "storage": MessageLookupByLibrary.simpleMessage("存储"),
         "theme": MessageLookupByLibrary.simpleMessage("主题"),
         "toggleInvisible": MessageLookupByLibrary.simpleMessage("隐藏"),
@@ -150,8 +156,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "urlEx": MessageLookupByLibrary.simpleMessage(
             "\'例如: https://www.xxxxxx.com\'"),
         "userName": MessageLookupByLibrary.simpleMessage("用户名"),
-        "versionX": m2,
+        "versionX": m3,
         "view": MessageLookupByLibrary.simpleMessage("查看"),
-        "xCanNotEmpty": m3
+        "xCanNotEmpty": m4
       };
 }
