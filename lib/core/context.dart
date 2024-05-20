@@ -72,7 +72,8 @@ class BaseContext extends XContext {
 
   /// 获取App目录
   Future<Directory> _getAppDirectory() async {
-    return kDebugMode ? await getTemporaryDirectory() : await getApplicationSupportDirectory();
+    // return kDebugMode ? await getTemporaryDirectory() : await getApplicationSupportDirectory();
+    return await getApplicationSupportDirectory();
   }
 
   @override
@@ -113,6 +114,9 @@ class AppContext extends EasyNotifier implements ComponentManager, XContext {
   Future<void> initialize() async {
     if (!_init) {
       _init = true;
+      await Future.delayed(
+          const Duration(milliseconds: 300)
+      );
       componentManager.initialize();
       final objectBox = await ObjectBox.create(
           directory: appDirectory.path
