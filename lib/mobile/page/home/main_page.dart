@@ -86,7 +86,7 @@ class _MainPageState extends State<MainPage> {
           key: _navigationBarKey,
           onTap: _setCurrentIndex
         ),
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       onWillPop: _onWillPop,
     );
@@ -220,7 +220,7 @@ class MainAppBarState extends State<MainAppBar> {
       ),
       centerTitle: true,
       elevation: 0,
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 
@@ -245,7 +245,7 @@ class MainAppBarState extends State<MainAppBar> {
         )
       ],
       elevation: 0,
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 

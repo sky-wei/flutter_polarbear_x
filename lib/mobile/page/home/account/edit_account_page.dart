@@ -115,7 +115,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
       child: Scaffold(
         appBar: _buildAppBar(),
         body: _buildBodyContent(),
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       onWillPop: _onBack,
     );
@@ -137,7 +137,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
       centerTitle: true,
       elevation: 0,
       actions: _buildActions(),
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 

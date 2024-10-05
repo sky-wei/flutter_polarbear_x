@@ -23,19 +23,22 @@ class XTheme {
   XTheme._();
 
   static ThemeData lightTheme() => ThemeData(
+    useMaterial3: false,
     fontFamily: 'MiSans',
+    brightness: Brightness.light,
     primarySwatch: XColor.blue,
-    backgroundColor: const Color(0xFFF7F7F7),
+    scaffoldBackgroundColor: const Color(0xFFF7F7F7),
     iconTheme: const IconThemeData(color: XColor.black),
     primaryIconTheme: const IconThemeData(color: XColor.black),
     cardColor: XColor.white
   );
 
   static ThemeData darkTheme() => ThemeData(
+    useMaterial3: false,
     fontFamily: 'MiSans',
     brightness: Brightness.dark,
     primarySwatch: XColor.blue,
-    backgroundColor: const Color(0xFF333333),
+    scaffoldBackgroundColor: const Color(0xFF333333),
     cardColor: const Color(0xFF404040),
   );
 }

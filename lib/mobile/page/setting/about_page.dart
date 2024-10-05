@@ -121,7 +121,7 @@ class _AboutPageState extends State<AboutPage> {
           ),
           XBox.vertical60,
           Material(
-            color: Theme.of(context).backgroundColor,
+            color: Theme.of(context).scaffoldBackgroundColor,
             borderRadius: BorderRadius.circular(6),
             child: Padding(
               padding: const EdgeInsets.all(20),

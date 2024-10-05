@@ -70,7 +70,7 @@ class _AccountPageState extends State<AccountPage> {
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildBodyContent(),
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 
@@ -89,7 +89,7 @@ class _AccountPageState extends State<AccountPage> {
       ),
       centerTitle: true,
       elevation: 0,
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 

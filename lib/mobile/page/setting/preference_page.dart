@@ -65,7 +65,7 @@ class _PreferencePageState extends State<PreferencePage> {
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildBodyContent(),
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 
@@ -84,7 +84,7 @@ class _PreferencePageState extends State<PreferencePage> {
       ),
       centerTitle: true,
       elevation: 0,
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 

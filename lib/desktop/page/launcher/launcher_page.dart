@@ -78,7 +78,7 @@ class _LauncherPageState extends State<LauncherPage> {
   Widget _buildLauncherWidget() {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Theme.of(context).backgroundColor,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
       child: SizedBox(
