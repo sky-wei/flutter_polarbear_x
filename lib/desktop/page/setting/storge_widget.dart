@@ -15,6 +15,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polarbear_x/core/settings.dart';
 import 'package:flutter_polarbear_x/desktop/dialog/hint_dialog.dart';
 import 'package:flutter_polarbear_x/desktop/dialog/input_dialog.dart';
 import 'package:flutter_polarbear_x/desktop/model/app_desktop_model.dart';
@@ -24,6 +25,8 @@ import 'package:flutter_polarbear_x/util/error_util.dart';
 import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 import 'package:provider/provider.dart';
+
+import 'sub_text_widget.dart';
 
 
 class StorageWidget extends StatefulWidget {
@@ -37,11 +40,13 @@ class StorageWidget extends StatefulWidget {
 class StorageWidgetState extends State<StorageWidget> {
 
   late AppDesktopModel _appModel;
+  late XSettings _appSetting;
 
   @override
   void initState() {
     super.initState();
     _appModel = context.read<AppDesktopModel>();
+    _appSetting = _appModel.appSetting;
   }
 
   @override
@@ -109,9 +114,29 @@ class StorageWidgetState extends State<StorageWidget> {
               )
           ),
           child: Text(S.of(context).clearData),
-        )
+        ),
+        XBox.vertical30,
+        SubTextWidget(
+          title: S.of(context).appDirectory,
+          content: _appSetting.getAppDirectory().path,
+          action: S.of(context).changeDirectory,
+          onPressed: () { _changeDirectory(); },
+        ),
       ],
     );
+  }
+
+  /// 修改目录
+  void _changeDirectory() {
+
+    _appModel.changeAppDirectory(
+    ).then((value) {
+      if (value) {
+        _appModel.restartApp(context);
+      }
+    }).catchError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
+    });
   }
 
   /// 导入账号

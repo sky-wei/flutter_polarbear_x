@@ -21,6 +21,7 @@ import 'dart:io';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as xPath;
 import 'package:uuid/uuid.dart';
 
 import '../constant.dart';
@@ -340,6 +341,39 @@ abstract class AppAbstractModel extends AbstractModel {
       allAccountNotifier.notify(() => allAccountItems.clear());
     }
     return result;
+  }
+
+  /// 修改目录
+  Future<bool> changeAppDirectory() async {
+
+    final oldDirectory = context.appDirectory;
+    final appDirectory = await getDirectoryPath(
+        initialDirectory: oldDirectory.path,
+        confirmButtonText: S.current.ok
+    );
+
+    if (appDirectory == null
+        || oldDirectory.path == appDirectory) {
+      // 不需要处理
+      return false;
+    }
+
+    final files = oldDirectory.listSync(followLinks: false);
+
+    for (var file in files) {
+
+      final oldFile = File(file.path);
+      final newFile = File(xPath.join(appDirectory, xPath.basename(file.path)));
+
+      // 开始复制文件
+      if (newFile.existsSync()) {
+        newFile.deleteSync();
+      }
+      oldFile.copySync(newFile.path);
+    }
+
+    // 保存目录
+    return await appSetting.setAppDirectory(Directory(appDirectory));
   }
 
   /// 查找文件夹

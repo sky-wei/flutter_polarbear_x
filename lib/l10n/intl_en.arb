@@ -115,6 +115,8 @@
   "sortBy": "Sort by",
   "dateCreated": "Date created",
   "dateModified": "Date modified",
+  "appDirectory": "App Directory",
+  "changeDirectory": "Change Directory",
   "clearTrashTips": "Are you sure you want to clear all current data！"
 }
 

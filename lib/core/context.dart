@@ -17,7 +17,6 @@
 
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_polarbear_x/core/repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,7 +51,7 @@ class BaseContext extends XContext {
   final XVersion appVersion = AppVersion(XConstant.versionName, 2);
 
   @override
-  late Directory appDirectory;
+  Directory get appDirectory => appSetting.getAppDirectory();
 
   @override
   late XSettings appSetting;
@@ -60,20 +59,15 @@ class BaseContext extends XContext {
   late SharedPreferences sharedPreferences;
 
   Future<void> initialize() async {
-    appDirectory = await _getAppDirectory();
+    final appDirectory = await _getAppDirectory();
     sharedPreferences = await SharedPreferences.getInstance();
     appSetting = AppSettings(
       AppPreferences(
         name: 'settings',
         preferences: sharedPreferences
-      )
+      ),
+      appDirectory
     );
-  }
-
-  /// 获取App目录
-  Future<Directory> _getAppDirectory() async {
-    // return kDebugMode ? await getTemporaryDirectory() : await getApplicationSupportDirectory();
-    return await getApplicationSupportDirectory();
   }
 
   @override
@@ -82,6 +76,12 @@ class BaseContext extends XContext {
   @override
   T getComponent<T extends XComponent>(String name) {
     throw UnimplementedError();
+  }
+
+  /// 获取App目录
+  Future<Directory> _getAppDirectory() async {
+    // return kDebugMode ? await getTemporaryDirectory() : await getApplicationSupportDirectory();
+    return await getApplicationSupportDirectory();
   }
 }
 

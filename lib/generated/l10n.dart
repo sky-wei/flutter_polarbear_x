@@ -1210,6 +1210,26 @@ class S {
     );
   }
 
+  /// `App Directory`
+  String get appDirectory {
+    return Intl.message(
+      'App Directory',
+      name: 'appDirectory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change Directory`
+  String get changeDirectory {
+    return Intl.message(
+      'Change Directory',
+      name: 'changeDirectory',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Are you sure you want to clear all current data！`
   String get clearTrashTips {
     return Intl.message(

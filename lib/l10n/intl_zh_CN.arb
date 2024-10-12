@@ -115,6 +115,8 @@
   "sortBy": "排序",
   "dateCreated": "创建时间",
   "dateModified": "修改时间",
+  "appDirectory": "应用目录",
+  "changeDirectory": "修改目录",
   "clearTrashTips": "您确定要清除当前所有数据吗！"
 }
 

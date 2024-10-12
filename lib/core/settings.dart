@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../data/item/time_item.dart';
@@ -48,14 +50,19 @@ abstract class XSettings {
   int getClipboardTimeBySecond(TimeItem defaultValue);
 
   Future<bool> setClipboardTime(TimeItem time);
+
+  Directory getAppDirectory();
+
+  Future<bool> setAppDirectory(Directory dir);
 }
 
 
 class AppSettings implements XSettings {
 
   final XPreferences _preferences;
+  final Directory _defaultAppDirectory;
 
-  AppSettings(this._preferences);
+  AppSettings(this._preferences, this._defaultAppDirectory);
 
   /// 获取主题模式
   @override
@@ -165,6 +172,18 @@ class AppSettings implements XSettings {
   @override
   Future<bool> setFontSize(double size) {
     return _preferences.setDouble('font_size', size);
+  }
+
+  @override
+  Directory getAppDirectory() {
+    final path = _defaultAppDirectory.path;
+    final appDir = _preferences.getString("app_dir") ?? path;
+    return Directory(appDir);
+  }
+
+  @override
+  Future<bool> setAppDirectory(Directory dir) {
+    return _preferences.setString('app_dir', dir.path);
   }
 }
 

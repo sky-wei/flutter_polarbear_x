@@ -43,11 +43,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "addAccountTip": MessageLookupByLibrary.simpleMessage("Add Account"),
         "addFolderTip": MessageLookupByLibrary.simpleMessage("Add Folder"),
         "allItems": MessageLookupByLibrary.simpleMessage("All Items"),
+        "appDirectory": MessageLookupByLibrary.simpleMessage("App Directory"),
         "appName": MessageLookupByLibrary.simpleMessage("PasswordX"),
         "brightColorMode":
             MessageLookupByLibrary.simpleMessage("Bright color Mode"),
         "canNotEmpty": MessageLookupByLibrary.simpleMessage("Can not be empty"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "changeDirectory":
+            MessageLookupByLibrary.simpleMessage("Change Directory"),
         "changeName": MessageLookupByLibrary.simpleMessage("Change Name"),
         "changeNotes": MessageLookupByLibrary.simpleMessage("Change Notes"),
         "changePassword":
