@@ -175,6 +175,7 @@ class HomeInfoState extends State<HomeInfo> {
     final itemTitle = (_isEdit ? S.of(context).editItem : S.of(context).itemInformation).toUpperCase();
 
     return SubFrameWidget(
+      menu: _buildMenuList(_buildMenuItems()),
       children: [
         SubListWidget(
           title: itemTitle,
@@ -297,7 +298,6 @@ class HomeInfoState extends State<HomeInfo> {
         //   title: 'Update: ${_dateFormat.format(_editAccountItem.updateDateTime)}',
         // )
       ],
-      menu: _buildMenuList(_buildMenuItems()),
     );
   }
 
@@ -317,7 +317,7 @@ class HomeInfoState extends State<HomeInfo> {
   /// 生成菜单列表
   Widget _buildMenuList(List<MenuItem> items) {
     return Padding(
-      padding: const EdgeInsets.only(top: 26),
+      padding: const EdgeInsets.only(top: 33),
       child: Material(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(6),
