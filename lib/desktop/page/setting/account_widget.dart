@@ -105,8 +105,8 @@ class _AccountWidgetState extends State<AccountWidget> {
             ElevatedButton(
               onPressed: () => _appModel.restartApp(context),
               style: ButtonStyle(
-                elevation: MaterialStateProperty.all(0),
-                backgroundColor: MaterialStateProperty.all(
+                elevation: WidgetStateProperty.all(0),
+                backgroundColor: WidgetStateProperty.all(
                   Theme.of(context).deleteColor
                 )
               ),

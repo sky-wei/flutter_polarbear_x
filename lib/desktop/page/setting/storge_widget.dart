@@ -115,8 +115,8 @@ class StorageWidgetState extends State<StorageWidget> {
         ElevatedButton(
           onPressed: () => _clearData(),
           style: ButtonStyle(
-              elevation: MaterialStateProperty.all(0),
-              backgroundColor: MaterialStateProperty.all(
+              elevation: WidgetStateProperty.all(0),
+              backgroundColor: WidgetStateProperty.all(
                   Theme.of(context).deleteColor
               )
           ),
