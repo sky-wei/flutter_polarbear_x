@@ -275,13 +275,6 @@ class AppDesktopModel extends AppAbstractModel {
     return result;
   }
 
-  /// 清除数据
-  @override
-  Future<bool> changeAppDirectory() async {
-    final result = await super.changeAppDirectory();
-    return result;
-  }
-
   /// 显示账号
   void viewAccountBy(AccountItem item) {
     listNotifier.notify();

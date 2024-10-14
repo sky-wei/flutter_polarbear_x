@@ -21,7 +21,7 @@ import 'dart:io';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart' as xPath;
+import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
 
 import '../constant.dart';
@@ -363,7 +363,7 @@ abstract class AppAbstractModel extends AbstractModel {
     for (var file in files) {
 
       final oldFile = File(file.path);
-      final newFile = File(xPath.join(appDirectory, xPath.basename(file.path)));
+      final newFile = File(path.join(appDirectory, path.basename(file.path)));
 
       // 开始复制文件
       if (newFile.existsSync()) {

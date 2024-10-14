@@ -62,6 +62,13 @@ class StorageWidgetState extends State<StorageWidget> {
           ),
         ),
         XBox.vertical30,
+        SubTextWidget(
+          title: S.of(context).appDirectory,
+          content: _appSetting.getAppDirectory().path,
+          action: S.of(context).changeDirectory,
+          onPressed: () { _changeDirectory(); },
+        ),
+        XBox.vertical30,
         Text(
           S.of(context).import,
           style: TextStyle(
@@ -114,13 +121,6 @@ class StorageWidgetState extends State<StorageWidget> {
               )
           ),
           child: Text(S.of(context).clearData),
-        ),
-        XBox.vertical30,
-        SubTextWidget(
-          title: S.of(context).appDirectory,
-          content: _appSetting.getAppDirectory().path,
-          action: S.of(context).changeDirectory,
-          onPressed: () { _changeDirectory(); },
         ),
       ],
     );

@@ -248,7 +248,7 @@ class _AccountWidgetState extends State<AccountWidget> {
   /// 修改头像
   Future<void> _changeHeadImage(AdminItem admin) async {
 
-    final typeGroup = XTypeGroup(
+    const typeGroup = XTypeGroup(
       label: 'images',
       extensions: <String>['jpg', 'png'],
     );
