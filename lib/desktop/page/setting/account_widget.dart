@@ -216,11 +216,11 @@ class _AccountWidgetState extends State<AccountWidget> {
     // 更新管理员密码
     _appModel.updateAdminPassword(
         newPassword
-    ).catchError((error, stackTrace) {
-      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
-    }).then((value) {
+    ).then((value) {
       Navigator.pop(context);
       MessageUtil.showMessage(context, S.of(context).updateCompleted);
+    }).catchError((error, stackTrace) {
+      MessageUtil.showMessage(context, ErrorUtil.getMessage(context, error));
     });
   }
 
