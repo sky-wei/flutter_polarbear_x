@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
+
+import 'dart:io';
+
 import 'data/item/account_item.dart';
 
 typedef ChooseItem<T> = bool Function(T value);
+
+typedef FileFilter = bool Function(File file);
 
 typedef IsLoginCallback = bool Function();
 

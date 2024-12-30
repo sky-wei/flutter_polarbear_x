@@ -344,7 +344,10 @@ abstract class AppAbstractModel extends AbstractModel {
   }
 
   /// 修改目录
-  Future<bool> changeAppDirectory() async {
+  Future<bool> changeAppDirectory({
+    bool overlay = false,
+    required FileFilter filter
+  }) async {
 
     final oldDirectory = context.appDirectory;
     final appDirectory = await getDirectoryPath(
@@ -362,13 +365,22 @@ abstract class AppAbstractModel extends AbstractModel {
 
     for (var file in files) {
 
+      if (!filter(File(file.path))) {
+        continue; // 跳过
+      }
+
       final oldFile = File(file.path);
       final newFile = File(path.join(appDirectory, path.basename(file.path)));
 
-      // 开始复制文件
       if (newFile.existsSync()) {
-        newFile.deleteSync();
+        if (overlay) {
+          newFile.deleteSync(); // 需要覆盖所以先删除
+        } else {
+          continue; // 跳过处理
+        }
       }
+
+      // 复制文件
       oldFile.copySync(newFile.path);
     }
 
@@ -448,6 +460,12 @@ abstract class AppAbstractModel extends AbstractModel {
 
     final newName = const Uuid().v1();
     final imageFile = File(image.path);
+
+    if (imageFile.parent.path == context.appDirectory.path) {
+      // 不需要复制文件
+      return await updateAdmin(admin.copy(headImage: imageFile.path));
+    }
+
     final extName = image.name.substring(image.name.lastIndexOf('.'));
     final newImagePath = '${context.appDirectory.path}/$newName$extName';
 

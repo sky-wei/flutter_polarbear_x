@@ -15,6 +15,7 @@
  */
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_polarbear_x/util/log_util.dart';
 
 import '../data/data_exception.dart';
 import '../generated/l10n.dart';
@@ -24,6 +25,7 @@ class ErrorUtil {
   ErrorUtil._();
 
   static String getMessage(BuildContext context, Object? error) {
+    XLog.d("处理异常: $error ");
     if (error is DataException) {
       switch(error.type) {
         case ErrorType.adminExist:

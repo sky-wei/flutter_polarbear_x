@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/core/settings.dart';
 import 'package:flutter_polarbear_x/desktop/dialog/hint_dialog.dart';
@@ -24,6 +26,7 @@ import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/error_util.dart';
 import 'package:flutter_polarbear_x/util/message_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
+import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 
 import 'sub_text_widget.dart';
@@ -130,6 +133,11 @@ class StorageWidgetState extends State<StorageWidget> {
   void _changeDirectory() {
 
     _appModel.changeAppDirectory(
+      filter: (filter) {
+        final fileName = path.basename(filter.path);
+        return fileName != "shared_preferences.json"
+            && FileSystemEntity.isFileSync(filter.path);
+      }
     ).then((value) {
       if (value) {
         _appModel.restartApp(context);
