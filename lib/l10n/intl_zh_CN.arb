@@ -1,4 +1,5 @@
 {
+  "@@locale": "zh_CN",
   "appName": "密码管理",
   "search": "搜索",
   "login": "登入",
