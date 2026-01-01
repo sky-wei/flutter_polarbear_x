@@ -22,9 +22,9 @@ class SubItemLine extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
 
   const SubItemLine({
-    Key? key,
+    super.key,
     this.padding
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -22,6 +22,8 @@ import 'package:flutter_polarbear_x/theme/theme.dart';
 import 'package:flutter_polarbear_x/util/launch_util.dart';
 import 'package:flutter_polarbear_x/util/size_box_util.dart';
 
+import 'document_page.dart';
+
 class AboutWidget extends StatefulWidget {
 
   const AboutWidget({super.key});
@@ -74,6 +76,40 @@ class _AboutWidgetState extends State<AboutWidget> {
           ),
           XBox.vertical40,
           SelectableText(S.of(context).mailX(XConstant.mail)),
+
+          XBox.vertical10,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () {
+                  showDocument(
+                    context: context,
+                    title: S.current.privacyPolicy,
+                    assetPath: 'assets/html/privacy_policy.html',
+                  );
+                },
+                child: Text(S.current.privacyPolicy)
+              ),
+              XBox.horizontal10,
+              SizedBox(
+                width: 1,
+                height: 18,
+                child: VerticalDivider(thickness: 1),
+              ),
+              XBox.horizontal10,
+              TextButton(
+                onPressed: () {
+                  showDocument(
+                    context: context,
+                    title: S.current.serviceAgreement,
+                    assetPath: 'assets/html/service_agreement.html',
+                  );
+                },
+                child: Text(S.current.serviceAgreement)
+              ),
+            ],
+          ),
           XBox.vertical10,
           Text.rich(
             TextSpan(
@@ -82,7 +118,7 @@ class _AboutWidgetState extends State<AboutWidget> {
                 TextSpan(
                   text: XConstant.source,
                   style: TextStyle(
-                    color: Theme.of(context).themeColor
+                      color: Theme.of(context).themeColor
                   ),
                   recognizer: _tapGestureRecognizer
                 )
@@ -90,7 +126,6 @@ class _AboutWidgetState extends State<AboutWidget> {
             )
           ),
           XBox.vertical30,
-          XBox.vertical60,
           Material(
             color: Theme.of(context).scaffoldBackgroundColor,
             borderRadius: BorderRadius.circular(6),

@@ -40,7 +40,7 @@ class SubTextWidget extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
 
   const SubTextWidget({
-    Key? key,
+    super.key,
     this.title,
     this.controller,
     this.focusNode,
@@ -57,7 +57,7 @@ class SubTextWidget extends StatelessWidget {
     this.actions = const <ActionItem>[],
     this.onAction,
     this.padding
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
