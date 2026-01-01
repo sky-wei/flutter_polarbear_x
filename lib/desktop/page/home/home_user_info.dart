@@ -28,7 +28,7 @@ import '../setting/setting_dialog.dart';
 
 class HomeUserInfoWidget extends StatefulWidget {
 
-  const HomeUserInfoWidget({Key? key}) : super(key: key);
+  const HomeUserInfoWidget({super.key});
 
   @override
   State<StatefulWidget> createState() => _HomeUserInfoState();

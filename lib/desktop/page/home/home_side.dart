@@ -42,7 +42,7 @@ import 'home_user_info.dart';
 
 class HomeSide extends StatefulWidget {
 
-  const HomeSide({Key? key}) : super(key: key);
+  const HomeSide({super.key});
 
   @override
   State<StatefulWidget> createState() => _HomeSideState();

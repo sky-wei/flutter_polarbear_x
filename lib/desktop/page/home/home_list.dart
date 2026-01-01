@@ -37,7 +37,7 @@ import 'package:provider/provider.dart';
 
 class HomeList extends StatefulWidget {
 
-  const HomeList({Key? key}) : super(key: key);
+  const HomeList({super.key});
 
   @override
   State<StatefulWidget> createState() => _HomeListState();
