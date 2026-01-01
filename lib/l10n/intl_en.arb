@@ -71,7 +71,7 @@
   "changeNotes": "Change Notes",
   "updated": "Updated",
   "changePassword": "Change Password",
-  "license": "Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.",
+  "license": "Copyright 2025 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.",
   "unsavedChanges": "Unsaved Changes",
   "updateCompleted": "Update Completed!",
   "unsavedChangesMessage": "Are you sure you want to leave? If you leave now them your current information will not be saved.",
@@ -118,6 +118,13 @@
   "dateModified": "Date modified",
   "appDirectory": "App Directory",
   "changeDirectory": "Change Directory",
+  "feedback": "Feedback",
+  "saveToLocal": "Save to Local",
+  "serviceAgreement": "Service Agreement",
+  "privacyPolicy": "Privacy Policy",
+  "scanQrcodeFeedbackTips": "Scan Qrcode for feedback",
+  "saveImage": "Save Image",
+  "saveTo": "Saved to: {path}",
   "clearTrashTips": "Are you sure you want to clear all current data！"
 }
 

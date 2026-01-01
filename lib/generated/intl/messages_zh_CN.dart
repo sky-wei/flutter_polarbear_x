@@ -24,11 +24,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m1(value) => "邮箱: ${value}";
 
-  static String m2(value) => "源代码: ${value}";
+  static String m2(path) => "已保存至: ${path}";
 
-  static String m3(value) => "版本: ${value}";
+  static String m3(value) => "源代码: ${value}";
 
-  static String m4(value) => "${value}不能为空!";
+  static String m4(value) => "版本: ${value}";
+
+  static String m5(value) => "${value}不能为空!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -91,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "exportCompleted": MessageLookupByLibrary.simpleMessage("导出完成!"),
         "favorite": MessageLookupByLibrary.simpleMessage("收藏"),
         "favorites": MessageLookupByLibrary.simpleMessage("收藏"),
+        "feedback": MessageLookupByLibrary.simpleMessage("反馈"),
         "folder": MessageLookupByLibrary.simpleMessage("文件夹"),
         "folderExists": MessageLookupByLibrary.simpleMessage("文件夹已存在!"),
         "folders": MessageLookupByLibrary.simpleMessage("文件夹"),
@@ -107,7 +110,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "language": MessageLookupByLibrary.simpleMessage("语言"),
         "launcher": MessageLookupByLibrary.simpleMessage("启动"),
         "license": MessageLookupByLibrary.simpleMessage(
-            "Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License."),
+            "Copyright 2025 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License."),
         "loading": MessageLookupByLibrary.simpleMessage("加载中..."),
         "lock": MessageLookupByLibrary.simpleMessage("锁定"),
         "lockApp": MessageLookupByLibrary.simpleMessage("锁定应用"),
@@ -129,18 +132,25 @@ class MessageLookup extends MessageLookupByLibrary {
         "passwordError": MessageLookupByLibrary.simpleMessage("密码错误!"),
         "passwordNotMatch": MessageLookupByLibrary.simpleMessage("密码不匹配!"),
         "preference": MessageLookupByLibrary.simpleMessage("设置"),
+        "privacyPolicy": MessageLookupByLibrary.simpleMessage("隐私政策"),
         "recall": MessageLookupByLibrary.simpleMessage("撤回"),
         "restore": MessageLookupByLibrary.simpleMessage("恢复"),
         "save": MessageLookupByLibrary.simpleMessage("保存"),
+        "saveImage": MessageLookupByLibrary.simpleMessage("保存图片"),
+        "saveTo": m2,
+        "saveToLocal": MessageLookupByLibrary.simpleMessage("保存至本地"),
         "sayWhat": MessageLookupByLibrary.simpleMessage("说些什么!"),
+        "scanQrcodeFeedbackTips":
+            MessageLookupByLibrary.simpleMessage("扫描二维码进行问题反馈"),
         "search": MessageLookupByLibrary.simpleMessage("搜索"),
         "second": MessageLookupByLibrary.simpleMessage("秒"),
         "security": MessageLookupByLibrary.simpleMessage("安全"),
+        "serviceAgreement": MessageLookupByLibrary.simpleMessage("服务协议"),
         "settings": MessageLookupByLibrary.simpleMessage("设置"),
         "signUp": MessageLookupByLibrary.simpleMessage("注册"),
         "simplifiedChinese": MessageLookupByLibrary.simpleMessage("简体中文"),
         "sortBy": MessageLookupByLibrary.simpleMessage("排序"),
-        "sourceX": m2,
+        "sourceX": m3,
         "storage": MessageLookupByLibrary.simpleMessage("存储"),
         "theme": MessageLookupByLibrary.simpleMessage("主题"),
         "toggleInvisible": MessageLookupByLibrary.simpleMessage("隐藏"),
@@ -158,8 +168,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "urlEx": MessageLookupByLibrary.simpleMessage(
             "\'例如: https://www.xxxxxx.com\'"),
         "userName": MessageLookupByLibrary.simpleMessage("用户名"),
-        "versionX": m3,
+        "versionX": m4,
         "view": MessageLookupByLibrary.simpleMessage("查看"),
-        "xCanNotEmpty": m4
+        "xCanNotEmpty": m5
       };
 }

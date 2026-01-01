@@ -50,6 +50,9 @@ dependencies:
   flutter_slidable: ^4.0.3
   uuid: ^4.5.2
   path: ^1.9.1
+  flutter_html: ^3.0.0
+  msix: ^3.16.12
+  icons_launcher: ^3.0.3
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +81,7 @@ flutter:
   assets:
     - assets/svg/
     - assets/image/
+    - assets/html/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -127,3 +131,45 @@ flutter_intl:
 
 objectbox:
   output_dir: data
+
+msix_config:
+  display_name: PasswordX
+  publisher_display_name: 周威
+  identity_name: ZhouWei.PasswordX
+  publisher: CN=2C06D91E-5460-4FD8-BE4B-01CE68ED02C9
+  msix_version: 1.3.0.0
+  languages: zh-cn, en
+  logo_path: D:\Work\StudioProject\flutter_polarbear_x\assets\ic_logo_radius.png
+  store: true
+
+icons_launcher:
+  image_path: "assets/ic_logo_radius.png"
+  platforms:
+    android:
+      enable: false
+    #      image_path: "assets/ic_logo_radius.png"
+    #      notification_image: "assets/ic_foreground.png"
+    #      # adaptive_background_color: '#ffffff'
+    #      adaptive_background_image: "assets/ic_background.png"
+    #      adaptive_foreground_image: "assets/ic_foreground.png"
+    #      adaptive_round_image: "assets/ic_logo_round.png"
+    #      adaptive_monochrome_image: "assets/ic_black_white.png"
+    ios:
+      enable: false
+    #      image_path: "assets/ic_logo_rectangle_light.png"
+    #      # For iOS 18+ (support dark and tinted)
+    #      dark_path: "assets/ic_logo_rectangle_dark.png"
+    #      tinted_path: "assets/ic_logo_rectangle_tinted.png"
+    web:
+      enable: false
+    #      image_path: "assets/ic_logo_radius.png"
+    #      favicon_path: "assets/ic_logo_round.png"
+    macos:
+      enable: true
+      image_path: "assets/ic_logo_radius.png"
+    windows:
+      enable: true
+      image_path: "assets/ic_logo_radius.png"
+    linux:
+      enable: true
+      image_path: "assets/ic_logo_radius.png"

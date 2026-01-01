@@ -18,6 +18,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polarbear_x/constant.dart';
 import 'package:flutter_polarbear_x/data/item/side_item.dart';
+import 'package:flutter_polarbear_x/desktop/page/setting/feedback_widget.dart';
 import 'package:flutter_polarbear_x/generated/l10n.dart';
 import 'package:flutter_polarbear_x/theme/color.dart';
 import 'package:flutter_polarbear_x/theme/theme.dart';
@@ -33,7 +34,7 @@ import 'storge_widget.dart';
 
 class SettingDialog extends StatelessWidget {
 
-  const SettingDialog({Key? key}) : super(key: key);
+  const SettingDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +62,7 @@ class SettingDialog extends StatelessWidget {
 
 class SettingWidget extends StatefulWidget {
   
-  const SettingWidget({Key? key}) : super(key: key);
+  const SettingWidget({super.key});
 
   @override
   State<StatefulWidget> createState() => SettingWidgetState();
@@ -74,7 +75,8 @@ class SettingWidgetState extends State<SettingWidget> {
     SideItem(id: 1, name: S.current.preference, icon: 'assets/svg/ic_all_items.svg'),
     SideItem(id: 2, name: S.current.security, icon: 'assets/svg/ic_security.svg'),
     SideItem(id: 3, name: S.current.storage, icon: 'assets/svg/ic_storage.svg'),
-    SideItem(id: 4, name: S.current.about, icon: 'assets/svg/ic_about.svg'),
+    SideItem(id: 4, name: S.current.feedback, icon: 'assets/svg/ic_feedback.svg'),
+    SideItem(id: 5, name: S.current.about, icon: 'assets/svg/ic_about.svg'),
   ];
 
   SideItem? _curSideItem;
@@ -132,6 +134,8 @@ class SettingWidgetState extends State<SettingWidget> {
       case 3:
         return const StorageWidget();
       case 4:
+        return const FeedbackWidget();
+      case 5:
         return const AboutWidget();
       default:
         return const Center(

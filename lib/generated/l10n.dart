@@ -760,10 +760,10 @@ class S {
     );
   }
 
-  /// `Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the "License");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an "AS IS" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.`
+  /// `Copyright 2025 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the "License");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an "AS IS" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.`
   String get license {
     return Intl.message(
-      'Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the "License");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an "AS IS" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.',
+      'Copyright 2025 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the "License");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an "AS IS" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.',
       name: 'license',
       desc: '',
       args: [],
@@ -1227,6 +1227,76 @@ class S {
       name: 'changeDirectory',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Feedback`
+  String get feedback {
+    return Intl.message(
+      'Feedback',
+      name: 'feedback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save to Local`
+  String get saveToLocal {
+    return Intl.message(
+      'Save to Local',
+      name: 'saveToLocal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Service Agreement`
+  String get serviceAgreement {
+    return Intl.message(
+      'Service Agreement',
+      name: 'serviceAgreement',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy Policy`
+  String get privacyPolicy {
+    return Intl.message(
+      'Privacy Policy',
+      name: 'privacyPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scan Qrcode for feedback`
+  String get scanQrcodeFeedbackTips {
+    return Intl.message(
+      'Scan Qrcode for feedback',
+      name: 'scanQrcodeFeedbackTips',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save Image`
+  String get saveImage {
+    return Intl.message(
+      'Save Image',
+      name: 'saveImage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saved to: {path}`
+  String saveTo(Object path) {
+    return Intl.message(
+      'Saved to: $path',
+      name: 'saveTo',
+      desc: '',
+      args: [path],
     );
   }
 

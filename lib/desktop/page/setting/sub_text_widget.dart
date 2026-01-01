@@ -27,12 +27,12 @@ class SubTextWidget extends StatefulWidget {
   final VoidCallback? onPressed;
 
   const SubTextWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.content,
     this.action,
     this.onPressed
-  }) : super(key: key);
+  });
 
   @override
   State createState() => _SubTextState();

@@ -34,7 +34,7 @@ import 'sub_text_widget.dart';
 
 class StorageWidget extends StatefulWidget {
 
-  const StorageWidget({Key? key}) : super(key: key);
+  const StorageWidget({super.key});
 
   @override
   State<StatefulWidget> createState() => StorageWidgetState();

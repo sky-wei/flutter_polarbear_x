@@ -34,7 +34,7 @@ import 'sub_text_widget.dart';
 
 class AccountWidget extends StatefulWidget {
 
-  const AccountWidget({Key? key}) : super(key: key);
+  const AccountWidget({super.key});
 
   @override
   State<StatefulWidget> createState() => _AccountWidgetState();

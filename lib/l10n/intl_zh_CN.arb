@@ -71,7 +71,7 @@
   "changeNotes": "修改备注",
   "updated": "更新",
   "changePassword": "修改密码",
-  "license": "Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.",
+  "license": "Copyright 2025 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.",
   "unsavedChanges": "未保存修改",
   "updateCompleted": "更新完成!",
   "unsavedChangesMessage": "您确定要离开吗？ 如果您现在离开，您当前的信息将不会被保存。",
@@ -118,6 +118,13 @@
   "dateModified": "修改时间",
   "appDirectory": "应用目录",
   "changeDirectory": "修改目录",
+  "feedback": "反馈",
+  "saveToLocal": "保存至本地",
+  "serviceAgreement": "服务协议",
+  "privacyPolicy": "隐私政策",
+  "scanQrcodeFeedbackTips": "扫描二维码进行问题反馈",
+  "saveImage": "保存图片",
+  "saveTo": "已保存至: {path}",
   "clearTrashTips": "您确定要清除当前所有数据吗！"
 }
 

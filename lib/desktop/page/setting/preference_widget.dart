@@ -26,7 +26,7 @@ import 'package:provider/provider.dart';
 
 class PreferenceWidget extends StatefulWidget {
 
-  const PreferenceWidget({Key? key}) : super(key: key);
+  const PreferenceWidget({super.key});
 
   @override
   State<StatefulWidget> createState() => PreferenceWidgetState();

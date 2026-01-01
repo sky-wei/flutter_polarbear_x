@@ -24,7 +24,7 @@ import 'package:flutter_polarbear_x/util/size_box_util.dart';
 
 class AboutWidget extends StatefulWidget {
 
-  const AboutWidget({Key? key}) : super(key: key);
+  const AboutWidget({super.key});
 
   @override
   State<StatefulWidget> createState() => _AboutWidgetState();
@@ -89,6 +89,7 @@ class _AboutWidgetState extends State<AboutWidget> {
               ]
             )
           ),
+          XBox.vertical30,
           XBox.vertical60,
           Material(
             color: Theme.of(context).scaffoldBackgroundColor,

@@ -25,7 +25,7 @@ import 'package:provider/provider.dart';
 
 class SecurityWidget extends StatefulWidget {
 
-  const SecurityWidget({Key? key}) : super(key: key);
+  const SecurityWidget({super.key});
 
   @override
   State<StatefulWidget> createState() => SecurityWidgetState();

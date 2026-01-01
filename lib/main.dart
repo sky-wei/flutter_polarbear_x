@@ -26,7 +26,7 @@ void main() {
   if (PlatformUtil.isPC()) {
     doWhenWindowReady(() {
       final win = appWindow;
-      win.minSize = const Size(1300, 800);
+      win.minSize = const Size(800, 600);
       win.size = const Size(1500, 1000);
       win.alignment = Alignment.center;
       win.title = 'PasswordX';

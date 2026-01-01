@@ -24,11 +24,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m1(value) => "Mail: ${value}";
 
-  static String m2(value) => "Source: ${value}";
+  static String m2(path) => "Saved to: ${path}";
 
-  static String m3(value) => "Version: ${value}";
+  static String m3(value) => "Source: ${value}";
 
-  static String m4(value) => "${value} can not be empty!";
+  static String m4(value) => "Version: ${value}";
+
+  static String m5(value) => "${value} can not be empty!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -103,6 +105,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Export Completed!"),
         "favorite": MessageLookupByLibrary.simpleMessage("Favorite"),
         "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
+        "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
         "folder": MessageLookupByLibrary.simpleMessage("Folder"),
         "folderExists":
             MessageLookupByLibrary.simpleMessage("Folder already exists!"),
@@ -125,7 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "language": MessageLookupByLibrary.simpleMessage("Language"),
         "launcher": MessageLookupByLibrary.simpleMessage("Launcher"),
         "license": MessageLookupByLibrary.simpleMessage(
-            "Copyright 2022 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License."),
+            "Copyright 2025 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License."),
         "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "lock": MessageLookupByLibrary.simpleMessage("Lock"),
         "lockApp": MessageLookupByLibrary.simpleMessage("Lock App"),
@@ -151,18 +154,26 @@ class MessageLookup extends MessageLookupByLibrary {
         "passwordNotMatch":
             MessageLookupByLibrary.simpleMessage("Password does not match!"),
         "preference": MessageLookupByLibrary.simpleMessage("Preference"),
+        "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
         "recall": MessageLookupByLibrary.simpleMessage("Recall"),
         "restore": MessageLookupByLibrary.simpleMessage("Restore"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
+        "saveImage": MessageLookupByLibrary.simpleMessage("Save Image"),
+        "saveTo": m2,
+        "saveToLocal": MessageLookupByLibrary.simpleMessage("Save to Local"),
         "sayWhat": MessageLookupByLibrary.simpleMessage("say what!"),
+        "scanQrcodeFeedbackTips":
+            MessageLookupByLibrary.simpleMessage("Scan Qrcode for feedback"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "second": MessageLookupByLibrary.simpleMessage("Second"),
         "security": MessageLookupByLibrary.simpleMessage("Security"),
+        "serviceAgreement":
+            MessageLookupByLibrary.simpleMessage("Service Agreement"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "simplifiedChinese": MessageLookupByLibrary.simpleMessage("简体中文"),
         "sortBy": MessageLookupByLibrary.simpleMessage("Sort by"),
-        "sourceX": m2,
+        "sourceX": m3,
         "storage": MessageLookupByLibrary.simpleMessage("Storage"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "toggleInvisible":
@@ -185,8 +196,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "urlEx": MessageLookupByLibrary.simpleMessage(
             "\'ex. https://www.xxxxxx.com\'"),
         "userName": MessageLookupByLibrary.simpleMessage("UserName"),
-        "versionX": m3,
+        "versionX": m4,
         "view": MessageLookupByLibrary.simpleMessage("View"),
-        "xCanNotEmpty": m4
+        "xCanNotEmpty": m5
       };
 }
