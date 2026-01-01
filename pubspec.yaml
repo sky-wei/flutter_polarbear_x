@@ -139,7 +139,7 @@ msix_config:
   publisher: CN=2C06D91E-5460-4FD8-BE4B-01CE68ED02C9
   msix_version: 1.3.0.0
   languages: zh-cn, en
-  logo_path: D:\Work\StudioProject\flutter_polarbear_x\assets\ic_logo_radius.png
+  logo_path: D:\Work\SkyProject\flutter_polarbear_x\assets\ic_logo_radius.png
   store: true
 
 icons_launcher:

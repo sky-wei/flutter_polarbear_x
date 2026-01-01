@@ -34,170 +34,185 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "about": MessageLookupByLibrary.simpleMessage("About"),
-        "account": MessageLookupByLibrary.simpleMessage("Account"),
-        "accountExists":
-            MessageLookupByLibrary.simpleMessage("Account already exists!"),
-        "accountInformation":
-            MessageLookupByLibrary.simpleMessage("Account Information"),
-        "accountPasswordError": MessageLookupByLibrary.simpleMessage(
-            "Incorrect username or password!"),
-        "addAccountTip": MessageLookupByLibrary.simpleMessage("Add Account"),
-        "addFolderTip": MessageLookupByLibrary.simpleMessage("Add Folder"),
-        "allItems": MessageLookupByLibrary.simpleMessage("All Items"),
-        "appDirectory": MessageLookupByLibrary.simpleMessage("App Directory"),
-        "appName": MessageLookupByLibrary.simpleMessage("PasswordX"),
-        "brightColorMode":
-            MessageLookupByLibrary.simpleMessage("Bright color Mode"),
-        "canNotEmpty": MessageLookupByLibrary.simpleMessage("Can not be empty"),
-        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
-        "changeDirectory":
-            MessageLookupByLibrary.simpleMessage("Change Directory"),
-        "changeName": MessageLookupByLibrary.simpleMessage("Change Name"),
-        "changeNotes": MessageLookupByLibrary.simpleMessage("Change Notes"),
-        "changePassword":
-            MessageLookupByLibrary.simpleMessage("Change Password"),
-        "clearClipboard":
-            MessageLookupByLibrary.simpleMessage("Clear Clipboard"),
-        "clearClipboardTips": MessageLookupByLibrary.simpleMessage(
-            "Automatically clear value copied to clipboard！"),
-        "clearCompleted":
-            MessageLookupByLibrary.simpleMessage("Clear Completed!"),
-        "clearData": MessageLookupByLibrary.simpleMessage("Clear Data"),
-        "clearDataMessage": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to clear all accounts under this account!"),
-        "clearTrashTips": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to clear all current data！"),
-        "clone": MessageLookupByLibrary.simpleMessage("Clone"),
-        "close": MessageLookupByLibrary.simpleMessage("Close"),
-        "confirmPassword":
-            MessageLookupByLibrary.simpleMessage("Confirm Password"),
-        "copy": MessageLookupByLibrary.simpleMessage("Copy"),
-        "copyToClipboard": MessageLookupByLibrary.simpleMessage(
-            "The current information has been copied!"),
-        "copyValue": MessageLookupByLibrary.simpleMessage("Copy Value"),
-        "countX": m0,
-        "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
-        "data": MessageLookupByLibrary.simpleMessage("Data"),
-        "dateCreated": MessageLookupByLibrary.simpleMessage("Date created"),
-        "dateModified": MessageLookupByLibrary.simpleMessage("Date modified"),
-        "delete": MessageLookupByLibrary.simpleMessage("Delete"),
-        "deleteAccount": MessageLookupByLibrary.simpleMessage("Delete Account"),
-        "deleteAccountMessage": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to delete this account!"),
-        "deleteFolder": MessageLookupByLibrary.simpleMessage("Delete Folder"),
-        "deleteFolderMessage": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to delete this folder!"),
-        "deleteInfoError":
-            MessageLookupByLibrary.simpleMessage("Delete error!"),
-        "edit": MessageLookupByLibrary.simpleMessage("Edit"),
-        "editFolder": MessageLookupByLibrary.simpleMessage("Edit Folder"),
-        "editItem": MessageLookupByLibrary.simpleMessage("Edit Item"),
-        "emptyAccountListTip":
-            MessageLookupByLibrary.simpleMessage("There are no items to list."),
-        "end": MessageLookupByLibrary.simpleMessage("End"),
-        "english": MessageLookupByLibrary.simpleMessage("English"),
-        "exitTips": MessageLookupByLibrary.simpleMessage(
-            "Press again to return to desktop！"),
-        "export": MessageLookupByLibrary.simpleMessage("Export"),
-        "exportAccount": MessageLookupByLibrary.simpleMessage("Export Account"),
-        "exportCompleted":
-            MessageLookupByLibrary.simpleMessage("Export Completed!"),
-        "favorite": MessageLookupByLibrary.simpleMessage("Favorite"),
-        "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
-        "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
-        "folder": MessageLookupByLibrary.simpleMessage("Folder"),
-        "folderExists":
-            MessageLookupByLibrary.simpleMessage("Folder already exists!"),
-        "folders": MessageLookupByLibrary.simpleMessage("Folders"),
-        "followSystem": MessageLookupByLibrary.simpleMessage("Follow System"),
-        "forgetPassword":
-            MessageLookupByLibrary.simpleMessage("Forget Password?"),
-        "handlerError":
-            MessageLookupByLibrary.simpleMessage("Handling exceptions!"),
-        "home": MessageLookupByLibrary.simpleMessage("Home"),
-        "hour": MessageLookupByLibrary.simpleMessage("Hour"),
-        "import": MessageLookupByLibrary.simpleMessage("Import"),
-        "importAccount": MessageLookupByLibrary.simpleMessage("Import Account"),
-        "importCompleted":
-            MessageLookupByLibrary.simpleMessage("Import Completed!"),
-        "importTips": MessageLookupByLibrary.simpleMessage(
-            "Tip: No need to enter when there is no password！"),
-        "itemInformation":
-            MessageLookupByLibrary.simpleMessage("Item Information"),
-        "language": MessageLookupByLibrary.simpleMessage("Language"),
-        "launcher": MessageLookupByLibrary.simpleMessage("Launcher"),
-        "license": MessageLookupByLibrary.simpleMessage(
-            "Copyright 2025 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License."),
-        "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
-        "lock": MessageLookupByLibrary.simpleMessage("Lock"),
-        "lockApp": MessageLookupByLibrary.simpleMessage("Lock App"),
-        "lockAppTips": MessageLookupByLibrary.simpleMessage(
-            "Automatically lock apps over time！"),
-        "login": MessageLookupByLibrary.simpleMessage("Login"),
-        "logout": MessageLookupByLibrary.simpleMessage("Logout"),
-        "mailX": m1,
-        "minute": MessageLookupByLibrary.simpleMessage("Minute"),
-        "name": MessageLookupByLibrary.simpleMessage("Name"),
-        "never": MessageLookupByLibrary.simpleMessage("Never"),
-        "newAccount": MessageLookupByLibrary.simpleMessage("New Account"),
-        "newPassword": MessageLookupByLibrary.simpleMessage("New Password"),
-        "noFolder": MessageLookupByLibrary.simpleMessage("No Folder"),
-        "notSupport":
-            MessageLookupByLibrary.simpleMessage("Not currently supported!"),
-        "notes": MessageLookupByLibrary.simpleMessage("Notes"),
-        "ok": MessageLookupByLibrary.simpleMessage("OK"),
-        "oldPassword": MessageLookupByLibrary.simpleMessage("Old Password"),
-        "password": MessageLookupByLibrary.simpleMessage("Password"),
-        "passwordError":
-            MessageLookupByLibrary.simpleMessage("Wrong password!"),
-        "passwordNotMatch":
-            MessageLookupByLibrary.simpleMessage("Password does not match!"),
-        "preference": MessageLookupByLibrary.simpleMessage("Preference"),
-        "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
-        "recall": MessageLookupByLibrary.simpleMessage("Recall"),
-        "restore": MessageLookupByLibrary.simpleMessage("Restore"),
-        "save": MessageLookupByLibrary.simpleMessage("Save"),
-        "saveImage": MessageLookupByLibrary.simpleMessage("Save Image"),
-        "saveTo": m2,
-        "saveToLocal": MessageLookupByLibrary.simpleMessage("Save to Local"),
-        "sayWhat": MessageLookupByLibrary.simpleMessage("say what!"),
-        "scanQrcodeFeedbackTips":
-            MessageLookupByLibrary.simpleMessage("Scan Qrcode for feedback"),
-        "search": MessageLookupByLibrary.simpleMessage("Search"),
-        "second": MessageLookupByLibrary.simpleMessage("Second"),
-        "security": MessageLookupByLibrary.simpleMessage("Security"),
-        "serviceAgreement":
-            MessageLookupByLibrary.simpleMessage("Service Agreement"),
-        "settings": MessageLookupByLibrary.simpleMessage("Settings"),
-        "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
-        "simplifiedChinese": MessageLookupByLibrary.simpleMessage("简体中文"),
-        "sortBy": MessageLookupByLibrary.simpleMessage("Sort by"),
-        "sourceX": m3,
-        "storage": MessageLookupByLibrary.simpleMessage("Storage"),
-        "theme": MessageLookupByLibrary.simpleMessage("Theme"),
-        "toggleInvisible":
-            MessageLookupByLibrary.simpleMessage("Toggle Invisible"),
-        "toggleVisibility":
-            MessageLookupByLibrary.simpleMessage("Toggle Visibility"),
-        "toolbox": MessageLookupByLibrary.simpleMessage("Toolbox"),
-        "trash": MessageLookupByLibrary.simpleMessage("Trash"),
-        "unlock": MessageLookupByLibrary.simpleMessage("Unlock"),
-        "unsavedChanges":
-            MessageLookupByLibrary.simpleMessage("Unsaved Changes"),
-        "unsavedChangesMessage": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to leave? If you leave now them your current information will not be saved."),
-        "updateCompleted":
-            MessageLookupByLibrary.simpleMessage("Update Completed!"),
-        "updateInfoError":
-            MessageLookupByLibrary.simpleMessage("Update error!"),
-        "updated": MessageLookupByLibrary.simpleMessage("Updated"),
-        "url": MessageLookupByLibrary.simpleMessage("Url"),
-        "urlEx": MessageLookupByLibrary.simpleMessage(
-            "\'ex. https://www.xxxxxx.com\'"),
-        "userName": MessageLookupByLibrary.simpleMessage("UserName"),
-        "versionX": m4,
-        "view": MessageLookupByLibrary.simpleMessage("View"),
-        "xCanNotEmpty": m5
-      };
+    "about": MessageLookupByLibrary.simpleMessage("About"),
+    "account": MessageLookupByLibrary.simpleMessage("Account"),
+    "accountExists": MessageLookupByLibrary.simpleMessage(
+      "Account already exists!",
+    ),
+    "accountInformation": MessageLookupByLibrary.simpleMessage(
+      "Account Information",
+    ),
+    "accountPasswordError": MessageLookupByLibrary.simpleMessage(
+      "Incorrect username or password!",
+    ),
+    "addAccountTip": MessageLookupByLibrary.simpleMessage("Add Account"),
+    "addFolderTip": MessageLookupByLibrary.simpleMessage("Add Folder"),
+    "allItems": MessageLookupByLibrary.simpleMessage("All Items"),
+    "appDirectory": MessageLookupByLibrary.simpleMessage("App Directory"),
+    "appName": MessageLookupByLibrary.simpleMessage("PasswordX"),
+    "brightColorMode": MessageLookupByLibrary.simpleMessage(
+      "Bright color Mode",
+    ),
+    "canNotEmpty": MessageLookupByLibrary.simpleMessage("Can not be empty"),
+    "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "changeDirectory": MessageLookupByLibrary.simpleMessage("Change Directory"),
+    "changeName": MessageLookupByLibrary.simpleMessage("Change Name"),
+    "changeNotes": MessageLookupByLibrary.simpleMessage("Change Notes"),
+    "changePassword": MessageLookupByLibrary.simpleMessage("Change Password"),
+    "clearClipboard": MessageLookupByLibrary.simpleMessage("Clear Clipboard"),
+    "clearClipboardTips": MessageLookupByLibrary.simpleMessage(
+      "Automatically clear value copied to clipboard！",
+    ),
+    "clearCompleted": MessageLookupByLibrary.simpleMessage("Clear Completed!"),
+    "clearData": MessageLookupByLibrary.simpleMessage("Clear Data"),
+    "clearDataMessage": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to clear all accounts under this account!",
+    ),
+    "clearTrashTips": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to clear all current data！",
+    ),
+    "clone": MessageLookupByLibrary.simpleMessage("Clone"),
+    "close": MessageLookupByLibrary.simpleMessage("Close"),
+    "confirmPassword": MessageLookupByLibrary.simpleMessage("Confirm Password"),
+    "copy": MessageLookupByLibrary.simpleMessage("Copy"),
+    "copyToClipboard": MessageLookupByLibrary.simpleMessage(
+      "The current information has been copied!",
+    ),
+    "copyValue": MessageLookupByLibrary.simpleMessage("Copy Value"),
+    "countX": m0,
+    "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
+    "data": MessageLookupByLibrary.simpleMessage("Data"),
+    "dateCreated": MessageLookupByLibrary.simpleMessage("Date created"),
+    "dateModified": MessageLookupByLibrary.simpleMessage("Date modified"),
+    "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+    "deleteAccount": MessageLookupByLibrary.simpleMessage("Delete Account"),
+    "deleteAccountMessage": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to delete this account!",
+    ),
+    "deleteFolder": MessageLookupByLibrary.simpleMessage("Delete Folder"),
+    "deleteFolderMessage": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to delete this folder!",
+    ),
+    "deleteInfoError": MessageLookupByLibrary.simpleMessage("Delete error!"),
+    "edit": MessageLookupByLibrary.simpleMessage("Edit"),
+    "editFolder": MessageLookupByLibrary.simpleMessage("Edit Folder"),
+    "editItem": MessageLookupByLibrary.simpleMessage("Edit Item"),
+    "emptyAccountListTip": MessageLookupByLibrary.simpleMessage(
+      "There are no items to list.",
+    ),
+    "end": MessageLookupByLibrary.simpleMessage("End"),
+    "english": MessageLookupByLibrary.simpleMessage("English"),
+    "exitTips": MessageLookupByLibrary.simpleMessage(
+      "Press again to return to desktop！",
+    ),
+    "export": MessageLookupByLibrary.simpleMessage("Export"),
+    "exportAccount": MessageLookupByLibrary.simpleMessage("Export Account"),
+    "exportCompleted": MessageLookupByLibrary.simpleMessage(
+      "Export Completed!",
+    ),
+    "favorite": MessageLookupByLibrary.simpleMessage("Favorite"),
+    "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
+    "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
+    "folder": MessageLookupByLibrary.simpleMessage("Folder"),
+    "folderExists": MessageLookupByLibrary.simpleMessage(
+      "Folder already exists!",
+    ),
+    "folders": MessageLookupByLibrary.simpleMessage("Folders"),
+    "followSystem": MessageLookupByLibrary.simpleMessage("Follow System"),
+    "forgetPassword": MessageLookupByLibrary.simpleMessage("Forget Password?"),
+    "handlerError": MessageLookupByLibrary.simpleMessage(
+      "Handling exceptions!",
+    ),
+    "home": MessageLookupByLibrary.simpleMessage("Home"),
+    "hour": MessageLookupByLibrary.simpleMessage("Hour"),
+    "import": MessageLookupByLibrary.simpleMessage("Import"),
+    "importAccount": MessageLookupByLibrary.simpleMessage("Import Account"),
+    "importCompleted": MessageLookupByLibrary.simpleMessage(
+      "Import Completed!",
+    ),
+    "importTips": MessageLookupByLibrary.simpleMessage(
+      "Tip: No need to enter when there is no password！",
+    ),
+    "itemInformation": MessageLookupByLibrary.simpleMessage("Item Information"),
+    "language": MessageLookupByLibrary.simpleMessage("Language"),
+    "launcher": MessageLookupByLibrary.simpleMessage("Launcher"),
+    "license": MessageLookupByLibrary.simpleMessage(
+      "Copyright 2025 The sky Authors\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n   http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.",
+    ),
+    "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
+    "lock": MessageLookupByLibrary.simpleMessage("Lock"),
+    "lockApp": MessageLookupByLibrary.simpleMessage("Lock App"),
+    "lockAppTips": MessageLookupByLibrary.simpleMessage(
+      "Automatically lock apps over time！",
+    ),
+    "login": MessageLookupByLibrary.simpleMessage("Login"),
+    "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+    "mailX": m1,
+    "minute": MessageLookupByLibrary.simpleMessage("Minute"),
+    "name": MessageLookupByLibrary.simpleMessage("Name"),
+    "never": MessageLookupByLibrary.simpleMessage("Never"),
+    "newAccount": MessageLookupByLibrary.simpleMessage("New Account"),
+    "newPassword": MessageLookupByLibrary.simpleMessage("New Password"),
+    "noFolder": MessageLookupByLibrary.simpleMessage("No Folder"),
+    "notSupport": MessageLookupByLibrary.simpleMessage(
+      "Not currently supported!",
+    ),
+    "notes": MessageLookupByLibrary.simpleMessage("Notes"),
+    "ok": MessageLookupByLibrary.simpleMessage("OK"),
+    "oldPassword": MessageLookupByLibrary.simpleMessage("Old Password"),
+    "password": MessageLookupByLibrary.simpleMessage("Password"),
+    "passwordError": MessageLookupByLibrary.simpleMessage("Wrong password!"),
+    "passwordNotMatch": MessageLookupByLibrary.simpleMessage(
+      "Password does not match!",
+    ),
+    "preference": MessageLookupByLibrary.simpleMessage("Preference"),
+    "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+    "recall": MessageLookupByLibrary.simpleMessage("Recall"),
+    "restore": MessageLookupByLibrary.simpleMessage("Restore"),
+    "save": MessageLookupByLibrary.simpleMessage("Save"),
+    "saveImage": MessageLookupByLibrary.simpleMessage("Save Image"),
+    "saveTo": m2,
+    "saveToLocal": MessageLookupByLibrary.simpleMessage("Save to Local"),
+    "sayWhat": MessageLookupByLibrary.simpleMessage("say what!"),
+    "scanQrcodeFeedbackTips": MessageLookupByLibrary.simpleMessage(
+      "Scan Qrcode for feedback",
+    ),
+    "search": MessageLookupByLibrary.simpleMessage("Search"),
+    "second": MessageLookupByLibrary.simpleMessage("Second"),
+    "security": MessageLookupByLibrary.simpleMessage("Security"),
+    "serviceAgreement": MessageLookupByLibrary.simpleMessage(
+      "Service Agreement",
+    ),
+    "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
+    "simplifiedChinese": MessageLookupByLibrary.simpleMessage("简体中文"),
+    "sortBy": MessageLookupByLibrary.simpleMessage("Sort by"),
+    "sourceX": m3,
+    "storage": MessageLookupByLibrary.simpleMessage("Storage"),
+    "theme": MessageLookupByLibrary.simpleMessage("Theme"),
+    "toggleInvisible": MessageLookupByLibrary.simpleMessage("Toggle Invisible"),
+    "toggleVisibility": MessageLookupByLibrary.simpleMessage(
+      "Toggle Visibility",
+    ),
+    "toolbox": MessageLookupByLibrary.simpleMessage("Toolbox"),
+    "trash": MessageLookupByLibrary.simpleMessage("Trash"),
+    "unlock": MessageLookupByLibrary.simpleMessage("Unlock"),
+    "unsavedChanges": MessageLookupByLibrary.simpleMessage("Unsaved Changes"),
+    "unsavedChangesMessage": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to leave? If you leave now them your current information will not be saved.",
+    ),
+    "updateCompleted": MessageLookupByLibrary.simpleMessage(
+      "Update Completed!",
+    ),
+    "updateInfoError": MessageLookupByLibrary.simpleMessage("Update error!"),
+    "updated": MessageLookupByLibrary.simpleMessage("Updated"),
+    "url": MessageLookupByLibrary.simpleMessage("Url"),
+    "urlEx": MessageLookupByLibrary.simpleMessage(
+      "\'ex. https://www.xxxxxx.com\'",
+    ),
+    "userName": MessageLookupByLibrary.simpleMessage("UserName"),
+    "versionX": m4,
+    "view": MessageLookupByLibrary.simpleMessage("View"),
+    "xCanNotEmpty": m5,
+  };
 }
