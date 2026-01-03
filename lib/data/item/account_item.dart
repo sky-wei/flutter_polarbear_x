@@ -81,7 +81,7 @@ class AccountItem {
     this.trash = false,
     int? createTime,
     int? updateTime,
-    this.version = 0
+    this.version = 1
   }): _alias = alias,
     _lowerAlias = alias.toLowerCase(),
     _name = name,

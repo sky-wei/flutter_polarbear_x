@@ -141,6 +141,14 @@ class AppRepository extends AbstractComponent implements XRepository {
         .findFirst();
 
     if (entity == null) {
+      if ("Demo" == admin.name && "a123456" == admin.password) {
+        // 应用市场测试用户。创建Demo用户，插入账号数据。
+        final demoAdmin = await createAdmin(admin);
+        await createAccount(demoAdmin, AccountItem(adminId: demoAdmin.id, alias: "Demo1", name: "Test1", password: "123456", url: "https://www.test.com", node: "Test", favorite: true));
+        await createAccount(demoAdmin, AccountItem(adminId: demoAdmin.id, alias: "Demo2", name: "Test2", password: "123456", url: "https://www.test.com", node: "Test"));
+        await createAccount(demoAdmin, AccountItem(adminId: demoAdmin.id, alias: "Demo2", name: "Test3", password: "123456", url: "https://www.test.com", node: "Test"));
+        return demoAdmin;
+      }
       throw DataException.type(type: ErrorType.nameOrPasswordError);
     }
 
@@ -150,7 +158,6 @@ class AppRepository extends AbstractComponent implements XRepository {
 
     return AdminMapper.transformEntity(entity).copy(password: admin.password);
   }
-
 
   /// 创建文件夹
   @override

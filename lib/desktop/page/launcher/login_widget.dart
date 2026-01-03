@@ -28,7 +28,7 @@ import 'package:provider/provider.dart';
 
 class LoginWidget extends StatefulWidget {
 
-  const LoginWidget({Key? key}) : super(key: key);
+  const LoginWidget({super.key});
 
   @override
   State<StatefulWidget> createState() => _LoginWidgetState();
